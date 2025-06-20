@@ -18,6 +18,7 @@ import android.app.AlertDialog
 import java.util.zip.ZipInputStream
 import java.io.FileOutputStream
 import java.io.File
+import android.provider.DocumentsContract
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -26,8 +27,10 @@ class MainActivity : AppCompatActivity() {
     private var isSuperSpeed = false
     private var lastTrack: String? = null
     private val IMPORT_ZIP_REQUEST_CODE = 101
+    private val IMPORT_PACK_REQUEST_CODE = 102
     private var userTracks: List<String> = emptyList()
     private var hysteresis = 3f // Гистерезис для предотвращения мигания
+    private var selectedTrack: String? = null // Для landscape режима
 
     private val locationPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { perms ->
@@ -45,17 +48,26 @@ class MainActivity : AppCompatActivity() {
 
         player = SoundPlayer(this)
 
+        // Функция для получения текущего выбранного трека
+        fun getCurrentTrack(): String {
+            return if (binding.root.findViewById<android.widget.ListView?>(R.id.listTracks) != null) {
+                selectedTrack ?: ""
+            } else {
+                binding.spinnerTracks?.text?.toString() ?: ""
+            }
+        }
+
         tracker = SpeedTracker(this, { speed ->
             runOnUiThread {
                 Log.d("MainActivity", "Triggered speed=$speed")
-                val track = binding.spinnerTracks.text.toString()
+                val track = getCurrentTrack()
                 val isUser = userTracks.contains(track)
                 player.crossfadeTo(track, true, isUser)
             }
         }, { speed ->
             runOnUiThread {
                 val threshold = tracker.getThreshold()
-                val track = binding.spinnerTracks.text.toString()
+                val track = getCurrentTrack()
                 val isUser = userTracks.contains(track)
                 if (lastTrack != track) {
                     // При смене трека всегда сбрасываем состояние
@@ -88,23 +100,51 @@ class MainActivity : AppCompatActivity() {
         // Инициализация подписи при запуске
         binding.textHysteresis.text = "Гистерезис: ${binding.seekCooldown.value.toInt()} км/ч"
 
-        // Заполняем AutoCompleteTextView названиями папок в assets
+        // Заполняем список треков для обоих режимов
         val tracks = assets.list("")!!.filter { name ->
             assets.list(name)?.contains("superspeed.wav") == true
         }
+        val allTracks = tracks + userTracks
         val tracksAdapter = ArrayAdapter(
             this,
             R.layout.item_track_dropdown,
-            tracks
+            allTracks
         )
-        binding.spinnerTracks.setAdapter(tracksAdapter)
-
-        binding.spinnerTracks.setOnClickListener {
-            binding.spinnerTracks.showDropDown()
-        }
-        binding.spinnerTracks.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                binding.spinnerTracks.showDropDown()
+        // Если есть listTracks (landscape)
+        val listTracks = binding.root.findViewById<android.widget.ListView?>(R.id.listTracks)
+        if (listTracks != null) {
+            listTracks.adapter = tracksAdapter
+            // По умолчанию выбираем первый трек
+            if (allTracks.isNotEmpty()) {
+                selectedTrack = allTracks[0]
+                listTracks.setItemChecked(0, true)
+            }
+            listTracks.setOnItemClickListener { parent, view, position, id ->
+                selectedTrack = allTracks[position]
+                val isUser = userTracks.contains(selectedTrack)
+                player.playBoth(selectedTrack!!, isUser)
+                // Обновить чекбокс длинной версии
+                val checked = player.isLongVersionEnabled(selectedTrack!!, "normal")
+                binding.checkboxLongVersion.isChecked = checked
+            }
+        } else {
+            // Портретный режим — AutoCompleteTextView
+            binding.spinnerTracks?.setAdapter(tracksAdapter)
+            binding.spinnerTracks?.setOnClickListener {
+                binding.spinnerTracks?.showDropDown()
+            }
+            binding.spinnerTracks?.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    binding.spinnerTracks?.showDropDown()
+                }
+            }
+            binding.spinnerTracks?.setOnItemClickListener { parent, view, position, id ->
+                val track = binding.spinnerTracks?.text?.toString() ?: ""
+                val isUser = userTracks.contains(track)
+                // Обновить чекбокс длинной версии
+                val checked = player.isLongVersionEnabled(track, "normal")
+                binding.checkboxLongVersion.isChecked = checked
+                player.playBoth(track, isUser)
             }
         }
 
@@ -118,20 +158,20 @@ class MainActivity : AppCompatActivity() {
 
         // --- Работа с CheckBox длинной версии ---
         val updateLongCheckbox = {
-            val track = binding.spinnerTracks.text.toString()
+            val track = getCurrentTrack()
             val checked = player.isLongVersionEnabled(track, "normal")
             binding.checkboxLongVersion.isChecked = checked
         }
 
-        binding.spinnerTracks.setOnItemClickListener { parent, view, position, id ->
+        binding.spinnerTracks?.setOnItemClickListener { parent, view, position, id ->
             updateLongCheckbox()
-            val track = binding.spinnerTracks.text.toString()
+            val track = getCurrentTrack()
             val isUser = userTracks.contains(track)
             player.playBoth(track, isUser)
         }
 
         binding.checkboxLongVersion.setOnCheckedChangeListener { _, isChecked ->
-            val track = binding.spinnerTracks.text.toString()
+            val track = getCurrentTrack()
             val isUser = userTracks.contains(track)
             if (isChecked) {
                 // Показываем диалог загрузки
@@ -162,6 +202,12 @@ class MainActivity : AppCompatActivity() {
             intent.type = "application/zip"
             startActivityForResult(intent, IMPORT_ZIP_REQUEST_CODE)
         }
+
+        binding.buttonImportPack.setOnClickListener {
+            // Открываем диалог выбора папки
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+            startActivityForResult(intent, IMPORT_PACK_REQUEST_CODE)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -169,6 +215,9 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == IMPORT_ZIP_REQUEST_CODE && resultCode == RESULT_OK) {
             val uri = data?.data ?: return
             showNameInputDialog(uri)
+        } else if (requestCode == IMPORT_PACK_REQUEST_CODE && resultCode == RESULT_OK) {
+            val treeUri = data?.data ?: return
+            importPackFromFolder(treeUri)
         }
     }
 
@@ -253,14 +302,112 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(
             this, R.layout.item_track_dropdown, allTracks
         )
-        binding.spinnerTracks.setAdapter(adapter)
-        if (selectedTrack != null) {
-            binding.spinnerTracks.setText(selectedTrack, false)
+        val listTracks = binding.root.findViewById<android.widget.ListView?>(R.id.listTracks)
+        if (listTracks != null) {
+            listTracks.adapter = adapter
+            if (allTracks.isNotEmpty()) {
+                this.selectedTrack = allTracks[0]
+                listTracks.setItemChecked(0, true)
+            }
+        } else {
+            binding.spinnerTracks?.setAdapter(adapter)
+            if (selectedTrack != null) {
+                binding.spinnerTracks?.setText(selectedTrack, false)
+            }
         }
     }
 
     private fun startTracking() {
         tracker.start()
         Toast.makeText(this, "Трекинг запущен", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun importPackFromFolder(treeUri: Uri) {
+        val dialog = ProgressDialog(this)
+        dialog.setMessage("Импортируем пак саундтреков...")
+        dialog.setCancelable(false)
+        dialog.show()
+        Thread {
+            var imported = 0
+            var failed = 0
+            try {
+                val children = contentResolver.query(
+                    DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, DocumentsContract.getTreeDocumentId(treeUri)),
+                    arrayOf(DocumentsContract.Document.COLUMN_DISPLAY_NAME, DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_MIME_TYPE),
+                    null, null, null
+                )
+                if (children != null) {
+                    while (children.moveToNext()) {
+                        val name = children.getString(0)
+                        val docId = children.getString(1)
+                        val mime = children.getString(2)
+                        if (mime == "application/zip" || name.endsWith(".zip", true)) {
+                            val zipUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, docId)
+                            val trackName = name.removeSuffix(".zip").removeSuffix(".ZIP")
+                            val result = importZipToSoundtracksSync(zipUri, trackName)
+                            if (result) imported++ else failed++
+                        }
+                    }
+                    children.close()
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    dialog.dismiss()
+                    Toast.makeText(this, "Ошибка импорта пака: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+                return@Thread
+            }
+            runOnUiThread {
+                dialog.dismiss()
+                Toast.makeText(this, "Импортировано: $imported, ошибок: $failed", Toast.LENGTH_LONG).show()
+                updateTracksList()
+            }
+        }.start()
+    }
+
+    // Синхронный импорт ZIP без диалогов, возвращает true/false
+    private fun importZipToSoundtracksSync(zipUri: Uri, name: String): Boolean {
+        return try {
+            val dir = File(filesDir, "soundtracks/$name")
+            dir.mkdirs()
+            val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
+            val zis = ZipInputStream(inputStream)
+            var entry = zis.nextEntry
+            var foundNormal = false
+            var foundSuper = false
+            while (entry != null) {
+                if (!entry.isDirectory) {
+                    val outFile = when (entry.name) {
+                        "normal.wav" -> File(dir, "normal.wav").also { foundNormal = true }
+                        "superspeed.wav" -> File(dir, "superspeed.wav").also { foundSuper = true }
+                        else -> null
+                    }
+                    if (outFile != null) {
+                        FileOutputStream(outFile).use { out ->
+                            zis.copyTo(out)
+                        }
+                    }
+                }
+                entry = zis.nextEntry
+            }
+            zis.close()
+            inputStream.close()
+            if (!(foundNormal && foundSuper)) {
+                dir.deleteRecursively()
+                false
+            } else true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        player.releaseAll()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        player.releaseAll()
     }
 }
