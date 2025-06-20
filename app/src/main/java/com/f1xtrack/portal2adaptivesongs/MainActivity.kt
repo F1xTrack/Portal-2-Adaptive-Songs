@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity() {
                     dialog.dismiss()
                     if (foundNormal && foundSuper) {
                         Toast.makeText(this, "Саундтрек импортирован!", Toast.LENGTH_SHORT).show()
-                        updateTracksList()
+                        updateTracksList(name)
                     } else {
                         dir.deleteRecursively()
                         Toast.makeText(this, "В ZIP должны быть normal.wav и superspeed.wav", Toast.LENGTH_LONG).show()
@@ -231,7 +231,7 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-    private fun updateTracksList() {
+    private fun updateTracksList(selectedTrack: String? = null) {
         // Стандартные треки из assets
         val assetTracks = assets.list("")!!.filter { name ->
             assets.list(name)?.contains("superspeed.wav") == true
@@ -243,11 +243,12 @@ class MainActivity : AppCompatActivity() {
         }?.map { it.name } ?: emptyList()
         val allTracks = assetTracks + userTracks
         val adapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_item, allTracks
-        ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
+            this, R.layout.item_track_dropdown, allTracks
+        )
         binding.spinnerTracks.setAdapter(adapter)
+        if (selectedTrack != null) {
+            binding.spinnerTracks.setText(selectedTrack, false)
+        }
     }
 
     private fun startTracking() {
