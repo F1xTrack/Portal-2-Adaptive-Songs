@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private var lastTrack: String? = null
     private val IMPORT_ZIP_REQUEST_CODE = 101
     private var userTracks: List<String> = emptyList()
+    private var hysteresis = 3f // Гистерезис для предотвращения мигания
 
     private val locationPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { perms ->
@@ -62,10 +63,11 @@ class MainActivity : AppCompatActivity() {
                     lastTrack = track
                     player.crossfadeTo(track, false, isUser)
                 }
+                // --- Гистерезис: включаем superspeed при speed >= threshold, выключаем при speed < (threshold - hysteresis) ---
                 if (!isSuperSpeed && speed >= threshold) {
                     isSuperSpeed = true
                     player.crossfadeTo(track, true, isUser)
-                } else if (isSuperSpeed && speed < threshold) {
+                } else if (isSuperSpeed && speed < (threshold - hysteresis)) {
                     isSuperSpeed = false
                     player.crossfadeTo(track, false, isUser)
                 }
@@ -74,11 +76,17 @@ class MainActivity : AppCompatActivity() {
         // Устанавливаем threshold из seekBurst (Slider)
         tracker.setThreshold(binding.seekBurst.value)
         binding.textSpeed.text = "Порог Faith Plate: ${binding.seekBurst.value.toInt()} км/ч"
-        // Слушатель для seekBurst (Slider)
-        binding.seekBurst.addOnChangeListener { slider, value, fromUser ->
-            tracker.setThreshold(value)
-            binding.textSpeed.text = "Порог Faith Plate: ${value.toInt()} км/ч"
+        // Устанавливаем hysteresis из seekCooldown (Slider)
+        hysteresis = binding.seekCooldown.value
+        // Подпись к ползунку гистерезиса
+        binding.seekCooldown.setLabelFormatter { value -> "Гистерезис: ${value.toInt()} км/ч" }
+        // Слушатель для seekCooldown (Slider)
+        binding.seekCooldown.addOnChangeListener { slider, value, fromUser ->
+            hysteresis = value
+            binding.textHysteresis.text = "Гистерезис: ${value.toInt()} км/ч"
         }
+        // Инициализация подписи при запуске
+        binding.textHysteresis.text = "Гистерезис: ${binding.seekCooldown.value.toInt()} км/ч"
 
         // Заполняем AutoCompleteTextView названиями папок в assets
         val tracks = assets.list("")!!.filter { name ->
