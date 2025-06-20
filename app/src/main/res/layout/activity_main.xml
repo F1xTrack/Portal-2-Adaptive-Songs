@@ -60,6 +60,17 @@
                 app:iconPadding="8dp"
                 style="@style/Widget.MaterialComponents.Button" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonImportPack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Импортировать пак саундтреков из папки"
+                app:icon="@android:drawable/ic_menu_upload"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                style="@style/Widget.MaterialComponents.Button" />
+
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/checkboxLongVersion"
                 android:layout_width="wrap_content"
