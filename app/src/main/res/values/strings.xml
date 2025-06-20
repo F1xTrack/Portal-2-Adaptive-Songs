@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
+    <string name="hint_choose_track">Выберите саундтрек</string>
+    <string name="import_zip">Загрузить саундтрек из ZIP</string>
+    <string name="long_version_checkbox">Использовать удлинённые версии саундтреков (больше памяти, но без пауз)</string>
+    <string name="faith_plate_threshold">Порог Faith Plate: %1$d км/ч</string>
+    <string name="burst_threshold">Порог срабатывания (км/ч)</string>
+    <string name="cooldown">Задержка повторного срабатывания (сек)</string>
+</resources>
