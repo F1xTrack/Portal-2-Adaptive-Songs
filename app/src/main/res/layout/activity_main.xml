@@ -77,6 +77,14 @@
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="@color/portal_white" />
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/textHysteresis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Гистерезис: 3 км/ч"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="@color/portal_white" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -98,7 +106,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cooldown"
+                android:text="Гистерезис (км/ч)"
                 android:textColor="@color/portal_white"
                 android:layout_marginTop="16dp" />
 
@@ -107,8 +115,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:valueFrom="0"
-                android:valueTo="60"
-                android:value="10"
+                android:valueTo="10"
+                android:value="3"
                 app:trackColorActive="@color/portal_blue"
                 app:trackColorInactive="@color/portal_white"
                 app:thumbColor="@color/portal_blue" />
