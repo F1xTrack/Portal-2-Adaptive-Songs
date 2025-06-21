@@ -29,7 +29,7 @@ Android-приложение для адаптивного воспроизве�
 
 ## Установка
 1. Склонируйте репозиторий:
-   git clone https://github.com/yourusername/portal2-adaptive-songs.git
+   git clone https://github.com/F1xTrack/Portal-2-Adaptive-Songs.git
 2. Откройте проект в Android Studio (Arctic Fox и выше)
 3. Соберите и установите APK на устройство с Android 11+
 
