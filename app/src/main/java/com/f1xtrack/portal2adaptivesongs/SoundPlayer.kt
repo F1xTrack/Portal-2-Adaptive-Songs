@@ -112,7 +112,7 @@ class SoundPlayer(private val context: Context) {
                     }
                 } catch (e: Exception) {
                     Log.e("SoundPlayer", "setVolume error", e)
-                }
+        }
                 if (i == steps) {
                     try {
                         if (toSuperSpeed) {
@@ -156,7 +156,17 @@ class SoundPlayer(private val context: Context) {
         }
     }
 
-    // Ручной loop: за 0.5 сек до конца длинного файла делаем seekTo(0) и start()
+    // Синхронный рестарт обоих плееров
+    private fun restartBothPlayers() {
+        try {
+            mediaPlayer?.seekTo(0)
+            mediaPlayerAlt?.seekTo(0)
+            mediaPlayer?.start()
+            mediaPlayerAlt?.start()
+        } catch (_: Exception) {}
+    }
+
+    // Ручной loop: за 1 сек до конца длинного файла делаем seekTo(0) и start() для ОБОИХ плееров
     private fun startManualLoop(player: MediaPlayer?, isSuper: Boolean) {
         if (isSuper) {
             loopHandlerSuper?.removeCallbacksAndMessages(null)
@@ -171,9 +181,8 @@ class SoundPlayer(private val context: Context) {
                 try {
                     val duration = player?.duration ?: 0
                     val pos = player?.currentPosition ?: 0
-                    if (duration > 0 && duration - pos < 500) {
-                        player?.seekTo(0)
-                        player?.start()
+                    if (duration > 0 && duration - pos < 1000) {
+                        restartBothPlayers()
                     }
                 } catch (_: Exception) {}
                 handler?.postDelayed(this, 100)
