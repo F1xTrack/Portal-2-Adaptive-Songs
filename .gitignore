@@ -13,7 +13,9 @@
 /captures
 .externalNativeBuild
 .cxx
+/AUTOPILOT/
 local.properties
+AUTOPILOT/
 =======
 # Gradle files
 .gradle/

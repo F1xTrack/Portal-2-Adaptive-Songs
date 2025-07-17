@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Стандартные цвета Material Design (используются по умолчанию) -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+    
+    <!-- Базовые цвета -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="portal_blue">#2196F3</color>
-    <color name="portal_orange">#FF9800</color>
-    <color name="portal_white">#FAFAFA</color>
-    <color name="portal_bg_dark">#23272A</color>
-    <color name="portal_card_bg">#2C2F33</color>
+    
+    <!-- Кастомные цвета в стиле Portal 2 -->
+    <color name="portal_blue">#2196F3</color>      <!-- Синий цвет для элементов интерфейса -->
+    <color name="portal_orange">#FF9800</color>    <!-- Оранжевый цвет для выделения и акцентов -->
+    <color name="portal_white">#FAFAFA</color>     <!-- Светло-серый для фона -->
+    
+    <!-- Цвета для темной темы -->
+    <color name="portal_bg_dark">#23272A</color>   <!-- Темно-серый фон -->
+    <color name="portal_card_bg">#2C2F33</color>   <!-- Цвет карточек в темной теме -->
 </resources>
