@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+*.vsidx
 *.iml
 .gradle
 /local.properties

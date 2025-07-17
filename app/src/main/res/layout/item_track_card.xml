@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Карточка отдельного трека в списке -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,7 +8,6 @@
     app:cardElevation="4dp"
     app:cardBackgroundColor="@color/portal_card_bg">
 
-    <!-- Основной контейнер с горизонтальной ориентацией -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +15,6 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
-        <!-- Иконка трека (музыкальная нота) -->
         <ImageView
             android:id="@+id/iconTrack"
             android:layout_width="32dp"
@@ -26,7 +23,6 @@
             android:tint="@color/portal_orange"
             android:contentDescription="icon" />
 
-        <!-- Контейнер с информацией о треке -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -34,7 +30,6 @@
             android:orientation="vertical"
             android:layout_marginStart="16dp">
 
-            <!-- Название трека -->
             <TextView
                 android:id="@+id/textTrackName"
                 android:layout_width="wrap_content"
@@ -45,14 +40,11 @@
                 android:maxLines="1"
                 android:ellipsize="end" />
 
-            <!-- Контейнер с дополнительной информацией (длительность и количество воспроизведений) -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="4dp">
-                
-                <!-- Длительность трека -->
                 <TextView
                     android:id="@+id/textTrackDuration"
                     android:layout_width="wrap_content"
@@ -61,8 +53,6 @@
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                     android:textColor="@color/portal_blue"
                     android:layout_marginEnd="12dp" />
-                
-                <!-- Количество воспроизведений трека -->
                 <TextView
                     android:id="@+id/textTrackPlays"
                     android:layout_width="wrap_content"

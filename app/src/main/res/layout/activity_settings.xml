@@ -20,5 +20,17 @@
 
         <!-- Здесь будут размещены секции настроек -->
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressLongVersion"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:indicatorSize="64dp"
+            app:indicatorInset="8dp"
+            app:trackThickness="6dp"
+            app:indicatorColor="@color/portal_orange" />
+
     </LinearLayout>
+
 </ScrollView> 
