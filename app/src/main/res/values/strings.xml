@@ -5,6 +5,7 @@
     <string name="long_version_checkbox">Использовать удлинённые версии саундтреков (больше памяти, но без пауз)</string>
     <string name="faith_plate_threshold">Порог Faith Plate: %1$d км/ч</string>
     <string name="burst_threshold">Порог срабатывания (км/ч)</string>
+<<<<<<< HEAD
     <string name="hint_sort_tracks">Сортировка треков</string>
     <string name="sort_alpha">По алфавиту</string>
     <string name="sort_freq">По частоте</string>
@@ -20,3 +21,6 @@
     <string name="settings_long_disable">Отключить длинную версию</string>
     <string name="settings_desync_fix">Синхронизировать оба потока при завершении одного</string>
 </resources>
+=======
+</resources>
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
