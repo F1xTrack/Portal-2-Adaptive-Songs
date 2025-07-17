@@ -1,44 +1,21 @@
 <resources>
-    <!-- Название приложения -->
     <string name="app_name">Portal 2 Adaptive Songs</string>
-    
-    <!-- Подсказка для выбора трека (используется в старом UI) -->
     <string name="hint_choose_track">Выберите саундтрек</string>
-    
-    <!-- Кнопка импорта ZIP файла -->
     <string name="import_zip">Загрузить саундтрек из ZIP</string>
-    
-    <!-- Описание длинной версии треков -->
     <string name="long_version_checkbox">Использовать удлинённые версии саундтреков (больше памяти, но без пауз)</string>
-    
-    <!-- Текст порога скорости с подстановкой значения -->
     <string name="faith_plate_threshold">Порог Faith Plate: %1$d км/ч</string>
-    
-    <!-- Подсказка для слайдера порога скорости -->
     <string name="burst_threshold">Порог срабатывания (км/ч)</string>
-    
-    <!-- Заголовок секции сортировки -->
     <string name="hint_sort_tracks">Сортировка треков</string>
-    
-    <!-- Варианты сортировки треков -->
     <string name="sort_alpha">По алфавиту</string>
     <string name="sort_freq">По частоте</string>
     <string name="sort_duration">По длительности</string>
-    
-    <!-- Заголовок экрана настроек -->
     <string name="settings_title">Настройки</string>
-    
-    <!-- Заголовки секций в настройках -->
     <string name="settings_section_import">Импорт саундтреков</string>
     <string name="settings_section_long">Длинные версии треков</string>
     <string name="settings_section_desync">Исправление рассинхрона</string>
-    
-    <!-- Кнопки импорта в настройках -->
     <string name="settings_import_zip">Импортировать из ZIP</string>
     <string name="settings_import_folder">Импортировать из папки</string>
     <string name="settings_import_file">Импортировать одиночный файл</string>
-    
-    <!-- Переключатели настроек треков -->
     <string name="settings_long_enable">Включить длинную версию</string>
     <string name="settings_long_disable">Отключить длинную версию</string>
     <string name="settings_desync_fix">Синхронизировать оба потока при завершении одного</string>

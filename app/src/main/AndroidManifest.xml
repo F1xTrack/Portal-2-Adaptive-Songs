@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Манифест приложения Portal 2 Adaptive Songs -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Разрешения на доступ к местоположению для отслеживания скорости -->
+    <!-- Разрешения на локацию -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
@@ -17,8 +16,7 @@
         android:theme="@style/Theme.Portal2AdaptiveSongs"
         tools:ignore="MissingApplicationIcon">
 
-        <!-- Главная активность приложения -->
-        <!-- Содержит intent-filter для запуска приложения из лаунчера -->
+        <!-- Главная активность с Launcher intent-filter -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -29,8 +27,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Активность настроек приложения -->
-        <!-- Открывается из главного меню -->
         <activity android:name=".SettingsActivity" />
 
     </application>

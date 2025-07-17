@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Главный экран приложения Portal 2 Adaptive Songs -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +7,6 @@
     android:background="@color/portal_bg_dark"
     tools:context=".MainActivity">
 
-    <!-- Панель инструментов с названием приложения -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
         android:layout_width="0dp"
@@ -21,7 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Основная карточка с содержимым -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardMain"
         android:layout_width="0dp"
@@ -40,7 +37,9 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- Группа кнопок для сортировки треков -->
+            <!-- Удалены кнопки импорта и чекбокс длинной версии, теперь они только в настройках -->
+
+            <!-- SegmentedButton для сортировки -->
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/sortSegmented"
                 android:layout_width="match_parent"
@@ -50,7 +49,6 @@
                 app:selectionRequired="true"
                 app:singleSelection="true">
 
-                <!-- Кнопка сортировки по алфавиту -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSortAlpha"
                     android:layout_width="0dp"
@@ -62,7 +60,6 @@
                     android:text="@string/sort_alpha"
                     android:textSize="12sp" />
 
-                <!-- Кнопка сортировки по частоте воспроизведения -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSortFreq"
                     android:layout_width="0dp"
@@ -73,7 +70,6 @@
                     android:text="@string/sort_freq"
                     android:textSize="12sp" />
 
-                <!-- Кнопка сортировки по длительности -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSortDuration"
                     android:layout_width="0dp"
@@ -85,18 +81,17 @@
                     android:textSize="12sp" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
-            <!-- Список треков с возможностью прокрутки -->
+            <!-- RecyclerView для треков -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerTracks"
                 android:layout_width="match_parent"
-                android:layout_height="226dp"
+                android:layout_height="183dp"
                 android:layout_marginTop="16dp"
                 android:layout_weight="0.33"
                 android:clipToPadding="false"
                 android:paddingBottom="16dp"
                 android:scrollbars="vertical" />
 
-            <!-- Текст с текущим порогом скорости -->
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textSpeed"
                 android:layout_width="wrap_content"
@@ -106,7 +101,6 @@
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="@color/portal_white" />
 
-            <!-- Текст с текущим значением гистерезиса -->
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textHysteresis"
                 android:layout_width="wrap_content"
@@ -115,7 +109,6 @@
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="@color/portal_white" />
 
-            <!-- Подпись для слайдера порога скорости -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -123,7 +116,6 @@
                 android:text="@string/burst_threshold"
                 android:textColor="@color/portal_white" />
 
-            <!-- Слайдер для настройки порога скорости (Faith Plate) -->
             <com.google.android.material.slider.Slider
                 android:id="@+id/seekBurst"
                 android:layout_width="match_parent"
@@ -135,7 +127,6 @@
                 app:trackColorActive="@color/portal_orange"
                 app:trackColorInactive="@color/portal_white" />
 
-            <!-- Подпись для слайдера гистерезиса -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -143,7 +134,6 @@
                 android:text="Гистерезис (км/ч)"
                 android:textColor="@color/portal_white" />
 
-            <!-- Слайдер для настройки гистерезиса (предотвращает мигание) -->
             <com.google.android.material.slider.Slider
                 android:id="@+id/seekCooldown"
                 android:layout_width="match_parent"
@@ -154,14 +144,6 @@
                 app:thumbColor="@color/portal_blue"
                 app:trackColorActive="@color/portal_blue"
                 app:trackColorInactive="@color/portal_white" />
-
-            <!-- Визуализация спектра музыки в реальном времени -->
-            <com.f1xtrack.portal2adaptivesongs.SpectrumView
-                android:id="@+id/spectrumView"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="24dp"
-                android:background="@color/portal_card_bg" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
