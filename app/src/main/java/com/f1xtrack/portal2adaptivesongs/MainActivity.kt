@@ -19,8 +19,11 @@ import java.util.zip.ZipInputStream
 import java.io.FileOutputStream
 import java.io.File
 import android.provider.DocumentsContract
+<<<<<<< HEAD
 import android.media.MediaMetadataRetriever
 import androidx.recyclerview.widget.LinearLayoutManager
+=======
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -33,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private var userTracks: List<String> = emptyList()
     private var hysteresis = 3f // Гистерезис для предотвращения мигания
     private var selectedTrack: String? = null // Для landscape режима
+<<<<<<< HEAD
     private val PREFS_NAME = "track_sort_prefs"
     private val PREF_SORT = "sort_type"
     private enum class SortType { ALPHA, FREQ, DURATION }
@@ -41,6 +45,8 @@ class MainActivity : AppCompatActivity() {
     private val trackDuration = mutableMapOf<String, Int>() // Для сортировки по длительности (заглушка)
     private val PREFS_STATS = "track_stats"
     private lateinit var tracksAdapter: TracksAdapter
+=======
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
 
     private val locationPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { perms ->
@@ -62,7 +68,15 @@ class MainActivity : AppCompatActivity() {
 
         // Функция для получения текущего выбранного трека
         fun getCurrentTrack(): String {
+<<<<<<< HEAD
             return selectedTrack ?: ""
+=======
+            return if (binding.root.findViewById<android.widget.ListView?>(R.id.listTracks) != null) {
+                selectedTrack ?: ""
+            } else {
+                binding.spinnerTracks?.text?.toString() ?: ""
+            }
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
         }
 
         tracker = SpeedTracker(this, { speed ->
@@ -104,15 +118,19 @@ class MainActivity : AppCompatActivity() {
         binding.seekCooldown.addOnChangeListener { slider, value, fromUser ->
             hysteresis = value
             binding.textHysteresis.text = "Гистерезис: ${value.toInt()} км/ч"
+<<<<<<< HEAD
         }
         // Слушатель для seekBurst (Slider)
         binding.seekBurst.addOnChangeListener { slider, value, fromUser ->
             tracker.setThreshold(value)
             binding.textSpeed.text = "Порог Faith Plate: ${value.toInt()} км/ч"
+=======
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
         }
         // Инициализация подписи при запуске
         binding.textHysteresis.text = "Гистерезис: ${binding.seekCooldown.value.toInt()} км/ч"
 
+<<<<<<< HEAD
         // --- Инициализация RecyclerView ---
         tracksAdapter = TracksAdapter(emptyList(), selectedTrack) { trackInfo ->
             selectedTrack = trackInfo.name
@@ -153,6 +171,53 @@ class MainActivity : AppCompatActivity() {
                 }
                 prefs.edit().putString(PREF_SORT, sortType.name).apply()
                 updateTracksList(selectedTrack)
+=======
+        // Заполняем список треков для обоих режимов
+        val tracks = assets.list("")!!.filter { name ->
+            assets.list(name)?.contains("superspeed.wav") == true
+        }
+        val allTracks = tracks + userTracks
+        val tracksAdapter = ArrayAdapter(
+            this,
+            R.layout.item_track_dropdown,
+            allTracks
+        )
+        // Если есть listTracks (landscape)
+        val listTracks = binding.root.findViewById<android.widget.ListView?>(R.id.listTracks)
+        if (listTracks != null) {
+            listTracks.adapter = tracksAdapter
+            // По умолчанию выбираем первый трек
+            if (allTracks.isNotEmpty()) {
+                selectedTrack = allTracks[0]
+                listTracks.setItemChecked(0, true)
+            }
+            listTracks.setOnItemClickListener { parent, view, position, id ->
+                selectedTrack = allTracks[position]
+                val isUser = userTracks.contains(selectedTrack)
+                player.playBoth(selectedTrack!!, isUser)
+                // Обновить чекбокс длинной версии
+                val checked = player.isLongVersionEnabled(selectedTrack!!, "normal")
+                binding.checkboxLongVersion.isChecked = checked
+            }
+        } else {
+            // Портретный режим — AutoCompleteTextView
+            binding.spinnerTracks?.setAdapter(tracksAdapter)
+            binding.spinnerTracks?.setOnClickListener {
+                binding.spinnerTracks?.showDropDown()
+            }
+            binding.spinnerTracks?.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    binding.spinnerTracks?.showDropDown()
+                }
+            }
+            binding.spinnerTracks?.setOnItemClickListener { parent, view, position, id ->
+                val track = binding.spinnerTracks?.text?.toString() ?: ""
+                val isUser = userTracks.contains(track)
+                // Обновить чекбокс длинной версии
+                val checked = player.isLongVersionEnabled(track, "normal")
+                binding.checkboxLongVersion.isChecked = checked
+                player.playBoth(track, isUser)
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
             }
         }
 
@@ -165,6 +230,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         // --- Работа с CheckBox длинной версии ---
+<<<<<<< HEAD
         // Удаляю строку: binding.checkboxLongVersion?.isChecked = checked
 
         // Удаляю строку: binding.checkboxLongVersion?.setOnCheckedChangeListener { _, isChecked -> ... }
@@ -195,8 +261,52 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
+=======
+        val updateLongCheckbox = {
+            val track = getCurrentTrack()
+            val checked = player.isLongVersionEnabled(track, "normal")
+            binding.checkboxLongVersion.isChecked = checked
+        }
+
+        binding.spinnerTracks?.setOnItemClickListener { parent, view, position, id ->
+            updateLongCheckbox()
+            val track = getCurrentTrack()
+            val isUser = userTracks.contains(track)
+            player.playBoth(track, isUser)
+        }
+
+        binding.checkboxLongVersion.setOnCheckedChangeListener { _, isChecked ->
+            val track = getCurrentTrack()
+            val isUser = userTracks.contains(track)
+            if (isChecked) {
+                // Показываем диалог загрузки
+                val dialog = ProgressDialog(this)
+                dialog.setMessage("Создание длинной версии трека...")
+                dialog.setCancelable(false)
+                dialog.show()
+                // Останавливаем плееры
+                player.releaseAll()
+                player.createLongFileAsync(track, "normal", isUser) {
+                    player.createLongFileAsync(track, "superspeed", isUser) {
+                        runOnUiThread {
+                            dialog.dismiss()
+                            player.playBoth(track, isUser)
+                        }
+                    }
+                }
+            } else {
+                player.removeLongFilesForTrack(track, isUser)
+                player.releaseAll()
+                player.playBoth(track, isUser)
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
             }
             else -> super.onOptionsItemSelected(item)
+        }
+
+        binding.buttonImportPack.setOnClickListener {
+            // Открываем диалог выбора папки
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+            startActivityForResult(intent, IMPORT_PACK_REQUEST_CODE)
         }
     }
 
@@ -278,6 +388,7 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
+<<<<<<< HEAD
     private fun getSortedTracks(assetTracks: List<String>, userTracks: List<String>): List<String> {
         val all = assetTracks + userTracks
         return when (sortType) {
@@ -305,6 +416,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+=======
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
     private fun updateTracksList(selectedTrack: String? = null) {
         // Стандартные треки из assets
         val assetTracks = assets.list("")!!.filter { name ->
@@ -315,6 +428,7 @@ class MainActivity : AppCompatActivity() {
         userTracks = userDir.listFiles()?.filter { dir ->
             dir.isDirectory && File(dir, "normal.wav").exists() && File(dir, "superspeed.wav").exists()
         }?.map { it.name } ?: emptyList()
+<<<<<<< HEAD
         // --- Обновляем длительности ---
         (assetTracks + userTracks).forEach { track ->
             if (!trackDuration.containsKey(track)) {
@@ -334,6 +448,25 @@ class MainActivity : AppCompatActivity() {
         }
         saveStats()
         tracksAdapter.updateData(getTrackInfoList(), selectedTrack)
+=======
+        val allTracks = assetTracks + userTracks
+        val adapter = ArrayAdapter(
+            this, R.layout.item_track_dropdown, allTracks
+        )
+        val listTracks = binding.root.findViewById<android.widget.ListView?>(R.id.listTracks)
+        if (listTracks != null) {
+            listTracks.adapter = adapter
+            if (allTracks.isNotEmpty()) {
+                this.selectedTrack = allTracks[0]
+                listTracks.setItemChecked(0, true)
+            }
+        } else {
+            binding.spinnerTracks?.setAdapter(adapter)
+            if (selectedTrack != null) {
+                binding.spinnerTracks?.setText(selectedTrack, false)
+            }
+        }
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
     }
 
     private fun startTracking() {
@@ -420,6 +553,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+<<<<<<< HEAD
     private fun saveStats() {
         val statsPrefs = getSharedPreferences(PREFS_STATS, MODE_PRIVATE)
         val playCounts = trackPlayCount.map { "${'$'}{it.key}|${'$'}{it.value}" }.toSet()
@@ -441,6 +575,8 @@ class MainActivity : AppCompatActivity() {
         } catch (_: Exception) { 0 } finally { retriever.release() }
     }
 
+=======
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         player.releaseAll()

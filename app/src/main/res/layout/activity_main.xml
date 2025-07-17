@@ -44,6 +44,45 @@
                 android:id="@+id/sortSegmented"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
+=======
+                android:layout_marginTop="24dp"
+                android:hint="@string/hint_choose_track">
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerTracks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:background="@android:color/transparent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonImportZip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/import_zip"
+                app:icon="@android:drawable/ic_menu_upload"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                style="@style/Widget.MaterialComponents.Button" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonImportPack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Импортировать пак саундтреков из папки"
+                app:icon="@android:drawable/ic_menu_upload"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                style="@style/Widget.MaterialComponents.Button" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkboxLongVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 app:selectionRequired="true"
@@ -130,9 +169,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                 android:layout_marginTop="16dp"
                 android:text="Гистерезис (км/ч)"
                 android:textColor="@color/portal_white" />
+=======
+                android:text="Гистерезис (км/ч)"
+                android:textColor="@color/portal_white"
+                android:layout_marginTop="16dp" />
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
 
             <com.google.android.material.slider.Slider
                 android:id="@+id/seekCooldown"
@@ -141,7 +186,11 @@
                 android:value="3"
                 android:valueFrom="0"
                 android:valueTo="10"
+<<<<<<< HEAD
                 app:thumbColor="@color/portal_blue"
+=======
+                android:value="3"
+>>>>>>> c02994cd5d430a45350572296c7e5ef66ea4286c
                 app:trackColorActive="@color/portal_blue"
                 app:trackColorInactive="@color/portal_white" />
         </LinearLayout>
