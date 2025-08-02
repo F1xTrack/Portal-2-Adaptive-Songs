@@ -62,7 +62,7 @@ class SoundPlayer(private val context: Context) {
     }
 
     // Запуск обоих треков одновременно (оба MediaPlayer), длинные версии только если стоит флаг
-    fun playBoth(trackName: String, isUserTrack: Boolean) {
+    fun playBoth(trackName: String, isUserTrack: Boolean, startWithSuperSpeed: Boolean = false) {
         mediaPlayer?.release()
         mediaPlayerAlt?.release()
         loopHandlerNormal?.removeCallbacksAndMessages(null)
@@ -78,8 +78,16 @@ class SoundPlayer(private val context: Context) {
             mediaPlayerAlt?.setDataSource(fileSuper.absolutePath)
             mediaPlayer?.prepare()
             mediaPlayerAlt?.prepare()
-            mediaPlayer?.setVolume(1f, 1f)
-            mediaPlayerAlt?.setVolume(0f, 0f)
+            
+            // Устанавливаем громкость в зависимости от текущего состояния
+            if (startWithSuperSpeed) {
+                mediaPlayer?.setVolume(0f, 0f)
+                mediaPlayerAlt?.setVolume(1f, 1f)
+            } else {
+                mediaPlayer?.setVolume(1f, 1f)
+                mediaPlayerAlt?.setVolume(0f, 0f)
+            }
+            
             mediaPlayer?.seekTo(0)
             mediaPlayerAlt?.seekTo(0)
             mediaPlayer?.start()

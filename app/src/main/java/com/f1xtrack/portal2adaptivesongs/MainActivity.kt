@@ -78,10 +78,9 @@ class MainActivity : AppCompatActivity() {
                 val track = getCurrentTrack()
                 val isUser = userTracks.contains(track)
                 if (lastTrack != track) {
-                    // При смене трека всегда сбрасываем состояние
-                    isSuperSpeed = false
+                    // При смене трека обновляем lastTrack, но не сбрасываем isSuperSpeed
+                    // Состояние isSuperSpeed уже установлено при выборе трека
                     lastTrack = track
-                    player.crossfadeTo(track, false, isUser)
                 }
                 // --- Гистерезис: включаем superspeed при speed >= threshold, выключаем при speed < (threshold - hysteresis) ---
                 if (!isSuperSpeed && speed >= threshold) {
@@ -119,7 +118,10 @@ class MainActivity : AppCompatActivity() {
             selectedTrack = trackInfo.name
             tracksAdapter.updateData(getTrackInfoList(), selectedTrack)
             val isUser = userTracks.contains(trackInfo.name)
-            player.playBoth(trackInfo.name, isUser)
+            // При выборе трека всегда начинаем с обычной версии
+            isSuperSpeed = false
+            lastTrack = trackInfo.name
+            player.playBoth(trackInfo.name, isUser, false)
             incTrackPlayCount(trackInfo.name)
             // (опционально) обновить чекбокс длинной версии
             val checked = player.isLongVersionEnabled(trackInfo.name, "normal")
@@ -326,6 +328,18 @@ class MainActivity : AppCompatActivity() {
         }
         saveStats()
         tracksAdapter.updateData(getTrackInfoList(), selectedTrack)
+        
+        // Инициализация первого трека при запуске
+        if (selectedTrack == null) {
+            val trackInfoList = getTrackInfoList()
+            if (trackInfoList.isNotEmpty()) {
+                selectedTrack = trackInfoList[0].name
+                val isUser = userTracks.contains(selectedTrack)
+                isSuperSpeed = false
+                lastTrack = selectedTrack
+                player.playBoth(selectedTrack!!, isUser, false)
+            }
+        }
     }
 
     private fun startTracking() {
