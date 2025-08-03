@@ -3,19 +3,25 @@ package com.f1xtrack.portal2adaptivesongs
 import android.content.Context
 import android.media.MediaPlayer
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
 class SoundPlayer(private val context: Context) {
-    private var mediaPlayer: MediaPlayer? = null
-    private var mediaPlayerAlt: MediaPlayer? = null
-    private var crossfadeJob: Handler? = null
-    private var loopHandlerNormal: Handler? = null
-    private var loopHandlerSuper: Handler? = null
-    private var loopRunnableNormal: Runnable? = null
-    private var loopRunnableSuper: Runnable? = null
+    companion object {
+        private const val TAG = "SoundPlayer"
+        private const val CROSSFADE_DURATION = 1000L
+        private const val CROSSFADE_STEPS = 20
+        private const val LONG_FILE_REPEAT_COUNT = 20
+    }
+
+    private var normalPlayer: MediaPlayer? = null
+    private var superSpeedPlayer: MediaPlayer? = null
+    private var crossfadeHandler: Handler? = null
+    private var normalLoopHandler: Handler? = null
+    private var superSpeedLoopHandler: Handler? = null
 
     // Генерация длинного файла (20x) в кэше
     private fun getOrCreateLongFile(trackName: String, fileName: String, isUserTrack: Boolean, force: Boolean = false): File {
@@ -61,80 +67,45 @@ class SoundPlayer(private val context: Context) {
         files.forEach { if (it.exists()) it.delete() }
     }
 
-    // Запуск обоих треков одновременно (оба MediaPlayer), длинные версии только если стоит флаг
+    /**
+     * Запускает оба трека одновременно (обычный и ускоренный)
+     * @param trackName Название трека
+     * @param isUserTrack Является ли трек пользовательским
+     * @param startWithSuperSpeed Начинать ли с ускоренной версии
+     */
     fun playBoth(trackName: String, isUserTrack: Boolean, startWithSuperSpeed: Boolean = false) {
-        mediaPlayer?.release()
-        mediaPlayerAlt?.release()
-        loopHandlerNormal?.removeCallbacksAndMessages(null)
-        loopHandlerSuper?.removeCallbacksAndMessages(null)
-        mediaPlayer = MediaPlayer()
-        mediaPlayerAlt = MediaPlayer()
+        releasePlayers()
+        clearLoopHandlers()
+        
         try {
-            val prefs = context.getSharedPreferences("track_settings", Context.MODE_PRIVATE)
-            val useLong = prefs.getBoolean("long_$trackName", false)
-            val fileNormal = if (useLong) getOrCreateLongFile(trackName, "normal", isUserTrack) else getShortFile(trackName, "normal", isUserTrack)
-            val fileSuper = if (useLong) getOrCreateLongFile(trackName, "superspeed", isUserTrack) else getShortFile(trackName, "superspeed", isUserTrack)
-            mediaPlayer?.setDataSource(fileNormal.absolutePath)
-            mediaPlayerAlt?.setDataSource(fileSuper.absolutePath)
-            mediaPlayer?.prepare()
-            mediaPlayerAlt?.prepare()
-            
-            // Устанавливаем громкость в зависимости от текущего состояния
-            if (startWithSuperSpeed) {
-                mediaPlayer?.setVolume(0f, 0f)
-                mediaPlayerAlt?.setVolume(1f, 1f)
-            } else {
-                mediaPlayer?.setVolume(1f, 1f)
-                mediaPlayerAlt?.setVolume(0f, 0f)
-            }
-            
-            mediaPlayer?.seekTo(0)
-            mediaPlayerAlt?.seekTo(0)
-            mediaPlayer?.start()
-            mediaPlayerAlt?.start()
-            val desyncFix = prefs.getBoolean("desync_$trackName", true)
-            startManualLoop(mediaPlayer, false, desyncFix)
-            startManualLoop(mediaPlayerAlt, true, desyncFix)
+            initializePlayers(trackName, isUserTrack)
+            setInitialVolumes(startWithSuperSpeed)
+            startPlayers()
+            setupLoopHandlers(trackName, isUserTrack)
         } catch (e: IOException) {
-            Log.e("SoundPlayer", "Error playing both", e)
+            Log.e(TAG, "Error playing both tracks", e)
         }
     }
 
-    // Кроссфейд между двумя MediaPlayer (оба всегда играют, меняется только громкость)
+    /**
+     * Плавно переключает между обычной и ускоренной версией трека
+     * @param trackName Название трека
+     * @param toSuperSpeed Переключаться ли на ускоренную версию
+     * @param isUserTrack Является ли трек пользовательским
+     */
     fun crossfadeTo(trackName: String, toSuperSpeed: Boolean, isUserTrack: Boolean) {
-        val fromPlayer = if (toSuperSpeed) mediaPlayer else mediaPlayerAlt
-        val toPlayer = if (toSuperSpeed) mediaPlayerAlt else mediaPlayer
-        val duration = 1000L
-        val steps = 20
-        val delay = duration / steps
-        crossfadeJob?.removeCallbacksAndMessages(null)
-        crossfadeJob = Handler(context.mainLooper)
-        for (i in 0..steps) {
-            crossfadeJob?.postDelayed({
-                val vol = i / steps.toFloat()
-                try {
-                    if (toSuperSpeed) {
-                        toPlayer?.setVolume(vol, vol)
-                        fromPlayer?.setVolume(1 - 0.9f * vol, 1 - 0.9f * vol)
-                    } else {
-                        toPlayer?.setVolume(0.1f + 0.9f * vol, 0.1f + 0.9f * vol)
-                        fromPlayer?.setVolume(1 - vol, 1 - vol)
-                    }
-                } catch (e: Exception) {
-                    Log.e("SoundPlayer", "setVolume error", e)
-        }
-                if (i == steps) {
-                    try {
-                        if (toSuperSpeed) {
-                            fromPlayer?.setVolume(0.1f, 0.1f)
-                            toPlayer?.setVolume(1f, 1f)
-                        } else {
-                            toPlayer?.setVolume(1f, 1f)
-                            fromPlayer?.setVolume(0f, 0f)
-                        }
-                    } catch (_: Exception) {}
-                }
-            }, i * delay)
+        val fromPlayer = if (toSuperSpeed) normalPlayer else superSpeedPlayer
+        val toPlayer = if (toSuperSpeed) superSpeedPlayer else normalPlayer
+        
+        crossfadeHandler?.removeCallbacksAndMessages(null)
+        crossfadeHandler = Handler(Looper.getMainLooper())
+        
+        val stepDelay = CROSSFADE_DURATION / CROSSFADE_STEPS
+        
+        for (i in 0..CROSSFADE_STEPS) {
+            crossfadeHandler?.postDelayed({
+                performCrossfadeStep(toSuperSpeed, i, fromPlayer, toPlayer)
+            }, i * stepDelay)
         }
     }
 
@@ -166,26 +137,124 @@ class SoundPlayer(private val context: Context) {
         }
     }
 
+    // Вспомогательные методы для инициализации плееров
+    private fun releasePlayers() {
+        normalPlayer?.release()
+        superSpeedPlayer?.release()
+        normalPlayer = null
+        superSpeedPlayer = null
+    }
+
+    private fun clearLoopHandlers() {
+        normalLoopHandler?.removeCallbacksAndMessages(null)
+        superSpeedLoopHandler?.removeCallbacksAndMessages(null)
+    }
+
+    private fun initializePlayers(trackName: String, isUserTrack: Boolean) {
+        val prefs = context.getSharedPreferences("track_settings", Context.MODE_PRIVATE)
+        val useLong = prefs.getBoolean("long_$trackName", false)
+        
+        val normalFile = if (useLong) {
+            getOrCreateLongFile(trackName, "normal", isUserTrack)
+        } else {
+            getShortFile(trackName, "normal", isUserTrack)
+        }
+        
+        val superSpeedFile = if (useLong) {
+            getOrCreateLongFile(trackName, "superspeed", isUserTrack)
+        } else {
+            getShortFile(trackName, "superspeed", isUserTrack)
+        }
+        
+        normalPlayer = MediaPlayer().apply {
+            setDataSource(normalFile.absolutePath)
+            prepare()
+        }
+        
+        superSpeedPlayer = MediaPlayer().apply {
+            setDataSource(superSpeedFile.absolutePath)
+            prepare()
+        }
+    }
+
+    private fun setInitialVolumes(startWithSuperSpeed: Boolean) {
+        if (startWithSuperSpeed) {
+            normalPlayer?.setVolume(0f, 0f)
+            superSpeedPlayer?.setVolume(1f, 1f)
+        } else {
+            normalPlayer?.setVolume(1f, 1f)
+            superSpeedPlayer?.setVolume(0f, 0f)
+        }
+    }
+
+    private fun startPlayers() {
+        normalPlayer?.apply {
+            seekTo(0)
+            start()
+        }
+        superSpeedPlayer?.apply {
+            seekTo(0)
+            start()
+        }
+    }
+
+    private fun setupLoopHandlers(trackName: String, isUserTrack: Boolean) {
+        val prefs = context.getSharedPreferences("track_settings", Context.MODE_PRIVATE)
+        val desyncFix = prefs.getBoolean("desync_$trackName", true)
+        
+        startManualLoop(normalPlayer, false, desyncFix)
+        startManualLoop(superSpeedPlayer, true, desyncFix)
+    }
+
+    private fun performCrossfadeStep(toSuperSpeed: Boolean, step: Int, fromPlayer: MediaPlayer?, toPlayer: MediaPlayer?) {
+        val volume = step / CROSSFADE_STEPS.toFloat()
+        
+        try {
+            if (toSuperSpeed) {
+                toPlayer?.setVolume(volume, volume)
+                fromPlayer?.setVolume(1f - 0.9f * volume, 1f - 0.9f * volume)
+            } else {
+                toPlayer?.setVolume(0.1f + 0.9f * volume, 0.1f + 0.9f * volume)
+                fromPlayer?.setVolume(1f - volume, 1f - volume)
+            }
+            
+            // Финальный шаг - устанавливаем точные значения
+            if (step == CROSSFADE_STEPS) {
+                if (toSuperSpeed) {
+                    fromPlayer?.setVolume(0.1f, 0.1f)
+                    toPlayer?.setVolume(1f, 1f)
+                } else {
+                    toPlayer?.setVolume(1f, 1f)
+                    fromPlayer?.setVolume(0f, 0f)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during crossfade step", e)
+        }
+    }
+
     // Синхронный рестарт обоих плееров
     private fun restartBothPlayers() {
         try {
-            mediaPlayer?.seekTo(0)
-            mediaPlayerAlt?.seekTo(0)
-            mediaPlayer?.start()
-            mediaPlayerAlt?.start()
+            normalPlayer?.seekTo(0)
+            superSpeedPlayer?.seekTo(0)
+            normalPlayer?.start()
+            superSpeedPlayer?.start()
         } catch (_: Exception) {}
     }
 
     // Ручной loop: за 1 сек до конца длинного файла делаем seekTo(0) и start() для ОБОИХ плееров, если включён desyncFix
     private fun startManualLoop(player: MediaPlayer?, isSuper: Boolean, desyncFix: Boolean) {
-        if (isSuper) {
-            loopHandlerSuper?.removeCallbacksAndMessages(null)
-            loopHandlerSuper = Handler(context.mainLooper)
+        val handler = if (isSuper) {
+            superSpeedLoopHandler?.removeCallbacksAndMessages(null)
+            superSpeedLoopHandler = Handler(Looper.getMainLooper())
+            superSpeedLoopHandler
         } else {
-            loopHandlerNormal?.removeCallbacksAndMessages(null)
-            loopHandlerNormal = Handler(context.mainLooper)
+            normalLoopHandler?.removeCallbacksAndMessages(null)
+            normalLoopHandler = Handler(Looper.getMainLooper())
+            normalLoopHandler
         }
-        val handler = if (isSuper) loopHandlerSuper else loopHandlerNormal
+        
         val runnable = object : Runnable {
             override fun run() {
                 try {
@@ -198,20 +267,15 @@ class SoundPlayer(private val context: Context) {
                 handler?.postDelayed(this, 100)
             }
         }
-        if (isSuper) {
-            loopRunnableSuper = runnable
-        } else {
-            loopRunnableNormal = runnable
-        }
+        
         handler?.post(runnable)
     }
 
+    // Очистка ресурсов
     fun releaseAll() {
-        mediaPlayer?.release()
-        mediaPlayerAlt?.release()
-        loopHandlerNormal?.removeCallbacksAndMessages(null)
-        loopHandlerSuper?.removeCallbacksAndMessages(null)
-        crossfadeJob?.removeCallbacksAndMessages(null)
+        releasePlayers()
+        clearLoopHandlers()
+        crossfadeHandler?.removeCallbacksAndMessages(null)
     }
 }
 

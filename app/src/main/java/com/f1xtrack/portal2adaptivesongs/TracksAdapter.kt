@@ -9,18 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 
 class TracksAdapter(
-    private var tracks: List<TrackInfo>,
+    private var tracks: List<TrackManager.TrackInfo>,
     private var selected: String?,
-    private val onTrackClick: (TrackInfo) -> Unit
+    private val onTrackClick: (TrackManager.TrackInfo) -> Unit
 ) : RecyclerView.Adapter<TracksAdapter.TrackViewHolder>() {
 
-    data class TrackInfo(
-        val name: String,
-        val duration: Int, // ms
-        val plays: Int
-    )
-
-    fun updateData(newTracks: List<TrackInfo>, selectedTrack: String?) {
+    fun updateData(newTracks: List<TrackManager.TrackInfo>, selectedTrack: String?) {
         tracks = newTracks
         selected = selectedTrack
         notifyDataSetChanged()
@@ -46,7 +40,7 @@ class TracksAdapter(
         private val plays: TextView = itemView.findViewById(R.id.textTrackPlays)
         private val icon: ImageView = itemView.findViewById(R.id.iconTrack)
 
-        fun bind(track: TrackInfo, isSelected: Boolean) {
+        fun bind(track: TrackManager.TrackInfo, isSelected: Boolean) {
             name.text = track.name
             duration.text = formatDuration(track.duration)
             plays.text = "${track.plays} прослушиваний"

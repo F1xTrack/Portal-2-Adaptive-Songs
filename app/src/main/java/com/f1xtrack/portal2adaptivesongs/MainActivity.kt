@@ -3,7 +3,6 @@ package com.f1xtrack.portal2adaptivesongs
 import android.Manifest
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.content.Intent
 import android.net.Uri
-import android.provider.OpenableColumns
 import android.app.AlertDialog
 import java.util.zip.ZipInputStream
 import java.io.FileOutputStream
@@ -23,162 +21,211 @@ import android.media.MediaMetadataRetriever
 import androidx.recyclerview.widget.LinearLayoutManager
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var tracker: SpeedTracker
-    private lateinit var player: SoundPlayer
-    private var isSuperSpeed = false
-    private var lastTrack: String? = null
-    private val IMPORT_ZIP_REQUEST_CODE = 101
-    private val IMPORT_PACK_REQUEST_CODE = 102
-    private var userTracks: List<String> = emptyList()
-    private var hysteresis = 3f // Гистерезис для предотвращения мигания
-    private var selectedTrack: String? = null // Для landscape режима
-    private val PREFS_NAME = "track_sort_prefs"
-    private val PREF_SORT = "sort_type"
-    private enum class SortType { ALPHA, FREQ, DURATION }
-    private var sortType: SortType = SortType.ALPHA
-    private val trackPlayCount = mutableMapOf<String, Int>() // Для сортировки по частоте
-    private val trackDuration = mutableMapOf<String, Int>() // Для сортировки по длительности
-    private val PREFS_STATS = "track_stats"
-    private lateinit var tracksAdapter: TracksAdapter
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val IMPORT_ZIP_REQUEST_CODE = 101
+        private const val IMPORT_PACK_REQUEST_CODE = 102
+        private const val PREFS_NAME = "track_sort_prefs"
+        private const val PREF_SORT = "sort_type"
+        private const val PREFS_STATS = "track_stats"
+    }
 
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var speedTracker: SpeedTracker
+    private lateinit var soundPlayer: SoundPlayer
+    private lateinit var tracksAdapter: TracksAdapter
+    private lateinit var trackManager: TrackManager
+
+    // Состояние приложения
+    private var currentTrack: String? = null
+    private var isSuperSpeedMode = false
+    private var speedThreshold = 10f
+    private var hysteresisValue = 3f
+
+    // Обработчик разрешений локации
     private val locationPermissionRequest =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { perms ->
-            val granted = perms[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                    perms[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-            if (granted) startTracking()
-            else Toast.makeText(this, "Разрешите местоположение", Toast.LENGTH_LONG).show()
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val hasLocationPermission = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                    permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            
+            if (hasLocationPermission) {
+                startSpeedTracking()
+            } else {
+                showToast("Разрешите доступ к местоположению для работы приложения")
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initializeUI()
+        initializeComponents()
+        setupEventListeners()
+        loadSavedState()
+        requestLocationPermission()
+    }
 
+    private fun initializeUI() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setSupportActionBar(binding.topAppBar)
+    }
 
-        player = SoundPlayer(this)
+    private fun initializeComponents() {
+        soundPlayer = SoundPlayer(this)
+        trackManager = TrackManager(this)
+        tracksAdapter = TracksAdapter(emptyList(), null) { trackInfo ->
+            onTrackSelected(trackInfo.name)
+        }
+        
+        setupSpeedTracker()
+        setupRecyclerView()
+    }
 
-        // Функция для получения текущего выбранного трека
-        fun getCurrentTrack(): String {
-            return selectedTrack ?: ""
+    private fun setupSpeedTracker() {
+        speedTracker = SpeedTracker(
+            context = this,
+            onSpeedBurst = { speed -> onSpeedBurst(speed) },
+            onSpeedChange = { speed -> onSpeedChange(speed) }
+        )
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerTracks?.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = tracksAdapter
+        }
+    }
+
+    private fun setupEventListeners() {
+        // Слушатели для слайдеров
+        binding.seekBurst.addOnChangeListener { _, value, _ ->
+            speedThreshold = value
+            updateSpeedThresholdDisplay()
+            speedTracker.setThreshold(value)
         }
 
-        tracker = SpeedTracker(this, { speed ->
-            runOnUiThread {
-                Log.d("MainActivity", "Triggered speed=$speed")
-                val track = getCurrentTrack()
-                val isUser = userTracks.contains(track)
-                player.crossfadeTo(track, true, isUser)
-            }
-        }, { speed ->
-            runOnUiThread {
-                val threshold = tracker.getThreshold()
-                val track = getCurrentTrack()
-                val isUser = userTracks.contains(track)
-                if (lastTrack != track) {
-                    // При смене трека обновляем lastTrack, но не сбрасываем isSuperSpeed
-                    // Состояние isSuperSpeed уже установлено при выборе трека
-                    lastTrack = track
-                }
-                // --- Гистерезис: включаем superspeed при speed >= threshold, выключаем при speed < (threshold - hysteresis) ---
-                if (!isSuperSpeed && speed >= threshold) {
-                    isSuperSpeed = true
-                    player.crossfadeTo(track, true, isUser)
-                } else if (isSuperSpeed && speed < (threshold - hysteresis)) {
-                    isSuperSpeed = false
-                    player.crossfadeTo(track, false, isUser)
-                }
-            }
+        binding.seekCooldown.addOnChangeListener { _, value, _ ->
+            hysteresisValue = value
+            updateHysteresisDisplay()
         }
-        })
-        // Устанавливаем threshold из seekBurst (Slider)
-        tracker.setThreshold(binding.seekBurst.value)
-        binding.textSpeed.text = "Порог Faith Plate: ${binding.seekBurst.value.toInt()} км/ч"
-        // Устанавливаем hysteresis из seekCooldown (Slider)
-        hysteresis = binding.seekCooldown.value
-        // Подпись к ползунку гистерезиса
-        binding.seekCooldown.setLabelFormatter { value -> "Гистерезис: ${value.toInt()} км/ч" }
-        // Слушатель для seekCooldown (Slider)
-        binding.seekCooldown.addOnChangeListener { slider, value, fromUser ->
-            hysteresis = value
-            binding.textHysteresis.text = "Гистерезис: ${value.toInt()} км/ч"
-        }
-        // Слушатель для seekBurst (Slider)
-        binding.seekBurst.addOnChangeListener { slider, value, fromUser ->
-            tracker.setThreshold(value)
-            binding.textSpeed.text = "Порог Faith Plate: ${value.toInt()} км/ч"
-        }
-        // Инициализация подписи при запуске
-        binding.textHysteresis.text = "Гистерезис: ${binding.seekCooldown.value.toInt()} км/ч"
 
-        // --- Инициализация RecyclerView ---
-        tracksAdapter = TracksAdapter(emptyList(), selectedTrack) { trackInfo ->
-            selectedTrack = trackInfo.name
-            tracksAdapter.updateData(getTrackInfoList(), selectedTrack)
-            val isUser = userTracks.contains(trackInfo.name)
-            // При выборе трека всегда начинаем с обычной версии
-            isSuperSpeed = false
-            lastTrack = trackInfo.name
-            player.playBoth(trackInfo.name, isUser, false)
-            incTrackPlayCount(trackInfo.name)
-            // (опционально) обновить чекбокс длинной версии
-            val checked = player.isLongVersionEnabled(trackInfo.name, "normal")
-            // Удалено: binding.checkboxLongVersion?.isChecked = checked
-        }
-        binding.recyclerTracks?.layoutManager = LinearLayoutManager(this)
-        binding.recyclerTracks?.adapter = tracksAdapter
-
-        // --- SegmentedButton для сортировки ---
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        sortType = when (prefs.getString(PREF_SORT, "ALPHA")) {
-            "FREQ" -> SortType.FREQ
-            "DURATION" -> SortType.DURATION
-            else -> SortType.ALPHA
-        }
-        val btnAlpha = binding.btnSortAlpha
-        val btnFreq = binding.btnSortFreq
-        val btnDuration = binding.btnSortDuration
-        when (sortType) {
-            SortType.ALPHA -> btnAlpha?.isChecked = true
-            SortType.FREQ -> btnFreq?.isChecked = true
-            SortType.DURATION -> btnDuration?.isChecked = true
-        }
-        binding.sortSegmented?.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        // Слушатели для кнопок сортировки
+        binding.sortSegmented?.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
-                sortType = when (checkedId) {
-                    R.id.btnSortAlpha -> SortType.ALPHA
-                    R.id.btnSortFreq -> SortType.FREQ
-                    R.id.btnSortDuration -> SortType.DURATION
-                    else -> SortType.ALPHA
+                val newSortType = when (checkedId) {
+                    R.id.btnSortAlpha -> TrackManager.SortType.ALPHA
+                    R.id.btnSortFreq -> TrackManager.SortType.FREQ
+                    R.id.btnSortDuration -> TrackManager.SortType.DURATION
+                    else -> TrackManager.SortType.ALPHA
                 }
-                prefs.edit().putString(PREF_SORT, sortType.name).apply()
-                updateTracksList(selectedTrack)
+                trackManager.setSortType(newSortType)
+                updateTracksList()
             }
         }
+    }
 
-        // Запрос разрешений
+    private fun loadSavedState() {
+        // Загружаем настройки сортировки
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val savedSortType = prefs.getString(PREF_SORT, "ALPHA")
+        trackManager.setSortType(TrackManager.SortType.valueOf(savedSortType ?: "ALPHA"))
+        
+        // Загружаем статистику
+        trackManager.loadStatistics()
+        
+        // Обновляем UI
+        updateTracksList()
+        updateSpeedThresholdDisplay()
+        updateHysteresisDisplay()
+        updateSortButtons()
+    }
+
+    private fun requestLocationPermission() {
         locationPermissionRequest.launch(
             arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
-
-        // --- Загрузка статистики ---
-        val statsPrefs = getSharedPreferences(PREFS_STATS, MODE_PRIVATE)
-        statsPrefs.getStringSet("play_counts", null)?.forEach {
-            val (track, count) = it.split("|", limit = 2)
-            trackPlayCount[track] = count.toIntOrNull() ?: 0
-        }
-        statsPrefs.getStringSet("durations", null)?.forEach {
-            val (track, dur) = it.split("|", limit = 2)
-            trackDuration[track] = dur.toIntOrNull() ?: 0
-        }
-        updateTracksList(selectedTrack)
     }
 
+    private fun startSpeedTracking() {
+        speedTracker.start()
+        showToast("Отслеживание скорости запущено")
+    }
+
+    // Обработчики событий скорости
+    private fun onSpeedBurst(speed: Float) {
+        Log.d(TAG, "Speed burst detected: $speed km/h")
+        currentTrack?.let { track ->
+            val isUserTrack = trackManager.isUserTrack(track)
+            soundPlayer.crossfadeTo(track, true, isUserTrack)
+        }
+    }
+
+    private fun onSpeedChange(speed: Float) {
+        currentTrack?.let { track ->
+            val isUserTrack = trackManager.isUserTrack(track)
+            
+            // Логика гистерезиса: включаем superspeed при speed >= threshold, 
+            // выключаем при speed < (threshold - hysteresis)
+            val shouldBeSuperSpeed = speed >= speedThreshold
+            val shouldBeNormalSpeed = speed < (speedThreshold - hysteresisValue)
+            
+            when {
+                !isSuperSpeedMode && shouldBeSuperSpeed -> {
+                    isSuperSpeedMode = true
+                    soundPlayer.crossfadeTo(track, true, isUserTrack)
+                }
+                isSuperSpeedMode && shouldBeNormalSpeed -> {
+                    isSuperSpeedMode = false
+                    soundPlayer.crossfadeTo(track, false, isUserTrack)
+                }
+            }
+        }
+    }
+
+    // Обработчик выбора трека
+    private fun onTrackSelected(trackName: String) {
+        if (currentTrack != trackName) {
+            currentTrack = trackName
+            isSuperSpeedMode = false // Всегда начинаем с обычной версии
+            
+            val isUserTrack = trackManager.isUserTrack(trackName)
+            soundPlayer.playBoth(trackName, isUserTrack, false)
+            trackManager.incrementPlayCount(trackName)
+            
+            updateTracksList()
+        }
+    }
+
+    // Обновление UI
+    private fun updateTracksList() {
+        val trackInfoList = trackManager.getTrackInfoList()
+        tracksAdapter.updateData(trackInfoList, currentTrack)
+        
+        // Инициализация первого трека при первом запуске
+        if (currentTrack == null && trackInfoList.isNotEmpty()) {
+            onTrackSelected(trackInfoList[0].name)
+        }
+    }
+
+    private fun updateSpeedThresholdDisplay() {
+        binding.textSpeed.text = "Порог Faith Plate: ${speedThreshold.toInt()} км/ч"
+    }
+
+    private fun updateHysteresisDisplay() {
+        binding.textHysteresis.text = "Гистерезис: ${hysteresisValue.toInt()} км/ч"
+    }
+
+    private fun updateSortButtons() {
+        val sortType = trackManager.getSortType()
+        binding.btnSortAlpha?.isChecked = sortType == TrackManager.SortType.ALPHA
+        binding.btnSortFreq?.isChecked = sortType == TrackManager.SortType.FREQ
+        binding.btnSortDuration?.isChecked = sortType == TrackManager.SortType.DURATION
+    }
+
+    // Меню
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
@@ -194,18 +241,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Обработка результатов импорта
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMPORT_ZIP_REQUEST_CODE && resultCode == RESULT_OK) {
-            val uri = data?.data ?: return
-            showNameInputDialog(uri)
-        } else if (requestCode == IMPORT_PACK_REQUEST_CODE && resultCode == RESULT_OK) {
-            val treeUri = data?.data ?: return
-            importPackFromFolder(treeUri)
+        
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                IMPORT_ZIP_REQUEST_CODE -> {
+                    data?.data?.let { uri -> showTrackNameInputDialog(uri) }
+                }
+                IMPORT_PACK_REQUEST_CODE -> {
+                    data?.data?.let { uri -> importTracksFromFolder(uri) }
+                }
+            }
         }
     }
 
-    private fun showNameInputDialog(zipUri: Uri) {
+    private fun showTrackNameInputDialog(zipUri: Uri) {
         val input = android.widget.EditText(this)
         AlertDialog.Builder(this)
             .setTitle("Введите название саундтрека")
@@ -213,247 +265,82 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("OK") { _, _ ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
-                    importZipToSoundtracks(zipUri, name)
+                    importTrackFromZip(zipUri, name)
                 } else {
-                    Toast.makeText(this, "Название не может быть пустым", Toast.LENGTH_SHORT).show()
+                    showToast("Название не может быть пустым")
                 }
             }
             .setNegativeButton("Отмена", null)
             .show()
     }
 
-    private fun importZipToSoundtracks(zipUri: Uri, name: String) {
-        val dialog = ProgressDialog(this)
-        dialog.setMessage("Импортируем саундтрек...")
-        dialog.setCancelable(false)
+    private fun importTrackFromZip(zipUri: Uri, trackName: String) {
+        showProgressDialog("Импортируем саундтрек...") { dialog ->
+            Thread {
+                try {
+                    val success = trackManager.importTrackFromZip(zipUri, trackName)
+                    runOnUiThread {
+                        dialog.dismiss()
+                        if (success) {
+                            showToast("Саундтрек импортирован!")
+                            updateTracksList()
+                        } else {
+                            showToast("Ошибка: в ZIP должны быть normal.wav и superspeed.wav")
+                        }
+                    }
+                } catch (e: Exception) {
+                    runOnUiThread {
+                        dialog.dismiss()
+                        showToast("Ошибка импорта: ${e.message}")
+                    }
+                }
+            }.start()
+        }
+    }
+
+    private fun importTracksFromFolder(folderUri: Uri) {
+        showProgressDialog("Импортируем пак саундтреков...") { dialog ->
+            Thread {
+                try {
+                    val result = trackManager.importTracksFromFolder(folderUri)
+                    runOnUiThread {
+                        dialog.dismiss()
+                        showToast("Импортировано: ${result.imported}, ошибок: ${result.failed}")
+                        updateTracksList()
+                    }
+                } catch (e: Exception) {
+                    runOnUiThread {
+                        dialog.dismiss()
+                        showToast("Ошибка импорта пака: ${e.message}")
+                    }
+                }
+            }.start()
+        }
+    }
+
+    // Вспомогательные методы
+    private fun showProgressDialog(message: String, onShow: (ProgressDialog) -> Unit) {
+        val dialog = ProgressDialog(this).apply {
+            setMessage(message)
+            setCancelable(false)
+        }
         dialog.show()
-        Thread {
-            try {
-                val dir = File(filesDir, "soundtracks/$name")
-                dir.mkdirs()
-                val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
-                val zis = ZipInputStream(inputStream)
-                var entry = zis.nextEntry
-                var foundNormal = false
-                var foundSuper = false
-                while (entry != null) {
-                    if (!entry.isDirectory) {
-                        val outFile = when (entry.name) {
-                            "normal.wav" -> File(dir, "normal.wav").also { foundNormal = true }
-                            "superspeed.wav" -> File(dir, "superspeed.wav").also { foundSuper = true }
-                            else -> null
-                        }
-                        if (outFile != null) {
-                            FileOutputStream(outFile).use { out ->
-                                zis.copyTo(out)
-                            }
-                        }
-                    }
-                    entry = zis.nextEntry
-                }
-                zis.close()
-                inputStream.close()
-                runOnUiThread {
-                    dialog.dismiss()
-                    if (foundNormal && foundSuper) {
-                        Toast.makeText(this, "Саундтрек импортирован!", Toast.LENGTH_SHORT).show()
-                        updateTracksList(name)
-                    } else {
-                        dir.deleteRecursively()
-                        Toast.makeText(this, "В ZIP должны быть normal.wav и superspeed.wav", Toast.LENGTH_LONG).show()
-                    }
-                }
-            } catch (e: Exception) {
-                runOnUiThread {
-                    dialog.dismiss()
-                    Toast.makeText(this, "Ошибка импорта: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-        }.start()
+        onShow(dialog)
     }
 
-    private fun getSortedTracks(assetTracks: List<String>, userTracks: List<String>): List<String> {
-        val all = assetTracks + userTracks
-        return when (sortType) {
-            SortType.ALPHA -> all.sortedBy { it.lowercase() }
-            SortType.FREQ -> all.sortedByDescending { trackPlayCount[it] ?: 0 }
-            SortType.DURATION -> all.sortedByDescending { trackDuration[it] ?: 0 }
-        }
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    private fun getTrackInfoList(): List<TracksAdapter.TrackInfo> {
-        val assetTracks = assets.list("")!!.filter { name ->
-            assets.list(name)?.contains("superspeed.wav") == true
-        }
-        val userDir = File(filesDir, "soundtracks")
-        userTracks = userDir.listFiles()?.filter { dir ->
-            dir.isDirectory && File(dir, "normal.wav").exists() && File(dir, "superspeed.wav").exists()
-        }?.map { it.name } ?: emptyList()
-        val allTracks = getSortedTracks(assetTracks, userTracks)
-        return allTracks.map { name ->
-            TracksAdapter.TrackInfo(
-                name = name,
-                duration = trackDuration[name] ?: 0,
-                plays = trackPlayCount[name] ?: 0
-            )
-        }
-    }
-
-    private fun updateTracksList(selectedTrack: String? = null) {
-        // Стандартные треки из assets
-        val assetTracks = assets.list("")!!.filter { name ->
-            assets.list(name)?.contains("superspeed.wav") == true
-        }
-        // Пользовательские треки из filesDir/soundtracks
-        val userDir = File(filesDir, "soundtracks")
-        userTracks = userDir.listFiles()?.filter { dir ->
-            dir.isDirectory && File(dir, "normal.wav").exists() && File(dir, "superspeed.wav").exists()
-        }?.map { it.name } ?: emptyList()
-        // --- Обновляем длительности ---
-        (assetTracks + userTracks).forEach { track ->
-            if (!trackDuration.containsKey(track)) {
-                val file = if (userTracks.contains(track)) {
-                    File(filesDir, "soundtracks/${track}/normal.wav")
-                } else {
-                    val tmp = File(cacheDir, "tmp_${track}.wav")
-                    if (!tmp.exists()) {
-                        assets.open("${track}/normal.wav").use { input ->
-                            tmp.outputStream().use { output -> input.copyTo(output) }
-                        }
-                    }
-                    tmp
-                }
-                trackDuration[track] = getTrackDuration(file.absolutePath)
-            }
-        }
-        saveStats()
-        tracksAdapter.updateData(getTrackInfoList(), selectedTrack)
-        
-        // Инициализация первого трека при запуске
-        if (selectedTrack == null) {
-            val trackInfoList = getTrackInfoList()
-            if (trackInfoList.isNotEmpty()) {
-                selectedTrack = trackInfoList[0].name
-                val isUser = userTracks.contains(selectedTrack)
-                isSuperSpeed = false
-                lastTrack = selectedTrack
-                player.playBoth(selectedTrack!!, isUser, false)
-            }
-        }
-    }
-
-    private fun startTracking() {
-        tracker.start()
-        Toast.makeText(this, "Трекинг запущен", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun importPackFromFolder(treeUri: Uri) {
-        val dialog = ProgressDialog(this)
-        dialog.setMessage("Импортируем пак саундтреков...")
-        dialog.setCancelable(false)
-        dialog.show()
-        Thread {
-            var imported = 0
-            var failed = 0
-            try {
-                val children = contentResolver.query(
-                    DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, DocumentsContract.getTreeDocumentId(treeUri)),
-                    arrayOf(DocumentsContract.Document.COLUMN_DISPLAY_NAME, DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_MIME_TYPE),
-                    null, null, null
-                )
-                if (children != null) {
-                    while (children.moveToNext()) {
-                        val name = children.getString(0)
-                        val docId = children.getString(1)
-                        val mime = children.getString(2)
-                        if (mime == "application/zip" || name.endsWith(".zip", true)) {
-                            val zipUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, docId)
-                            val trackName = name.removeSuffix(".zip").removeSuffix(".ZIP")
-                            val result = importZipToSoundtracksSync(zipUri, trackName)
-                            if (result) imported++ else failed++
-                        }
-                    }
-                    children.close()
-                }
-            } catch (e: Exception) {
-                runOnUiThread {
-                    dialog.dismiss()
-                    Toast.makeText(this, "Ошибка импорта пака: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-                return@Thread
-            }
-            runOnUiThread {
-                dialog.dismiss()
-                Toast.makeText(this, "Импортировано: $imported, ошибок: $failed", Toast.LENGTH_LONG).show()
-                updateTracksList()
-            }
-        }.start()
-    }
-
-    // Синхронный импорт ZIP без диалогов, возвращает true/false
-    private fun importZipToSoundtracksSync(zipUri: Uri, name: String): Boolean {
-        return try {
-            val dir = File(filesDir, "soundtracks/$name")
-            dir.mkdirs()
-            val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
-            val zis = ZipInputStream(inputStream)
-            var entry = zis.nextEntry
-            var foundNormal = false
-            var foundSuper = false
-            while (entry != null) {
-                if (!entry.isDirectory) {
-                    val outFile = when (entry.name) {
-                        "normal.wav" -> File(dir, "normal.wav").also { foundNormal = true }
-                        "superspeed.wav" -> File(dir, "superspeed.wav").also { foundSuper = true }
-                        else -> null
-                    }
-                    if (outFile != null) {
-                        FileOutputStream(outFile).use { out ->
-                            zis.copyTo(out)
-                        }
-                    }
-                }
-                entry = zis.nextEntry
-            }
-            zis.close()
-            inputStream.close()
-            if (!(foundNormal && foundSuper)) {
-                dir.deleteRecursively()
-                false
-            } else true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    private fun saveStats() {
-        val statsPrefs = getSharedPreferences(PREFS_STATS, MODE_PRIVATE)
-        val playCounts = trackPlayCount.map { "${'$'}{it.key}|${'$'}{it.value}" }.toSet()
-        val durations = trackDuration.map { "${'$'}{it.key}|${'$'}{it.value}" }.toSet()
-        statsPrefs.edit().putStringSet("play_counts", playCounts).putStringSet("durations", durations).apply()
-    }
-
-    private fun incTrackPlayCount(track: String) {
-        trackPlayCount[track] = (trackPlayCount[track] ?: 0) + 1
-        saveStats()
-    }
-
-    private fun getTrackDuration(path: String): Int {
-        val retriever = MediaMetadataRetriever()
-        return try {
-            retriever.setDataSource(path)
-            val dur = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            dur?.toIntOrNull() ?: 0
-        } catch (_: Exception) { 0 } finally { retriever.release() }
-    }
-
+    // Сохранение состояния
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        player.releaseAll()
+        soundPlayer.releaseAll()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        player.releaseAll()
+        soundPlayer.releaseAll()
+        trackManager.saveStatistics()
     }
 }

@@ -9,127 +9,166 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.f1xtrack.portal2adaptivesongs.databinding.ActivitySettingsBinding
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import android.widget.Toast
 
 class SettingsActivity : AppCompatActivity() {
+    companion object {
+        private const val IMPORT_ZIP_REQUEST_CODE = 101
+        private const val IMPORT_FOLDER_REQUEST_CODE = 102
+        private const val TRACK_SETTINGS_PREFS = "track_settings"
+    }
+
     private lateinit var binding: ActivitySettingsBinding
+    private lateinit var trackManager: TrackManager
+    private lateinit var soundPlayer: SoundPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initializeUI()
+        initializeComponents()
+        setupImportSection()
+        setupTracksSection()
+    }
+
+    private fun initializeUI() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.title = getString(R.string.settings_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
-        // --- Секция импорта ---
-        val importTitle = android.widget.TextView(this).apply {
-            text = getString(R.string.settings_section_import)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-        }
-        val btnImportZip = com.google.android.material.button.MaterialButton(this).apply {
-            text = getString(R.string.settings_import_zip)
-        }
-        val btnImportFolder = com.google.android.material.button.MaterialButton(this).apply {
-            text = getString(R.string.settings_import_folder)
-        }
-        // Кнопка одиночного файла убрана
+    private fun initializeComponents() {
+        trackManager = TrackManager(this)
+        soundPlayer = SoundPlayer(this)
+    }
 
-        // --- Секция длинных версий ---
-        val longTitle = android.widget.TextView(this).apply {
-            text = getString(R.string.settings_section_long)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
+    private fun setupImportSection() {
+        val importTitle = createSectionTitle(getString(R.string.settings_section_import))
+        val btnImportZip = createImportButton(getString(R.string.settings_import_zip)) {
+            openZipFilePicker()
         }
-        // Здесь позже появится список треков с переключателями длинных версий
-
-        // --- Секция рассинхрона ---
-        val desyncTitle = android.widget.TextView(this).apply {
-            text = getString(R.string.settings_section_desync)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-        }
-        // Здесь позже появится список треков с чекбоксами рассинхрона
-
-        btnImportZip.setOnClickListener {
-            val intent = android.content.Intent(android.content.Intent.ACTION_OPEN_DOCUMENT)
-            intent.addCategory(android.content.Intent.CATEGORY_OPENABLE)
-            intent.type = "application/zip"
-            startActivityForResult(intent, 101)
-        }
-        btnImportFolder.setOnClickListener {
-            val intent = android.content.Intent(android.content.Intent.ACTION_OPEN_DOCUMENT_TREE)
-            startActivityForResult(intent, 102)
+        val btnImportFolder = createImportButton("Импортировать из папки") {
+            openFolderPicker()
         }
 
-        // Получаем LinearLayout для размещения секций настроек
         val layout = binding.layoutSettingsContent
-        // Удаляем заголовок, чтобы не было дублирования
-        layout.removeView(binding.textSettingsTitle)
+        layout.removeView(binding.textSettingsTitle) // Убираем дублирующий заголовок
         layout.addView(importTitle)
         layout.addView(btnImportZip)
         layout.addView(btnImportFolder)
-        // layout.addView(btnImportFile) // убрано
+    }
+
+    private fun setupTracksSection() {
+        val longTitle = createSectionTitle(getString(R.string.settings_section_long))
+        val desyncTitle = createSectionTitle(getString(R.string.settings_section_desync))
+        
+        val layout = binding.layoutSettingsContent
         layout.addView(longTitle)
         layout.addView(desyncTitle)
 
-        // --- Секция длинных версий и рассинхрона для каждого трека ---
-        val prefs = getSharedPreferences("track_settings", MODE_PRIVATE)
-        val userDir = java.io.File(filesDir, "soundtracks")
-        val userTracks = userDir.listFiles()?.filter { dir ->
-            dir.isDirectory && java.io.File(dir, "normal.wav").exists() && java.io.File(dir, "superspeed.wav").exists()
-        }?.map { it.name } ?: emptyList()
-        val assetTracks = assets.list("")?.filter { name ->
-            assets.list(name)?.contains("superspeed.wav") == true
-        } ?: emptyList()
-        val allTracks = (assetTracks + userTracks).sortedBy { it.lowercase() }
-        allTracks.forEach { track ->
-            val row = android.widget.LinearLayout(this).apply {
-                orientation = android.widget.LinearLayout.VERTICAL
-                setPadding(0, 8, 0, 8)
+        // Добавляем настройки для каждого трека
+        val allTracks = trackManager.getTrackInfoList().map { it.name }
+        allTracks.forEach { trackName ->
+            addTrackSettingsRow(trackName)
+        }
+    }
+
+    private fun createSectionTitle(text: String): android.widget.TextView {
+        return android.widget.TextView(this).apply {
+            this.text = text
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
+        }
+    }
+
+    private fun createImportButton(text: String, onClick: () -> Unit): com.google.android.material.button.MaterialButton {
+        return com.google.android.material.button.MaterialButton(this).apply {
+            this.text = text
+            setOnClickListener { onClick() }
+        }
+    }
+
+    private fun addTrackSettingsRow(trackName: String) {
+        val prefs = getSharedPreferences(TRACK_SETTINGS_PREFS, MODE_PRIVATE)
+        val isUserTrack = trackManager.isUserTrack(trackName)
+
+        val row = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(0, 8, 0, 8)
+        }
+
+        val label = android.widget.TextView(this).apply {
+            text = trackName
+            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyLarge)
+            setPadding(0, 0, 0, 4)
+        }
+
+        val switchLong = com.google.android.material.switchmaterial.SwitchMaterial(this).apply {
+            text = getString(R.string.settings_long_enable)
+            isChecked = prefs.getBoolean("long_$trackName", false)
+            setOnCheckedChangeListener { _, checked ->
+                onLongVersionToggle(trackName, checked, isUserTrack)
             }
-            val label = android.widget.TextView(this).apply {
-                text = track
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyLarge)
-                setPadding(0, 0, 0, 4)
+            thumbTintList = getColorStateList(R.color.portal_orange)
+            trackTintList = getColorStateList(R.color.portal_orange)
+        }
+
+        val switchDesync = com.google.android.material.switchmaterial.SwitchMaterial(this).apply {
+            text = getString(R.string.settings_desync_fix)
+            isChecked = prefs.getBoolean("desync_$trackName", true)
+            setOnCheckedChangeListener { _, checked ->
+                prefs.edit().putBoolean("desync_$trackName", checked).apply()
             }
-            val switchLong = com.google.android.material.switchmaterial.SwitchMaterial(this).apply {
-                text = getString(R.string.settings_long_enable)
-                isChecked = prefs.getBoolean("long_$track", false)
-                setOnCheckedChangeListener { _, checked ->
-                    prefs.edit().putBoolean("long_$track", checked).apply()
-                    val player = SoundPlayer(this@SettingsActivity)
-                    val isUser = userTracks.contains(track)
-                    if (checked) {
-                        val progressDialog = ProgressLongVersionDialog()
-                        progressDialog.show(supportFragmentManager, "progress_long_version")
-                        player.createLongFileAsync(track, "normal", isUser) {
-                            player.createLongFileAsync(track, "superspeed", isUser) {
-                                runOnUiThread {
-                                    progressDialog.dismiss()
-                                    android.widget.Toast.makeText(this@SettingsActivity, "Длинные версии созданы", android.widget.Toast.LENGTH_SHORT).show()
-                                }
-                            }
+            thumbTintList = getColorStateList(R.color.portal_blue)
+            trackTintList = getColorStateList(R.color.portal_blue)
+        }
+
+        row.addView(label)
+        row.addView(switchLong)
+        row.addView(switchDesync)
+        binding.layoutSettingsContent.addView(row)
+    }
+
+    private fun onLongVersionToggle(trackName: String, enabled: Boolean, isUserTrack: Boolean) {
+        val prefs = getSharedPreferences(TRACK_SETTINGS_PREFS, MODE_PRIVATE)
+        prefs.edit().putBoolean("long_$trackName", enabled).apply()
+
+        if (enabled) {
+            showProgressDialog("Создание длинной версии трека...") { dialog ->
+                soundPlayer.createLongFileAsync(trackName, "normal", isUserTrack) {
+                    soundPlayer.createLongFileAsync(trackName, "superspeed", isUserTrack) {
+                        runOnUiThread {
+                            dialog.dismiss()
+                            showToast("Длинные версии созданы")
                         }
-                    } else {
-                        player.removeLongFilesForTrack(track, isUser)
                     }
                 }
-                // Цвет акцента
-                this.thumbTintList = getColorStateList(R.color.portal_orange)
-                this.trackTintList = getColorStateList(R.color.portal_orange)
             }
-            val switchDesync = com.google.android.material.switchmaterial.SwitchMaterial(this).apply {
-                text = getString(R.string.settings_desync_fix)
-                isChecked = prefs.getBoolean("desync_$track", true)
-                setOnCheckedChangeListener { _, checked ->
-                    prefs.edit().putBoolean("desync_$track", checked).apply()
-                }
-                // Цвет акцента
-                this.thumbTintList = getColorStateList(R.color.portal_blue)
-                this.trackTintList = getColorStateList(R.color.portal_blue)
-            }
-            row.addView(label)
-            row.addView(switchLong)
-            row.addView(switchDesync)
-            layout.addView(row)
+        } else {
+            soundPlayer.removeLongFilesForTrack(trackName, isUserTrack)
         }
+    }
+
+    private fun openZipFilePicker() {
+        val intent = android.content.Intent(android.content.Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(android.content.Intent.CATEGORY_OPENABLE)
+            type = "application/zip"
+        }
+        startActivityForResult(intent, IMPORT_ZIP_REQUEST_CODE)
+    }
+
+    private fun openFolderPicker() {
+        val intent = android.content.Intent(android.content.Intent.ACTION_OPEN_DOCUMENT_TREE)
+        startActivityForResult(intent, IMPORT_FOLDER_REQUEST_CODE)
+    }
+
+    private fun showProgressDialog(message: String, onShow: (ProgressLongVersionDialog) -> Unit) {
+        val dialog = ProgressLongVersionDialog()
+        dialog.show(supportFragmentManager, "progress_long_version")
+        onShow(dialog)
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -139,16 +178,20 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 101 && resultCode == RESULT_OK) {
-            val uri = data?.data ?: return
-            showNameInputDialog(uri)
-        } else if (requestCode == 102 && resultCode == RESULT_OK) {
-            val treeUri = data?.data ?: return
-            importPackFromFolder(treeUri)
+        
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                IMPORT_ZIP_REQUEST_CODE -> {
+                    data?.data?.let { uri -> showTrackNameInputDialog(uri) }
+                }
+                IMPORT_FOLDER_REQUEST_CODE -> {
+                    data?.data?.let { uri -> importTracksFromFolder(uri) }
+                }
+            }
         }
     }
 
-    private fun showNameInputDialog(zipUri: android.net.Uri) {
+    private fun showTrackNameInputDialog(zipUri: android.net.Uri) {
         val input = android.widget.EditText(this)
         android.app.AlertDialog.Builder(this)
             .setTitle("Введите название саундтрека")
@@ -156,139 +199,61 @@ class SettingsActivity : AppCompatActivity() {
             .setPositiveButton("OK") { _, _ ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
-                    importZipToSoundtracks(zipUri, name)
+                    importTrackFromZip(zipUri, name)
                 } else {
-                    android.widget.Toast.makeText(this, "Название не может быть пустым", android.widget.Toast.LENGTH_SHORT).show()
+                    showToast("Название не может быть пустым")
                 }
             }
             .setNegativeButton("Отмена", null)
             .show()
     }
 
-    private fun importZipToSoundtracks(zipUri: android.net.Uri, name: String) {
-        val dialog = android.app.ProgressDialog(this)
-        dialog.setMessage("Импортируем саундтрек...")
-        dialog.setCancelable(false)
-        dialog.show()
-        Thread {
-            try {
-                val dir = java.io.File(filesDir, "soundtracks/$name")
-                dir.mkdirs()
-                val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
-                val zis = java.util.zip.ZipInputStream(inputStream)
-                var entry = zis.nextEntry
-                var foundNormal = false
-                var foundSuper = false
-                while (entry != null) {
-                    if (!entry.isDirectory) {
-                        val outFile = when (entry.name) {
-                            "normal.wav" -> java.io.File(dir, "normal.wav").also { foundNormal = true }
-                            "superspeed.wav" -> java.io.File(dir, "superspeed.wav").also { foundSuper = true }
-                            else -> null
-                        }
-                        if (outFile != null) {
-                            java.io.FileOutputStream(outFile).use { out ->
-                                zis.copyTo(out)
-                            }
+    private fun importTrackFromZip(zipUri: android.net.Uri, trackName: String) {
+        showProgressDialog("Импортируем саундтрек...") { dialog ->
+            Thread {
+                try {
+                    val success = trackManager.importTrackFromZip(zipUri, trackName)
+                    runOnUiThread {
+                        dialog.dismiss()
+                        if (success) {
+                            showToast("Саундтрек импортирован!")
+                        } else {
+                            showToast("Ошибка: в ZIP должны быть normal.wav и superspeed.wav")
                         }
                     }
-                    entry = zis.nextEntry
-                }
-                zis.close()
-                inputStream.close()
-                runOnUiThread {
-                    dialog.dismiss()
-                    if (foundNormal && foundSuper) {
-                        android.widget.Toast.makeText(this, "Саундтрек импортирован!", android.widget.Toast.LENGTH_SHORT).show()
-                    } else {
-                        dir.deleteRecursively()
-                        android.widget.Toast.makeText(this, "В ZIP должны быть normal.wav и superspeed.wav", android.widget.Toast.LENGTH_LONG).show()
+                } catch (e: Exception) {
+                    runOnUiThread {
+                        dialog.dismiss()
+                        showToast("Ошибка импорта: ${e.message}")
                     }
                 }
-            } catch (e: Exception) {
-                runOnUiThread {
-                    dialog.dismiss()
-                    android.widget.Toast.makeText(this, "Ошибка импорта: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
-                }
-            }
-        }.start()
-    }
-
-    private fun importPackFromFolder(treeUri: android.net.Uri) {
-        val dialog = android.app.ProgressDialog(this)
-        dialog.setMessage("Импортируем пак саундтреков...")
-        dialog.setCancelable(false)
-        dialog.show()
-        Thread {
-            var imported = 0
-            var failed = 0
-            try {
-                val children = contentResolver.query(
-                    android.provider.DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, android.provider.DocumentsContract.getTreeDocumentId(treeUri)),
-                    arrayOf(android.provider.DocumentsContract.Document.COLUMN_DISPLAY_NAME, android.provider.DocumentsContract.Document.COLUMN_DOCUMENT_ID, android.provider.DocumentsContract.Document.COLUMN_MIME_TYPE),
-                    null, null, null
-                )
-                if (children != null) {
-                    while (children.moveToNext()) {
-                        val name = children.getString(0)
-                        val docId = children.getString(1)
-                        val mime = children.getString(2)
-                        if (mime == "application/zip" || name.endsWith(".zip", true)) {
-                            val zipUri = android.provider.DocumentsContract.buildDocumentUriUsingTree(treeUri, docId)
-                            val trackName = name.removeSuffix(".zip").removeSuffix(".ZIP")
-                            val result = importZipToSoundtracksSync(zipUri, trackName)
-                            if (result) imported++ else failed++
-                        }
-                    }
-                    children.close()
-                }
-            } catch (e: Exception) {
-                runOnUiThread {
-                    dialog.dismiss()
-                    android.widget.Toast.makeText(this, "Ошибка импорта пака: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
-                }
-                return@Thread
-            }
-            runOnUiThread {
-                dialog.dismiss()
-                android.widget.Toast.makeText(this, "Импортировано: $imported, ошибок: $failed", android.widget.Toast.LENGTH_LONG).show()
-            }
-        }.start()
-    }
-
-    private fun importZipToSoundtracksSync(zipUri: android.net.Uri, name: String): Boolean {
-        return try {
-            val dir = java.io.File(filesDir, "soundtracks/$name")
-            dir.mkdirs()
-            val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
-            val zis = java.util.zip.ZipInputStream(inputStream)
-            var entry = zis.nextEntry
-            var foundNormal = false
-            var foundSuper = false
-            while (entry != null) {
-                if (!entry.isDirectory) {
-                    val outFile = when (entry.name) {
-                        "normal.wav" -> java.io.File(dir, "normal.wav").also { foundNormal = true }
-                        "superspeed.wav" -> java.io.File(dir, "superspeed.wav").also { foundSuper = true }
-                        else -> null
-                    }
-                    if (outFile != null) {
-                        java.io.FileOutputStream(outFile).use { out ->
-                            zis.copyTo(out)
-                        }
-                    }
-                }
-                entry = zis.nextEntry
-            }
-            zis.close()
-            inputStream.close()
-            if (!(foundNormal && foundSuper)) {
-                dir.deleteRecursively()
-                false
-            } else true
-        } catch (e: Exception) {
-            false
+            }.start()
         }
+    }
+
+    private fun importTracksFromFolder(folderUri: android.net.Uri) {
+        showProgressDialog("Импортируем пак саундтреков...") { dialog ->
+            Thread {
+                try {
+                    val result = trackManager.importTracksFromFolder(folderUri)
+                    runOnUiThread {
+                        dialog.dismiss()
+                        showToast("Импортировано: ${result.imported}, ошибок: ${result.failed}")
+                    }
+                } catch (e: Exception) {
+                    runOnUiThread {
+                        dialog.dismiss()
+                        showToast("Ошибка импорта пака: ${e.message}")
+                    }
+                }
+            }.start()
+        }
+    }
+
+    private fun showProgressDialog(message: String, onShow: (ProgressLongVersionDialog) -> Unit) {
+        val dialog = ProgressLongVersionDialog()
+        dialog.show(supportFragmentManager, "progress_long_version")
+        onShow(dialog)
     }
 }
 
