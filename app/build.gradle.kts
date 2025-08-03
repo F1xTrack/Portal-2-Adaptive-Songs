@@ -10,8 +10,8 @@ android {
         applicationId = "com.f1xtrack.portal2adaptivesongs"
         minSdk = 30
         targetSdk = 33
-        versionCode = 3
-        versionName = "1.1.2"
+        versionCode = 4
+        versionName = "1.2.1"
     }
     buildFeatures {
         viewBinding = true
