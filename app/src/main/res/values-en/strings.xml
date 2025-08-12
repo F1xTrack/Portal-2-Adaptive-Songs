@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
+    <string name="hint_choose_track">Choose Soundtrack</string>
+    <string name="import_zip">Load soundtrack from ZIP</string>
+    <string name="long_version_checkbox">Use long versions (more memory, no gaps)</string>
+    <string name="faith_plate_threshold">Faith Plate threshold: %1$d km/h</string>
+    <string name="burst_threshold">Trigger threshold (km/h)</string>
+    <string name="hint_sort_tracks">Sort tracks</string>
+    <string name="sort_alpha">Alphabet</string>
+    <string name="sort_freq">Frequency</string>
+    <string name="sort_duration">Duration</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_import">Import soundtracks</string>
+    <string name="settings_section_long">Long versions</string>
+    <string name="settings_section_desync">Desync fix</string>
+    <string name="settings_import_zip">Import from ZIP</string>
+    <string name="settings_import_folder">Import from folder</string>
+    <string name="settings_import_file">Import a single file</string>
+    <string name="settings_long_enable">Enable long version</string>
+    <string name="settings_long_disable">Disable long version</string>
+    <string name="settings_desync_fix">Synchronize both streams when one ends</string>
+</resources>

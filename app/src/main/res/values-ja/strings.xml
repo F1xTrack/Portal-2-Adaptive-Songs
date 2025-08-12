@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_choose_track">サウンドトラックを選択</string>
+    <string name="import_zip">ZIPからサウンドトラックを読み込む</string>
+    <string name="long_version_checkbox">ロングバージョンを使用（メモリ多め、無音なし）</string>
+    <string name="faith_plate_threshold">Faith Plateのしきい値: %1$d km/h</string>
+    <string name="burst_threshold">トリガーしきい値 (km/h)</string>
+    <string name="hint_sort_tracks">トラックの並び替え</string>
+    <string name="sort_alpha">アルファベット順</string>
+    <string name="sort_freq">再生頻度順</string>
+    <string name="sort_duration">長さ順</string>
+    <string name="settings_title">設定</string>
+    <string name="settings_section_import">サウンドトラックのインポート</string>
+    <string name="settings_section_long">ロングバージョン</string>
+    <string name="settings_section_desync">非同期の修正</string>
+    <string name="settings_import_zip">ZIPからインポート</string>
+    <string name="settings_import_folder">フォルダからインポート</string>
+    <string name="settings_import_file">単一ファイルをインポート</string>
+    <string name="settings_long_enable">ロングバージョンを有効にする</string>
+    <string name="settings_long_disable">ロングバージョンを無効にする</string>
+    <string name="settings_desync_fix">どちらかが終了したら両方を同期</string>
+</resources> 

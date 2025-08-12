@@ -13,6 +13,20 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
 
+    private fun assetFolderHasAnyVariant(folder: String, base: String): Boolean {
+        return try {
+            val files = assets.list(folder) ?: return false
+            val regex = Regex("^${base}(\\d*)\\.wav$", RegexOption.IGNORE_CASE)
+            files.any { regex.matches(it) }
+        } catch (_: Exception) { false }
+    }
+
+    private fun userFolderHasAnyVariant(dir: java.io.File, base: String): Boolean {
+        if (!dir.exists() || !dir.isDirectory) return false
+        val regex = Regex("^${base}(\\d*)\\.wav$", RegexOption.IGNORE_CASE)
+        return dir.listFiles()?.any { file -> regex.matches(file.name) } == true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
@@ -73,10 +87,10 @@ class SettingsActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("track_settings", MODE_PRIVATE)
         val userDir = java.io.File(filesDir, "soundtracks")
         val userTracks = userDir.listFiles()?.filter { dir ->
-            dir.isDirectory && java.io.File(dir, "normal.wav").exists() && java.io.File(dir, "superspeed.wav").exists()
+            dir.isDirectory && userFolderHasAnyVariant(dir, "normal") && userFolderHasAnyVariant(dir, "superspeed")
         }?.map { it.name } ?: emptyList()
         val assetTracks = assets.list("")?.filter { name ->
-            assets.list(name)?.contains("superspeed.wav") == true
+            assetFolderHasAnyVariant(name, "superspeed") && assetFolderHasAnyVariant(name, "normal")
         } ?: emptyList()
         val allTracks = (assetTracks + userTracks).sortedBy { it.lowercase() }
         allTracks.forEach { track ->
@@ -99,12 +113,10 @@ class SettingsActivity : AppCompatActivity() {
                     if (checked) {
                         val progressDialog = ProgressLongVersionDialog()
                         progressDialog.show(supportFragmentManager, "progress_long_version")
-                        player.createLongFileAsync(track, "normal", isUser) {
-                            player.createLongFileAsync(track, "superspeed", isUser) {
-                                runOnUiThread {
-                                    progressDialog.dismiss()
-                                    android.widget.Toast.makeText(this@SettingsActivity, "Длинные версии созданы", android.widget.Toast.LENGTH_SHORT).show()
-                                }
+                        player.createAllLongFilesForTrackAsync(track, isUser) {
+                            runOnUiThread {
+                                progressDialog.dismiss()
+                                android.widget.Toast.makeText(this@SettingsActivity, "Длинные версии созданы", android.widget.Toast.LENGTH_SHORT).show()
                             }
                         }
                     } else {

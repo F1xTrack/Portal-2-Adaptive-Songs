@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Portal 2 Adaptive Songs</string>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">Выберите саундтрек</string>
     <string name="import_zip">Загрузить саундтрек из ZIP</string>
     <string name="long_version_checkbox">Использовать удлинённые версии саундтреков (больше памяти, но без пауз)</string>

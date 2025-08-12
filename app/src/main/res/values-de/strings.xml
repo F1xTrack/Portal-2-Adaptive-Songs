@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_choose_track">Soundtrack wählen</string>
+    <string name="import_zip">Soundtrack aus ZIP laden</string>
+    <string name="long_version_checkbox">Lange Versionen verwenden (mehr Speicher, keine Pausen)</string>
+    <string name="faith_plate_threshold">Faith Plate Schwelle: %1$d km/h</string>
+    <string name="burst_threshold">Auslöseschwelle (km/h)</string>
+    <string name="hint_sort_tracks">Titel sortieren</string>
+    <string name="sort_alpha">Alphabetisch</string>
+    <string name="sort_freq">Nach Häufigkeit</string>
+    <string name="sort_duration">Nach Dauer</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_section_import">Soundtracks importieren</string>
+    <string name="settings_section_long">Lange Versionen der Titel</string>
+    <string name="settings_section_desync">Desynchronisationskorrektur</string>
+    <string name="settings_import_zip">Aus ZIP importieren</string>
+    <string name="settings_import_folder">Aus Ordner importieren</string>
+    <string name="settings_import_file">Einzelne Datei importieren</string>
+    <string name="settings_long_enable">Lange Version aktivieren</string>
+    <string name="settings_long_disable">Lange Version deaktivieren</string>
+    <string name="settings_desync_fix">Beide Streams synchronisieren, wenn einer endet</string>
+</resources> 
