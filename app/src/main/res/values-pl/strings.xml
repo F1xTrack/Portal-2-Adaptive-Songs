@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_choose_track">Wybierz ścieżkę dźwiękową</string>
+    <string name="import_zip">Wczytaj ścieżkę z ZIP</string>
+    <string name="long_version_checkbox">Użyj długich wersji (więcej pamięci, bez przerw)</string>
+    <string name="faith_plate_threshold">Próg Faith Plate: %1$d km/h</string>
+    <string name="burst_threshold">Próg wyzwolenia (km/h)</string>
+    <string name="hint_sort_tracks">Sortowanie utworów</string>
+    <string name="sort_alpha">Alfabetycznie</string>
+    <string name="sort_freq">Według częstotliwości</string>
+    <string name="sort_duration">Według długości</string>
+    <string name="settings_title">Ustawienia</string>
+    <string name="settings_section_import">Importuj ścieżki dźwiękowe</string>
+    <string name="settings_section_long">Długie wersje utworów</string>
+    <string name="settings_section_desync">Korekcja desynchronizacji</string>
+    <string name="settings_import_zip">Importuj z ZIP</string>
+    <string name="settings_import_folder">Importuj z folderu</string>
+    <string name="settings_import_file">Importuj pojedynczy plik</string>
+    <string name="settings_long_enable">Włącz wersję długą</string>
+    <string name="settings_long_disable">Wyłącz wersję długą</string>
+    <string name="settings_desync_fix">Synchronizuj oba strumienie po zakończeniu jednego</string>
+</resources> 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_choose_track">اختر الموسيقى التصويرية</string>
+    <string name="import_zip">تحميل الموسيقى من ملف ZIP</string>
+    <string name="long_version_checkbox">استخدم الإصدارات الطويلة (ذاكرة أكثر، دون توقف)</string>
+    <string name="faith_plate_threshold">حد Faith Plate: %1$d كم/س</string>
+    <string name="burst_threshold">حد التفعيل (كم/س)</string>
+    <string name="hint_sort_tracks">فرز المقاطع</string>
+    <string name="sort_alpha">أبجديًا</string>
+    <string name="sort_freq">حسب التكرار</string>
+    <string name="sort_duration">حسب المدة</string>
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_section_import">استيراد الموسيقى التصويرية</string>
+    <string name="settings_section_long">الإصدارات الطويلة للمقاطع</string>
+    <string name="settings_section_desync">إصلاح عدم التزامن</string>
+    <string name="settings_import_zip">استيراد من ZIP</string>
+    <string name="settings_import_folder">استيراد من مجلد</string>
+    <string name="settings_import_file">استيراد ملف فردي</string>
+    <string name="settings_long_enable">تفعيل الإصدار الطويل</string>
+    <string name="settings_long_disable">تعطيل الإصدار الطويل</string>
+    <string name="settings_desync_fix">مزامنة القناتين عند انتهاء إحداهما</string>
+</resources> 
