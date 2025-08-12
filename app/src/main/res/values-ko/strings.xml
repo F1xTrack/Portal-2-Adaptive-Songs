@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_choose_track">사운드트랙 선택</string>
+    <string name="import_zip">ZIP에서 사운드트랙 불러오기</string>
+    <string name="long_version_checkbox">롱 버전 사용 (메모리 사용 증가, 끊김 없음)</string>
+    <string name="faith_plate_threshold">Faith Plate 임계값: %1$d km/h</string>
+    <string name="burst_threshold">트리거 임계값 (km/h)</string>
+    <string name="hint_sort_tracks">트랙 정렬</string>
+    <string name="sort_alpha">알파벳순</string>
+    <string name="sort_freq">빈도순</string>
+    <string name="sort_duration">길이순</string>
+    <string name="settings_title">설정</string>
+    <string name="settings_section_import">사운드트랙 가져오기</string>
+    <string name="settings_section_long">롱 버전</string>
+    <string name="settings_section_desync">비동기 수정</string>
+    <string name="settings_import_zip">ZIP에서 가져오기</string>
+    <string name="settings_import_folder">폴더에서 가져오기</string>
+    <string name="settings_import_file">단일 파일 가져오기</string>
+    <string name="settings_long_enable">롱 버전 사용</string>
+    <string name="settings_long_disable">롱 버전 해제</string>
+    <string name="settings_desync_fix">한쪽이 끝나면 두 스트림 동기화</string>
+</resources> 

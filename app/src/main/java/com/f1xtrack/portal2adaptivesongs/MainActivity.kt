@@ -3,7 +3,6 @@ package com.f1xtrack.portal2adaptivesongs
 import android.Manifest
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.content.Intent
 import android.net.Uri
-import android.provider.OpenableColumns
 import android.app.AlertDialog
 import java.util.zip.ZipInputStream
 import java.io.FileOutputStream
@@ -41,6 +39,43 @@ class MainActivity : AppCompatActivity() {
     private val trackDuration = mutableMapOf<String, Int>() // Для сортировки по длительности
     private val PREFS_STATS = "track_stats"
     private lateinit var tracksAdapter: TracksAdapter
+
+    private fun assetFolderHasAnyVariant(folder: String, base: String): Boolean {
+        return try {
+            val files = assets.list(folder) ?: return false
+            val regex = Regex("^${base}(\\d*)\\.wav$", RegexOption.IGNORE_CASE)
+            files.any { regex.matches(it) }
+        } catch (_: Exception) { false }
+    }
+
+    private fun userFolderHasAnyVariant(dir: File, base: String): Boolean {
+        if (!dir.exists() || !dir.isDirectory) return false
+        val regex = Regex("^${base}(\\d*)\\.wav$", RegexOption.IGNORE_CASE)
+        return dir.listFiles()?.any { file -> regex.matches(file.name) } == true
+    }
+
+    private fun findFirstVariantPath(track: String, base: String, isUser: Boolean): File? {
+        val regex = Regex("^${base}(\\d*)\\.wav$", RegexOption.IGNORE_CASE)
+        return try {
+            if (isUser) {
+                val dir = File(filesDir, "soundtracks/$track")
+                val candidate = dir.listFiles()?.firstOrNull { f -> regex.matches(f.name) }
+                candidate
+            } else {
+                val files = assets.list(track) ?: return null
+                val candidate = files.firstOrNull { name -> regex.matches(name) }
+                if (candidate != null) {
+                    val tmp = File(cacheDir, "tmp_${track}_${candidate}")
+                    if (!tmp.exists()) {
+                        assets.open("${track}/${candidate}").use { input ->
+                            tmp.outputStream().use { output -> input.copyTo(output) }
+                        }
+                    }
+                    tmp
+                } else null
+            }
+        } catch (_: Exception) { null }
+    }
 
     private val locationPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { perms ->
@@ -92,27 +127,23 @@ class MainActivity : AppCompatActivity() {
                     player.crossfadeTo(track, false, isUser)
                 }
             }
-        }
         })
         // Устанавливаем threshold из seekBurst (Slider)
         tracker.setThreshold(binding.seekBurst.value)
         binding.textSpeed.text = "Порог Faith Plate: ${binding.seekBurst.value.toInt()} км/ч"
         // Устанавливаем hysteresis из seekCooldown (Slider)
         hysteresis = binding.seekCooldown.value
-        // Подпись к ползунку гистерезиса
-        binding.seekCooldown.setLabelFormatter { value -> "Гистерезис: ${value.toInt()} км/ч" }
-        // Слушатель для seekCooldown (Slider)
-        binding.seekCooldown.addOnChangeListener { slider, value, fromUser ->
+        binding.textHysteresis.text = "Гистерезис: ${binding.seekCooldown.value.toInt()} км/ч"
+
+        binding.seekCooldown.addOnChangeListener { _, value, _ ->
             hysteresis = value
             binding.textHysteresis.text = "Гистерезис: ${value.toInt()} км/ч"
         }
-        // Слушатель для seekBurst (Slider)
-        binding.seekBurst.addOnChangeListener { slider, value, fromUser ->
+
+        binding.seekBurst.addOnChangeListener { _, value, _ ->
             tracker.setThreshold(value)
             binding.textSpeed.text = "Порог Faith Plate: ${value.toInt()} км/ч"
         }
-        // Инициализация подписи при запуске
-        binding.textHysteresis.text = "Гистерезис: ${binding.seekCooldown.value.toInt()} км/ч"
 
         // --- Инициализация RecyclerView ---
         tracksAdapter = TracksAdapter(emptyList(), selectedTrack) { trackInfo ->
@@ -121,9 +152,6 @@ class MainActivity : AppCompatActivity() {
             val isUser = userTracks.contains(trackInfo.name)
             player.playBoth(trackInfo.name, isUser)
             incTrackPlayCount(trackInfo.name)
-            // (опционально) обновить чекбокс длинной версии
-            val checked = player.isLongVersionEnabled(trackInfo.name, "normal")
-            // Удалено: binding.checkboxLongVersion?.isChecked = checked
         }
         binding.recyclerTracks?.layoutManager = LinearLayoutManager(this)
         binding.recyclerTracks?.adapter = tracksAdapter
@@ -135,15 +163,14 @@ class MainActivity : AppCompatActivity() {
             "DURATION" -> SortType.DURATION
             else -> SortType.ALPHA
         }
-        val btnAlpha = binding.btnSortAlpha
-        val btnFreq = binding.btnSortFreq
-        val btnDuration = binding.btnSortDuration
+
         when (sortType) {
-            SortType.ALPHA -> btnAlpha?.isChecked = true
-            SortType.FREQ -> btnFreq?.isChecked = true
-            SortType.DURATION -> btnDuration?.isChecked = true
+            SortType.ALPHA -> binding.btnSortAlpha?.isChecked = true
+            SortType.FREQ -> binding.btnSortFreq?.isChecked = true
+            SortType.DURATION -> binding.btnSortDuration?.isChecked = true
         }
-        binding.sortSegmented?.addOnButtonCheckedListener { group, checkedId, isChecked ->
+
+        binding.sortSegmented?.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
                 sortType = when (checkedId) {
                     R.id.btnSortAlpha -> SortType.ALPHA
@@ -280,12 +307,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getTrackInfoList(): List<TracksAdapter.TrackInfo> {
-        val assetTracks = assets.list("")!!.filter { name ->
-            assets.list(name)?.contains("superspeed.wav") == true
-        }
+        val assetTracks = assets.list("")?.filter { name ->
+            assetFolderHasAnyVariant(name, "normal") && assetFolderHasAnyVariant(name, "superspeed")
+        } ?: emptyList()
         val userDir = File(filesDir, "soundtracks")
         userTracks = userDir.listFiles()?.filter { dir ->
-            dir.isDirectory && File(dir, "normal.wav").exists() && File(dir, "superspeed.wav").exists()
+            dir.isDirectory && userFolderHasAnyVariant(dir, "normal") && userFolderHasAnyVariant(dir, "superspeed")
         }?.map { it.name } ?: emptyList()
         val allTracks = getSortedTracks(assetTracks, userTracks)
         return allTracks.map { name ->
@@ -299,29 +326,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateTracksList(selectedTrack: String? = null) {
         // Стандартные треки из assets
-        val assetTracks = assets.list("")!!.filter { name ->
-            assets.list(name)?.contains("superspeed.wav") == true
-        }
+        val assetTracks = assets.list("")?.filter { name ->
+            assetFolderHasAnyVariant(name, "normal") && assetFolderHasAnyVariant(name, "superspeed")
+        } ?: emptyList()
         // Пользовательские треки из filesDir/soundtracks
         val userDir = File(filesDir, "soundtracks")
         userTracks = userDir.listFiles()?.filter { dir ->
-            dir.isDirectory && File(dir, "normal.wav").exists() && File(dir, "superspeed.wav").exists()
+            dir.isDirectory && userFolderHasAnyVariant(dir, "normal") && userFolderHasAnyVariant(dir, "superspeed")
         }?.map { it.name } ?: emptyList()
         // --- Обновляем длительности ---
         (assetTracks + userTracks).forEach { track ->
             if (!trackDuration.containsKey(track)) {
                 val file = if (userTracks.contains(track)) {
-                    File(filesDir, "soundtracks/${track}/normal.wav")
+                    // Берём первую доступную вариацию normal*
+                    findFirstVariantPath(track, "normal", isUser = true)
                 } else {
-                    val tmp = File(cacheDir, "tmp_${track}.wav")
-                    if (!tmp.exists()) {
-                        assets.open("${track}/normal.wav").use { input ->
-                            tmp.outputStream().use { output -> input.copyTo(output) }
-                        }
-                    }
-                    tmp
+                    // Берём первую доступную вариацию из assets, копируем во временный файл
+                    findFirstVariantPath(track, "normal", isUser = false)
                 }
-                trackDuration[track] = getTrackDuration(file.absolutePath)
+                if (file != null) {
+                    trackDuration[track] = getTrackDuration(file.absolutePath)
+                } else {
+                    trackDuration[track] = 0
+                }
             }
         }
         saveStats()
@@ -414,8 +441,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveStats() {
         val statsPrefs = getSharedPreferences(PREFS_STATS, MODE_PRIVATE)
-        val playCounts = trackPlayCount.map { "${'$'}{it.key}|${'$'}{it.value}" }.toSet()
-        val durations = trackDuration.map { "${'$'}{it.key}|${'$'}{it.value}" }.toSet()
+        val playCounts = trackPlayCount.map { "${it.key}|${it.value}" }.toSet()
+        val durations = trackDuration.map { "${it.key}|${it.value}" }.toSet()
         statsPrefs.edit().putStringSet("play_counts", playCounts).putStringSet("durations", durations).apply()
     }
 

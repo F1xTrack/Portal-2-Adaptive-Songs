@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_choose_track">选择原声音乐</string>
+    <string name="import_zip">从ZIP加载原声</string>
+    <string name="long_version_checkbox">使用长版本（占用更多内存，无停顿）</string>
+    <string name="faith_plate_threshold">Faith Plate阈值：%1$d 公里/小时</string>
+    <string name="burst_threshold">触发阈值（公里/小时）</string>
+    <string name="hint_sort_tracks">曲目排序</string>
+    <string name="sort_alpha">按字母</string>
+    <string name="sort_freq">按频率</string>
+    <string name="sort_duration">按时长</string>
+    <string name="settings_title">设置</string>
+    <string name="settings_section_import">导入原声</string>
+    <string name="settings_section_long">曲目长版本</string>
+    <string name="settings_section_desync">不同步修正</string>
+    <string name="settings_import_zip">从ZIP导入</string>
+    <string name="settings_import_folder">从文件夹导入</string>
+    <string name="settings_import_file">导入单个文件</string>
+    <string name="settings_long_enable">启用长版本</string>
+    <string name="settings_long_disable">禁用长版本</string>
+    <string name="settings_desync_fix">任一结束时同步两个流</string>
+</resources> 
