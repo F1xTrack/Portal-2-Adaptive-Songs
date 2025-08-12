@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_choose_track">Müzik parçasını seçin</string>
+    <string name="import_zip">ZIP’ten müzik parçası yükle</string>
+    <string name="long_version_checkbox">Uzun sürümleri kullan (daha fazla hafıza, kesinti yok)</string>
+    <string name="faith_plate_threshold">Faith Plate eşiği: %1$d km/s</string>
+    <string name="burst_threshold">Tetikleme eşiği (km/s)</string>
+    <string name="hint_sort_tracks">Parça sıralama</string>
+    <string name="sort_alpha">Alfabetik</string>
+    <string name="sort_freq">Sıklığa göre</string>
+    <string name="sort_duration">Süreye göre</string>
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_section_import">Müzik parçalarını içe aktar</string>
+    <string name="settings_section_long">Uzun sürümler</string>
+    <string name="settings_section_desync">Senkronizasyon düzeltmesi</string>
+    <string name="settings_import_zip">ZIP’ten içe aktar</string>
+    <string name="settings_import_folder">Klasörden içe aktar</string>
+    <string name="settings_import_file">Tek dosya içe aktar</string>
+    <string name="settings_long_enable">Uzun sürümü etkinleştir</string>
+    <string name="settings_long_disable">Uzun sürümü devre dışı bırak</string>
+    <string name="settings_desync_fix">Bir akış bittiğinde her ikisini senkronize et</string>
+</resources> 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_choose_track">साउंडट्रैक चुनें</string>
+    <string name="import_zip">ZIP से साउंडट्रैक लोड करें</string>
+    <string name="long_version_checkbox">लंबा संस्करण उपयोग करें (अधिक मेमोरी, बिना रुकावट)</string>
+    <string name="faith_plate_threshold">Faith Plate थ्रेशहोल्ड: %1$d किमी/घं</string>
+    <string name="burst_threshold">ट्रिगर थ्रेशहोल्ड (किमी/घं)</string>
+    <string name="hint_sort_tracks">ट्रैक्स को सॉर्ट करें</string>
+    <string name="sort_alpha">वर्णानुक्रम</string>
+    <string name="sort_freq">आवृत्ति के अनुसार</string>
+    <string name="sort_duration">अवधि के अनुसार</string>
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="settings_section_import">साउंडट्रैक्स आयात करें</string>
+    <string name="settings_section_long">ट्रैक्स के लंबे संस्करण</string>
+    <string name="settings_section_desync">डीसिंक सुधार</string>
+    <string name="settings_import_zip">ZIP से आयात करें</string>
+    <string name="settings_import_folder">फ़ोल्डर से आयात करें</string>
+    <string name="settings_import_file">एकल फ़ाइल आयात करें</string>
+    <string name="settings_long_enable">लंबा संस्करण सक्षम करें</string>
+    <string name="settings_long_disable">लंबा संस्करण अक्षम करें</string>
+    <string name="settings_desync_fix">एक समाप्त होने पर दोनों स्ट्रीम सिंक करें</string>
+</resources> 

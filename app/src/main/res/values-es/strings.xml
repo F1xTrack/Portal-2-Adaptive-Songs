@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_choose_track">Elige una banda sonora</string>
+    <string name="import_zip">Cargar banda sonora desde ZIP</string>
+    <string name="long_version_checkbox">Usar versiones largas (más memoria, sin pausas)</string>
+    <string name="faith_plate_threshold">Umbral de Faith Plate: %1$d km/h</string>
+    <string name="burst_threshold">Umbral de activación (km/h)</string>
+    <string name="hint_sort_tracks">Ordenar pistas</string>
+    <string name="sort_alpha">Alfabético</string>
+    <string name="sort_freq">Por frecuencia</string>
+    <string name="sort_duration">Por duración</string>
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_section_import">Importar bandas sonoras</string>
+    <string name="settings_section_long">Versiones largas de pistas</string>
+    <string name="settings_section_desync">Corrección de desincronización</string>
+    <string name="settings_import_zip">Importar desde ZIP</string>
+    <string name="settings_import_folder">Importar desde carpeta</string>
+    <string name="settings_import_file">Importar archivo individual</string>
+    <string name="settings_long_enable">Activar versión larga</string>
+    <string name="settings_long_disable">Desactivar versión larga</string>
+    <string name="settings_desync_fix">Sincronizar ambas pistas al finalizar una</string>
+</resources> 
