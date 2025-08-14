@@ -6,6 +6,8 @@
     <!-- Разрешения на локацию -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:label="@string/app_name"
@@ -28,6 +30,19 @@
         </activity>
 
         <activity android:name=".SettingsActivity" />
+        <activity android:name=".AchievementsActivity" />
+        <activity android:name=".StorageActivity" />
+        <activity android:name=".HistoryActivity" />
+        <activity
+            android:name=".RouteSettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_routes_title"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".TimeAttackSettingsActivity"
+            android:exported="false"
+            android:label="@string/menu_time_attack"
+            android:parentActivityName=".MainActivity" />
 
     </application>
 </manifest>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:title="@string/history_title"
+        android:theme="@style/ThemeOverlay.Material3.ActionBar"
+        app:titleCentered="true"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationContentDescription="@string/action_back"
+        app:navigationIconTint="?attr/colorOnSurface" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="4dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputColorScheme"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/history_color_scheme"
+            app:placeholderText="@string/history_color_scheme_placeholder"
+            app:endIconMode="dropdown_menu">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/autoCompleteColorScheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="0dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputTimePeriod"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/history_time_period"
+            app:placeholderText="@string/history_time_period_placeholder"
+            app:endIconMode="dropdown_menu">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/autoCompleteTimePeriod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="0dp" />
+
+    </LinearLayout>
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        app:cardElevation="2dp"
+        app:strokeColor="?attr/colorOutline"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:id="@+id/legendRoot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/textLegendTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?attr/textAppearanceTitleMedium"
+                android:text="@string/history_legend" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/textLegendHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:paddingTop="4dp"
+                android:text="@string/history_legend_hint" />
+
+            <LinearLayout
+                android:id="@+id/legendContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

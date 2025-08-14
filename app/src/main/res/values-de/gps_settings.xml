@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_map_gps">Karte und GPS</string>
+    <string name="settings_use_network_location">WLAN/Netze für Standort verwenden</string>
+    <string name="settings_recording_interval">Aufzeichnungsintervall</string>
+    <string name="recording_interval_value">Alle %1$d s</string>
+</resources>

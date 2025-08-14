@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- History legend dimensions -->
+    <dimen name="history_legend_gradient_height">40dp</dimen>
+    <dimen name="history_legend_gradient_radius">8dp</dimen>
+</resources>

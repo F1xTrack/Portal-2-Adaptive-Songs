@@ -49,7 +49,9 @@ class TracksAdapter(
         fun bind(track: TrackInfo, isSelected: Boolean) {
             name.text = track.name
             duration.text = formatDuration(track.duration)
-            plays.text = "${track.plays} прослушиваний"
+            plays.text = itemView.context.resources.getQuantityString(
+                R.plurals.plays_count, track.plays, track.plays
+            )
             card.strokeWidth = if (isSelected) 6 else 0
             card.strokeColor = if (isSelected) itemView.context.getColor(R.color.portal_orange) else 0
             icon.alpha = if (isSelected) 1f else 0.7f

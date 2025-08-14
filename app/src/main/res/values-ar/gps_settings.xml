@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- This file intentionally left empty after removing duplicates -->
+    <string name="settings_use_network_location">استخدام Wi‑Fi/الشبكات لتحديد الموقع</string>
+    <string name="settings_recording_interval">فترة التسجيل</string>
+    <string name="recording_interval_value">كل %1$d ثانية</string>
+</resources>

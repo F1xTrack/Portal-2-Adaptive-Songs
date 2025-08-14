@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Custom theme attributes used across layouts -->
+    <attr name="backgroundColor" format="color"/>
+    <attr name="cardBackgroundColor" format="color"/>
+    <attr name="textPrimaryOnBackground" format="color"/>
+    <attr name="textSecondaryOnBackground" format="color"/>
+    <attr name="toolbarBackgroundColor" format="color"/>
+    <attr name="toolbarTitleTextColor" format="color"/>
+    <attr name="sliderThumbColor" format="color"/>
+    <attr name="sliderTrackActiveColor" format="color"/>
+    <attr name="sliderTrackInactiveColor" format="color"/>
+    <attr name="overlayScrimColor" format="color"/>
+    <attr name="colorInfo" format="color"/>
+</resources>

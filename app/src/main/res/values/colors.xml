@@ -12,4 +12,8 @@
     <color name="portal_white">#FAFAFA</color>
     <color name="portal_bg_dark">#23272A</color>
     <color name="portal_card_bg">#2C2F33</color>
+    <color name="portal_bg_light">#FFC0C0C0</color>
+    <!-- Theming helper colors -->
+    <color name="text_secondary_on_bg">#B3FFFFFF</color>
+    <color name="overlay_scrim">#80000000</color>
 </resources>

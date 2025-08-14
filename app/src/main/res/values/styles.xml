@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App dialog overlay based on Material3 Centered, but without hardcoded colors.
+         Colors will come from the active app theme. -->
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.App.Title.Text</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.App.Button.Dialog.Flush</item>
+        <!-- Lighter vertical spacing than default 80dp -->
+        <item name="backgroundInsetTop">64dp</item>
+        <item name="backgroundInsetBottom">64dp</item>
+    </style>
+
+    <!-- Base dialog style: tweak shape only, keep Material3 defaults for color/typography -->
+    <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.Material3">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>
+        <item name="shapeAppearanceOverlay">@null</item>
+    </style>
+
+    <!-- Title text: use theme-driven on-surface color -->
+    <style name="MaterialAlertDialog.App.Title.Text" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Dialog buttons: tint from colorSecondary to keep visual accent from theme -->
+    <style name="Widget.App.Button.Dialog" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="iconTint">?attr/colorSecondary</item>
+    </style>
+
+    <style name="Widget.App.Button.Dialog.Flush" parent="Widget.Material3.Button.TextButton.Dialog.Flush">
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="iconTint">?attr/colorSecondary</item>
+    </style>
+
+    <!-- Cut corners like in example, but remain subtle -->
+    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+</resources>

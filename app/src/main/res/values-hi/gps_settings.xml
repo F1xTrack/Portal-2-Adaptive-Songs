@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_map_gps">मानचित्र और GPS</string>
+    <string name="settings_use_network_location">स्थान हेतु Wi‑Fi/नेटवर्क का उपयोग करें</string>
+    <string name="settings_recording_interval">रिकॉर्डिंग अंतराल</string>
+    <string name="recording_interval_value">हर %1$d सेक</string>
+</resources>

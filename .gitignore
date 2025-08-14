@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 *.vsidx
 *.iml
+Dialog.md
 .gradle
 /app/src/main/assets
 /local.properties
