@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_map_gps">地図とGPS</string>
+    <string name="settings_use_network_location">位置情報にWi‑Fi/ネットワークを使用</string>
+    <string name="settings_recording_interval">記録間隔</string>
+    <string name="recording_interval_value">毎 %1$d 秒</string>
+</resources>

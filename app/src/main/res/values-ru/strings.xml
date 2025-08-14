@@ -3,21 +3,182 @@
     <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">Выберите саундтрек</string>
     <string name="import_zip">Загрузить саундтрек из ZIP</string>
-    <string name="long_version_checkbox">Использовать удлинённые версии саундтреков (больше памяти, но без пауз)</string>
-    <string name="faith_plate_threshold">Порог Faith Plate: %1$d км/ч</string>
+
+    <string name="faith_plate_threshold">Порог Панели Веры: %1$d км/ч</string>
+    <string name="faith_plate_threshold_label">Порог Панели Веры (км/ч)</string>
     <string name="burst_threshold">Порог срабатывания (км/ч)</string>
+    <string name="hysteresis_value">Гистерезис: %1$d км/ч</string>
+    <string name="hysteresis_label">Гистерезис (км/ч)</string>
+    <string name="hysteresis_value_initial">Гистерезис: 3 км/ч</string>
     <string name="hint_sort_tracks">Сортировка треков</string>
     <string name="sort_alpha">По алфавиту</string>
     <string name="sort_freq">По частоте</string>
     <string name="sort_duration">По длительности</string>
     <string name="settings_title">Настройки</string>
     <string name="settings_section_import">Импорт саундтреков</string>
-    <string name="settings_section_long">Длинные версии треков</string>
+    <string name="settings_section_tracks">Настройки треков</string>
+    <string name="settings_tracks_placeholder">Этот раздел будет доступен в будущих версиях</string>
+    <string name="settings_section_route_recording">Запись маршрутов</string>
     <string name="settings_section_desync">Исправление рассинхронизации</string>
     <string name="settings_import_zip">Импортировать из ZIP</string>
     <string name="settings_import_folder">Импортировать из папки</string>
     <string name="settings_import_file">Импортировать одиночный файл</string>
-    <string name="settings_long_enable">Включить длинную версию</string>
-    <string name="settings_long_disable">Отключить длинную версию</string>
     <string name="settings_desync_fix">Синхронизировать оба потока при завершении одного</string>
+
+    <!-- Storage menu -->
+    <string name="menu_storage">Хранилище</string>
+    <string name="storage_title">Управление хранилищем</string>
+    <string name="storage_builtin_label">Встроенный</string>
+    <string name="storage_imported_label">Импортированный</string>
+    <string name="storage_hide">Скрыть</string>
+    <string name="storage_unhide">Показать</string>
+    <string name="storage_delete">Удалить</string>
+    <string name="storage_delete_all_user">Удалить все импортированные</string>
+    <string name="storage_unhide_all">Показать все встроенные</string>
+    <string name="storage_clear_stats">Очистить статистику</string>
+    <string name="storage_routes_coming_soon">Очистка истории маршрутов (скоро)</string>
+    <string name="storage_confirm_delete_track">Удалить трек "%1$s"?</string>
+    <string name="storage_confirm_delete_all_user">Удалить все импортированные треки?</string>
+    <string name="storage_confirm_clear_stats">Очистить статистику (кроме количества треков)?</string>
+    <string name="storage_done">Готово</string>
+
+    <!-- Achievements: superspeed (Faith Plate / Панель Веры) -->
+    <string name="achievement_super_10_title">10 минут Панели Веры</string>
+    <string name="achievement_super_60_title">1 час Панели Веры</string>
+    <string name="achievement_super_600_title">10 часов Панели Веры</string>
+    <string name="achievement_super_10_desc">В ускоренном режиме 10 минут</string>
+    <string name="achievement_super_60_desc">В ускоренном режиме 60 минут</string>
+    <string name="achievement_super_600_desc">В ускоренном режиме 600 минут</string>
+
+    <!-- Drawer hint -->
+    <string name="hint_open_drawer">Подсказка: откройте меню свайпом от левого края или нажмите иконку слева</string>
+    <string name="action_got_it">Понятно</string>
+
+    <string name="search_hint">Поиск по трекам</string>
+
+    <!-- Menu additions -->
+    <string name="menu_language">Язык</string>
+    <string name="menu_theme">Тема</string>
+    <string name="menu_time_attack">Тайм-атака</string>
+
+    <!-- Language dialog -->
+    <string name="dialog_language_title">Выберите язык</string>
+    <string name="language_system_default">Системный (по умолчанию)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+    <string name="language_arabic">Арабский</string>
+
+    <!-- Theme dialog -->
+    <string name="dialog_theme_title">Выберите тему</string>
+    <string name="theme_portal2_default">Portal 2 (по умолчанию)</string>
+    <string name="theme_asi">ASI (Aperture Science Innovators)</string>
+    <string name="theme_portal2_overgrowth">Portal 2 (Заросли)</string>
+    <string name="theme_portal1">Portal 1</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_p1">Portal 1</string>
+    <string name="theme_p2o">Portal 2 Overgrown</string>
+    <string name="theme_system">Системная</string>
+
+    <!-- Time-attack -->
+    <string name="settings_section_time_attack">Тайм-атака</string>
+    <string name="time_attack_difficulty">Сложность</string>
+    <string name="difficulty">Сложность</string>
+    <string name="difficulty_easy">Лёгкая</string>
+    <string name="difficulty_normal">Средняя</string>
+    <string name="difficulty_hard">Сложная</string>
+    <string name="time_attack_trigger_now">Запустить тайм-атаку сейчас</string>
+    <string name="time_attack_title">Тайм-атака</string>
+    <string name="time_attack_desc_keep_above">Держите скорость не ниже %1$d км/ч в течение %2$d с</string>
+    <string name="time_attack_progress">Прогресс</string>
+    <string name="time_attack_cancel">Прервать</string>
+    <string name="time_attack_success">Испытание выполнено!</string>
+    <string name="time_attack_fail">Испытание провалено</string>
+    <string name="time_attack_failed">Провалено</string>
+    <string name="time_attack_finished">Завершено</string>
+    <string name="time_attack_next_mission_in">Следующая миссия через %d секунд</string>
+    <string name="time_attack_next_mission_now">Следующая миссия сейчас</string>
+
+    <!-- History / Map / GPS -->
+    <string name="menu_history">История маршрутов</string>
+    <string name="menu_route_history">История маршрутов</string>
+    <string name="history_title">История маршрутов</string>
+    <string name="history_legend">Легенда</string>
+    <string name="history_no_routes">Пока нет записанных маршрутов</string>
+
+    <string name="settings_section_map_gps">Карта и GPS</string>
+    <string name="settings_map_provider">Поставщик карт</string>
+    <string name="map_provider_osm">OpenStreetMap (OSMDroid)</string>
+    <string name="settings_gps_accuracy">Точность записи GPS</string>
+    <string name="gps_accuracy">Точность GPS</string>
+    <string name="gps_accuracy_high">Высокая (GPS)</string>
+    <string name="gps_accuracy_balanced">Сбалансированная (Wi-Fi/сети)</string>
+    <string name="gps_accuracy_low">Низкая</string>
+    <string name="gps_settings_title">Настройки GPS</string>
+
+    <!-- View mode toggle -->
+    <string name="view_mode_tracks">Треки</string>
+    <string name="view_mode_speed">Скорость</string>
+    <string name="view_mode_elevation">Высота</string>
+    <string name="storage_clear_route_history">Очистить историю маршрутов</string>
+    <string name="storage_confirm_clear_routes">Очистить историю маршрутов?</string>
+    <string name="action_back">Назад</string>
+    <string name="history_legend_hint">Толстая линия — ускоренный режим</string>
+
+    <!-- Achievements: superspeed (aliases for code keys) -->
+    <string name="ach_sup_10m_title">10 минут Панели Веры</string>
+    <string name="ach_sup_10m_desc">В ускоренном режиме 10 минут</string>
+    <string name="ach_sup_60m_title">1 час Панели Веры</string>
+    <string name="ach_sup_60m_desc">В ускоренном режиме 60 минут</string>
+    <string name="ach_sup_600m_title">10 часов Панели Веры</string>
+    <string name="ach_sup_600m_desc">В ускоренном режиме 600 минут</string>
+
+    <!-- Achievements: distance -->
+    <string name="ach_km_1_title">1 км пройдено</string>
+    <string name="ach_km_1_desc">Пройденная дистанция: 1 км</string>
+    <string name="ach_km_10_title">10 км пройдено</string>
+    <string name="ach_km_10_desc">Пройденная дистанция: 10 км</string>
+    <string name="ach_km_100_title">100 км пройдено</string>
+    <string name="ach_km_100_desc">Пройденная дистанция: 100 км</string>
+
+    <!-- Achievements: library size -->
+    <string name="ach_lib_1_title">1 трек в библиотеке</string>
+    <string name="ach_lib_1_desc">Общее число доступных треков: 1</string>
+    <string name="ach_lib_10_title">10 треков в библиотеке</string>
+    <string name="ach_lib_10_desc">Общее число доступных треков: 10</string>
+    <string name="ach_lib_100_title">100 треков в библиотеке</string>
+    <string name="ach_lib_100_desc">Общее число доступных треков: 100</string>
+
+    <!-- Plurals -->
+    <plurals name="plays_count">
+        <item quantity="one">%d прослушивание</item>
+        <item quantity="few">%d прослушивания</item>
+        <item quantity="many">%d прослушиваний</item>
+        <item quantity="other">%d прослушиваний</item>
+    </plurals>
+
+    <string name="achievements_title">Достижения</string>
+    <string name="menu_track_settings">Настройки треков</string>
+    <string name="menu_achievements">Достижения</string>
+    <string name="achievement_icon_desc">Иконка достижения</string>
+    <string name="history_change_map_provider">Сменить провайдера карты</string>
+    <string name="history_color_scheme">Схема окраски</string>
+    <string-array name="history_color_scheme_options">
+        <item>По треку</item>
+        <item>По скорости</item>
+        <item>По высоте</item>
+    </string-array>
+    <string name="history_time_period">Период</string>
+    <string-array name="history_time_period_options">
+        <item>За 24 часа</item>
+        <item>За 7 дней</item>
+        <item>За 30 дней</item>
+        <item>За всё время</item>
+    </string-array>
+
+    <string name="stats_title">Общая статистика</string>
+    <string name="stats_total_distance">Общее расстояние</string>
+    <string name="stats_unique_tracks">Уникальных треков</string>
+    <string name="stats_superspeed_time">Время в ускорении</string>
+    <string name="settings_routes_title">Настройки маршрутов</string>
 </resources>

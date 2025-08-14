@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">传送门2自适应歌曲</string>
     <string name="hint_choose_track">选择原声音乐</string>
     <string name="import_zip">从ZIP加载原声</string>
-    <string name="long_version_checkbox">使用长版本（占用更多内存，无停顿）</string>
-    <string name="faith_plate_threshold">Faith Plate阈值：%1$d 公里/小时</string>
+    
+    <string name="faith_plate_threshold">跳板阈值：%1$d 公里/小时</string>
+    <string name="faith_plate_threshold_label">信仰之板阈值 (公里/小时)</string>
     <string name="burst_threshold">触发阈值（公里/小时）</string>
     <string name="hint_sort_tracks">曲目排序</string>
     <string name="sort_alpha">按字母</string>
@@ -11,12 +13,135 @@
     <string name="sort_duration">按时长</string>
     <string name="settings_title">设置</string>
     <string name="settings_section_import">导入原声</string>
-    <string name="settings_section_long">曲目长版本</string>
+    <string name="settings_section_tracks">曲目设置</string>
+    <string name="settings_tracks_placeholder">此部分将在未来版本中提供</string>
+    <string name="settings_section_route_recording">路线录制</string>
+    
     <string name="settings_section_desync">不同步修正</string>
     <string name="settings_import_zip">从ZIP导入</string>
     <string name="settings_import_folder">从文件夹导入</string>
     <string name="settings_import_file">导入单个文件</string>
-    <string name="settings_long_enable">启用长版本</string>
-    <string name="settings_long_disable">禁用长版本</string>
+    
     <string name="settings_desync_fix">任一结束时同步两个流</string>
-</resources> 
+
+    <!-- 存储菜单 -->
+    <string name="menu_storage">存储</string>
+    <string name="storage_title">存储管理</string>
+    <string name="storage_builtin_label">内置</string>
+    <string name="storage_imported_label">已导入</string>
+    <string name="storage_hide">隐藏</string>
+    <string name="storage_unhide">显示</string>
+    <string name="storage_delete">删除</string>
+    <string name="storage_delete_all_user">删除所有已导入</string>
+    <string name="storage_unhide_all">显示所有内置</string>
+    <string name="storage_clear_stats">清除统计数据</string>
+    <string name="storage_routes_coming_soon">清除路线历史 (即将推出)</string>
+    <string name="storage_confirm_delete_track">确定要删除曲目 “%1$s” 吗？</string>
+    <string name="storage_confirm_delete_all_user">确定要删除所有已导入的曲目吗？</string>
+    <string name="storage_confirm_clear_stats">确定要清除统计数据 (曲目计数除外) 吗？</string>
+    <string name="storage_done">完成</string>
+    <string name="hysteresis_value">迟滞：%1$d 公里/小时</string>
+    <string name="hysteresis_label">迟滞（公里/小时）</string>
+    <string name="hysteresis_value_initial">迟滞：3 公里/小时</string>
+    
+    <!-- 成就：加速模式 / 跳板 -->
+    <string name="achievement_super_10_title">跳板 10 分钟</string>
+    <string name="achievement_super_60_title">跳板 1 小时</string>
+    <string name="achievement_super_600_title">跳板 10 小时</string>
+    <string name="achievement_super_10_desc">在加速模式下 10 分钟</string>
+    <string name="achievement_super_60_desc">在加速模式下 60 分钟</string>
+    <string name="achievement_super_600_desc">在加速模式下 600 分钟</string>
+    
+    <!-- 侧边菜单提示 -->
+    <string name="hint_open_drawer">提示：从左边缘滑动或点击左侧图标打开菜单</string>
+    <string name="action_got_it">知道了</string>
+
+    <string name="search_hint">搜索曲目</string>
+
+    <!-- 菜单附加项 -->
+    <string name="menu_language">语言</string>
+    <string name="menu_theme">Theme</string>
+
+    <!-- 语言对话框 -->
+    <string name="dialog_language_title">选择语言</string>
+    <string name="language_system_default">系统默认</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <!-- 通用 -->
+    <string name="action_back">返回</string>
+    
+    <!-- 历史 -->
+    <string name="menu_route_history">路线历史</string>
+    <string name="history_title">路线历史</string>
+    <string name="history_no_routes">尚无已记录的路线</string>
+    <string name="history_legend_hint">粗线 — 加速模式</string>
+    <string name="history_change_map_provider">更改地图提供商</string>
+    <string name="history_color_scheme">配色方案</string>
+    <string-array name="history_color_scheme_options">
+        <item>按曲目</item>
+        <item>按速度</item>
+        <item>按海拔</item>
+    </string-array>
+    <string name="history_time_period">时间段</string>
+    <string-array name="history_time_period_options">
+        <item>过去24小时</item>
+        <item>过去7天</item>
+        <item>过去30天</item>
+        <item>所有时间</item>
+    </string-array>
+
+    <!-- 成就：代码键别名 -->
+    <string name="ach_sup_10m_title">跳板 10 分钟</string>
+    <string name="ach_sup_10m_desc">在加速模式下 10 分钟</string>
+    <string name="ach_sup_60m_title">跳板 1 小时</string>
+    <string name="ach_sup_60m_desc">在加速模式下 60 分钟</string>
+    <string name="ach_sup_600m_title">跳板 10 小时</string>
+    <string name="ach_sup_600m_desc">在加速模式下 600 分钟</string>
+
+    <!-- GPS 设置 -->
+    <string name="gps_settings_title">GPS 设置</string>
+    <string name="gps_accuracy">GPS 精度</string>
+    <string name="gps_accuracy_high">高 (仅GPS)</string>
+    <string name="gps_accuracy_balanced">平衡 (Wi-Fi/蜂窝网络)</string>
+    <string name="gps_accuracy_low">低</string>
+
+    <!-- 视图模式选择器 -->
+    <string name="view_mode_tracks">曲目</string>
+    <string name="view_mode_speed">速度</string>
+    <string name="view_mode_elevation">海拔</string>
+    <string name="storage_clear_route_history">清除路线历史</string>
+    <string name="storage_confirm_clear_routes">确定要清除路线历史吗？</string>
+
+    <!-- 成就：距离 -->
+    <string name="ach_km_1_title">行进 1 公里</string>
+    <string name="ach_km_1_desc">总距离：1 公里</string>
+    <string name="ach_km_10_title">行进 10 公里</string>
+    <string name="ach_km_10_desc">总距离：10 公里</string>
+    <string name="ach_km_100_title">行进 100 公里</string>
+    <string name="ach_km_100_desc">总距离：100 公里</string>
+
+    <!-- 成就：资料库大小 -->
+    <string name="ach_lib_1_title">资料库中有 1 首曲目</string>
+    <string name="ach_lib_1_desc">可用曲目总数：1</string>
+    <string name="ach_lib_10_title">资料库中有 10 首曲目</string>
+    <string name="ach_lib_10_desc">可用曲目总数：10</string>
+    <string name="ach_lib_100_title">资料库中有 100 首曲目</string>
+    <string name="ach_lib_100_desc">可用曲目总数：100</string>
+
+    <!-- 复数 -->
+    <plurals name="plays_count">
+        <item quantity="other">%d 次播放</item>
+    </plurals>
+
+    <string name="achievements_title">成就</string>
+    <string name="menu_track_settings">赛道设置</string>
+    <string name="menu_achievements">成就</string>
+    <string name="achievement_icon_desc">成就图标</string>
+
+    <!-- 统计数据 -->
+    <string name="stats_title">通用统计</string>
+    <string name="stats_total_distance">总距离</string>
+    <string name="stats_unique_tracks">独特曲目</string>
+    <string name="stats_superspeed_time">超高速模式时间</string>
+</resources>

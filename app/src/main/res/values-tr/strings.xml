@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">Müzik parçasını seçin</string>
     <string name="import_zip">ZIP’ten müzik parçası yükle</string>
-    <string name="long_version_checkbox">Uzun sürümleri kullan (daha fazla hafıza, kesinti yok)</string>
-    <string name="faith_plate_threshold">Faith Plate eşiği: %1$d km/s</string>
+    
+    <string name="faith_plate_threshold">Zıplama platformu eşiği: %1$d km/s</string>
+    <string name="faith_plate_threshold_label">İnanç Plakası Eşiği (km/s)</string>
     <string name="burst_threshold">Tetikleme eşiği (km/s)</string>
     <string name="hint_sort_tracks">Parça sıralama</string>
     <string name="sort_alpha">Alfabetik</string>
@@ -11,12 +13,135 @@
     <string name="sort_duration">Süreye göre</string>
     <string name="settings_title">Ayarlar</string>
     <string name="settings_section_import">Müzik parçalarını içe aktar</string>
-    <string name="settings_section_long">Uzun sürümler</string>
+    <string name="settings_section_tracks">Parça Ayarları</string>
+    <string name="settings_tracks_placeholder">Bu bölüm gelecekteki sürümlerde mevcut olacak</string>
+    <string name="settings_section_route_recording">Rota kaydı</string>
+    
     <string name="settings_section_desync">Senkronizasyon düzeltmesi</string>
     <string name="settings_import_zip">ZIP’ten içe aktar</string>
     <string name="settings_import_folder">Klasörden içe aktar</string>
     <string name="settings_import_file">Tek dosya içe aktar</string>
-    <string name="settings_long_enable">Uzun sürümü etkinleştir</string>
-    <string name="settings_long_disable">Uzun sürümü devre dışı bırak</string>
+    
     <string name="settings_desync_fix">Bir akış bittiğinde her ikisini senkronize et</string>
-</resources> 
+
+    <!-- Depolama Menüsü -->
+    <string name="menu_storage">Depolama</string>
+    <string name="storage_title">Depolama Yönetimi</string>
+    <string name="storage_builtin_label">Dahili</string>
+    <string name="storage_imported_label">İçe Aktarılan</string>
+    <string name="storage_hide">Gizle</string>
+    <string name="storage_unhide">Göster</string>
+    <string name="storage_delete">Sil</string>
+    <string name="storage_delete_all_user">Tüm içe aktarılanları sil</string>
+    <string name="storage_unhide_all">Tüm dahilileri göster</string>
+    <string name="storage_clear_stats">İstatistikleri temizle</string>
+    <string name="storage_routes_coming_soon">Rota geçmişini temizle (yakında)</string>
+    <string name="storage_confirm_delete_track">&quot;%1$s&quot; parçasını silmek istediğinizden emin misiniz?</string>
+    <string name="storage_confirm_delete_all_user">Tüm içe aktarılan parçaları silmek istediğinizden emin misiniz?</string>
+    <string name="storage_confirm_clear_stats">İstatistikleri (parça sayısı hariç) temizlemek istediğinizden emin misiniz?</string>
+    <string name="storage_done">Bitti</string>
+    <string name="hysteresis_value">Histerezis: %1$d km/s</string>
+    <string name="hysteresis_label">Histerezis (km/s)</string>
+    <string name="hysteresis_value_initial">Histerezis: 3 km/s</string>
+    
+    <!-- Başarımlar: hızlandırılmış mod / zıplama platformu -->
+    <string name="achievement_super_10_title">Zıplama platformunda 10 dakika</string>
+    <string name="achievement_super_60_title">Zıplama platformunda 1 saat</string>
+    <string name="achievement_super_600_title">Zıplama platformunda 10 saat</string>
+    <string name="achievement_super_10_desc">Hızlandırılmış modda 10 dakika</string>
+    <string name="achievement_super_60_desc">Hızlandırılmış modda 60 dakika</string>
+    <string name="achievement_super_600_desc">Hızlandırılmış modda 600 dakika</string>
+    
+    <!-- Yan menü ipucu -->
+    <string name="hint_open_drawer">İpucu: menüyü sol kenardan kaydırarak veya soldaki simgeye dokunarak açın</string>
+    <string name="action_got_it">Anladım</string>
+
+    <string name="search_hint">Parçaları ara</string>
+
+    <!-- Menü eklemeleri -->
+    <string name="menu_language">Dil</string>
+    <string name="menu_theme">Theme</string>
+
+    <!-- Dil diyalogu -->
+    <string name="dialog_language_title">Dil Seçin</string>
+    <string name="language_system_default">Sistem (varsayılan)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <!-- Genel -->
+    <string name="action_back">Geri</string>
+    
+    <!-- Geçmiş -->
+    <string name="menu_route_history">Rota Geçmişi</string>
+    <string name="history_title">Rota Geçmişi</string>
+    <string name="history_no_routes">Henüz kaydedilmiş rota yok</string>
+    <string name="history_legend_hint">Kalın çizgi — hızlandırılmış mod</string>
+    <string name="history_change_map_provider">Harita sağlayıcısını değiştir</string>
+    <string name="history_color_scheme">Renk şeması</string>
+    <string-array name="history_color_scheme_options">
+        <item>Parçaya göre</item>
+        <item>Hıza göre</item>
+        <item>Yüksekliğe göre</item>
+    </string-array>
+    <string name="history_time_period">Zaman aralığı</string>
+    <string-array name="history_time_period_options">
+        <item>Son 24 saat</item>
+        <item>Son 7 gün</item>
+        <item>Son 30 gün</item>
+        <item>Tüm zamanlar</item>
+    </string-array>
+
+    <!-- Başarımlar: kod anahtarları için takma adlar -->
+    <string name="ach_sup_10m_title">Zıplama platformunda 10 dakika</string>
+    <string name="ach_sup_10m_desc">Hızlandırılmış modda 10 dakika</string>
+    <string name="ach_sup_60m_title">Zıplama platformunda 1 saat</string>
+    <string name="ach_sup_60m_desc">Hızlandırılmış modda 60 dakika</string>
+    <string name="ach_sup_600m_title">Zıplama platformunda 10 saat</string>
+    <string name="ach_sup_600m_desc">Hızlandırılmış modda 600 dakika</string>
+
+    <!-- GPS Ayarları -->
+    <string name="gps_settings_title">GPS Ayarları</string>
+    <string name="gps_accuracy">GPS doğruluğu</string>
+    <string name="gps_accuracy_high">Yüksek (sadece GPS)</string>
+    <string name="gps_accuracy_balanced">Dengeli (Wi-Fi/hücresel)</string>
+    <string name="gps_accuracy_low">Düşük</string>
+
+    <!-- Görünüm modu seçici -->
+    <string name="view_mode_tracks">Parçalar</string>
+    <string name="view_mode_speed">Hız</string>
+    <string name="view_mode_elevation">Yükseklik</string>
+    <string name="storage_clear_route_history">Rota geçmişini temizle</string>
+    <string name="storage_confirm_clear_routes">Rota geçmişini temizlemek istediğinizden emin misiniz?</string>
+
+    <!-- Başarımlar: mesafe -->
+    <string name="ach_km_1_title">1 km katedildi</string>
+    <string name="ach_km_1_desc">Toplam mesafe: 1 km</string>
+    <string name="ach_km_10_title">10 km katedildi</string>
+    <string name="ach_km_10_desc">Toplam mesafe: 10 km</string>
+    <string name="ach_km_100_title">100 km katedildi</string>
+    <string name="ach_km_100_desc">Toplam mesafe: 100 km</string>
+
+    <!-- Başarımlar: kitaplık boyutu -->
+    <string name="ach_lib_1_title">Kitaplıkta 1 parça</string>
+    <string name="ach_lib_1_desc">Kullanılabilir toplam parça: 1</string>
+    <string name="ach_lib_10_title">Kitaplıkta 10 parça</string>
+    <string name="ach_lib_10_desc">Kullanılabilir toplam parça: 10</string>
+    <string name="ach_lib_100_title">Kitaplıkta 100 parça</string>
+    <string name="ach_lib_100_desc">Kullanılabilir toplam parça: 100</string>
+
+    <!-- Çoğul -->
+    <plurals name="plays_count">
+        <item quantity="other">%d kez çalındı</item>
+    </plurals>
+
+    <string name="achievements_title">Başarımlar</string>
+    <string name="menu_track_settings">Parça Ayarları</string>
+    <string name="menu_achievements">Başarımlar</string>
+    <string name="achievement_icon_desc">Başarım simgesi</string>
+
+    <!-- İstatistikler -->
+    <string name="stats_title">Genel İstatistikler</string>
+    <string name="stats_total_distance">Toplam Mesafe</string>
+    <string name="stats_unique_tracks">Benzersiz Parçalar</string>
+    <string name="stats_superspeed_time">Süper hız modunda geçen süre</string>
+</resources>

@@ -3,21 +3,146 @@
     <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">Choose Soundtrack</string>
     <string name="import_zip">Load soundtrack from ZIP</string>
-    <string name="long_version_checkbox">Use long versions (more memory, no gaps)</string>
+    
     <string name="faith_plate_threshold">Faith Plate threshold: %1$d km/h</string>
+    <string name="faith_plate_threshold_label">Faith Plate Threshold (km/h)</string>
     <string name="burst_threshold">Trigger threshold (km/h)</string>
+    <string name="hysteresis_value">Hysteresis: %1$d km/h</string>
+    <string name="hysteresis_label">Hysteresis (km/h)</string>
+    <string name="hysteresis_value_initial">Hysteresis: 3 km/h</string>
     <string name="hint_sort_tracks">Sort tracks</string>
     <string name="sort_alpha">Alphabet</string>
     <string name="sort_freq">Frequency</string>
     <string name="sort_duration">Duration</string>
     <string name="settings_title">Settings</string>
     <string name="settings_section_import">Import soundtracks</string>
-    <string name="settings_section_long">Long versions</string>
+    <string name="settings_section_tracks">Track Settings</string>
+    <string name="settings_tracks_placeholder">This section will be available in future versions</string>
+    <string name="settings_section_route_recording">Route Recording</string>
+    
     <string name="settings_section_desync">Desync fix</string>
     <string name="settings_import_zip">Import from ZIP</string>
     <string name="settings_import_folder">Import from folder</string>
     <string name="settings_import_file">Import a single file</string>
-    <string name="settings_long_enable">Enable long version</string>
-    <string name="settings_long_disable">Disable long version</string>
+    
     <string name="settings_desync_fix">Synchronize both streams when one ends</string>
+
+    <!-- Storage menu -->
+    <string name="menu_storage">Storage</string>
+    <string name="storage_title">Storage Management</string>
+    <string name="storage_builtin_label">Built-in</string>
+    <string name="storage_imported_label">Imported</string>
+    <string name="storage_hide">Hide</string>
+    <string name="storage_unhide">Unhide</string>
+    <string name="storage_delete">Delete</string>
+    <string name="storage_delete_all_user">Delete all imported</string>
+    <string name="storage_unhide_all">Unhide all built-in</string>
+    <string name="storage_clear_stats">Clear statistics</string>
+    <string name="storage_routes_coming_soon">Clear route history (soon)</string>
+    <string name="storage_confirm_delete_track">Delete track "%1$s"?</string>
+    <string name="storage_confirm_delete_all_user">Delete all imported tracks?</string>
+    <string name="storage_confirm_clear_stats">Clear statistics (except for track counts)?</string>
+    <string name="storage_done">Done</string>
+    
+    <!-- Achievements: superspeed (Faith Plate) -->
+    <string name="achievement_super_10_title">10 minutes of Faith Plate</string>
+    <string name="achievement_super_60_title">1 hour of Faith Plate</string>
+    <string name="achievement_super_600_title">10 hours of Faith Plate</string>
+    <string name="achievement_super_10_desc">Superspeed for 10 minutes</string>
+    <string name="achievement_super_60_desc">Superspeed for 60 minutes</string>
+    <string name="achievement_super_600_desc">Superspeed for 600 minutes</string>
+    
+    <!-- Drawer hint -->
+    <string name="hint_open_drawer">Hint: open the menu by swiping from the left edge or by tapping the icon on the left</string>
+    <string name="action_got_it">Got it</string>
+    <string name="search_hint">Search tracks</string>
+
+    <!-- Menu additions -->
+    <string name="menu_language">Language</string>
+    <string name="menu_time_attack">Time Attack</string>
+    <string name="menu_theme">Theme</string>
+
+    <!-- Language dialog -->
+    <string name="dialog_language_title">Select language</string>
+    <string name="language_system_default">System (default)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <!-- Common -->
+    <string name="action_back">Back</string>
+    
+    <!-- History -->
+    <string name="menu_route_history">Route History</string>
+    <string name="history_title">Route History</string>
+    <string name="history_no_routes">No routes recorded yet</string>
+    <string name="history_legend_hint">Thick line — superspeed</string>
+    <string name="history_change_map_provider">Change map provider</string>
+    <string name="history_color_scheme">Color scheme</string>
+    <string-array name="history_color_scheme_options">
+        <item>By track</item>
+        <item>By speed</item>
+        <item>By altitude</item>
+    </string-array>
+    <string name="history_time_period">Period</string>
+    <string-array name="history_time_period_options">
+        <item>Last 24 hours</item>
+        <item>Last 7 days</item>
+        <item>Last 30 days</item>
+        <item>All time</item>
+    </string-array>
+    
+    <!-- Achievements: superspeed (aliases for code keys) -->
+    <string name="ach_sup_10m_title">10 minutes of Faith Plate</string>
+    <string name="ach_sup_10m_desc">Superspeed for 10 minutes</string>
+    <string name="ach_sup_60m_title">1 hour of Faith Plate</string>
+    <string name="ach_sup_60m_desc">Superspeed for 60 minutes</string>
+    <string name="ach_sup_600m_title">10 hours of Faith Plate</string>
+    <string name="ach_sup_600m_desc">Superspeed for 600 minutes</string>
+
+    <!-- GPS Settings -->
+    <string name="gps_settings_title">GPS Settings</string>
+    <string name="gps_accuracy">GPS accuracy</string>
+    <string name="gps_accuracy_high">High (GPS only)</string>
+    <string name="gps_accuracy_balanced">Balanced (Wi-Fi/cellular)</string>
+    <string name="gps_accuracy_low">Low</string>
+
+    <!-- View mode toggle -->
+    <string name="view_mode_tracks">Tracks</string>
+    <string name="view_mode_speed">Speed</string>
+    <string name="view_mode_elevation">Elevation</string>
+    <string name="storage_clear_route_history">Clear route history</string>
+    <string name="storage_confirm_clear_routes">Clear route history?</string>
+
+    <!-- Achievements: distance -->
+    <string name="ach_km_1_title">1 km traveled</string>
+    <string name="ach_km_1_desc">Total distance: 1 km</string>
+    <string name="ach_km_10_title">10 km traveled</string>
+    <string name="ach_km_10_desc">Total distance: 10 km</string>
+    <string name="ach_km_100_title">100 km traveled</string>
+    <string name="ach_km_100_desc">Total distance: 100 km</string>
+
+    <!-- Achievements: library size -->
+    <string name="ach_lib_1_title">1 track in library</string>
+    <string name="ach_lib_1_desc">Total available tracks: 1</string>
+    <string name="ach_lib_10_title">10 tracks in library</string>
+    <string name="ach_lib_10_desc">Total available tracks: 10</string>
+    <string name="ach_lib_100_title">100 tracks in library</string>
+    <string name="ach_lib_100_desc">Total available tracks: 100</string>
+
+    <!-- Plurals -->
+    <plurals name="plays_count">
+        <item quantity="one">%d play</item>
+        <item quantity="other">%d plays</item>
+    </plurals>
+
+    <string name="achievements_title">Achievements</string>
+    <string name="menu_track_settings">Track Settings</string>
+    <string name="menu_achievements">Achievements</string>
+    <string name="achievement_icon_desc">Achievement icon</string>
+
+    <!-- Statistics -->
+    <string name="stats_title">Overall Statistics</string>
+    <string name="stats_total_distance">Total distance</string>
+    <string name="stats_unique_tracks">Unique tracks</string>
+    <string name="stats_superspeed_time">Time in superspeed</string>
 </resources>

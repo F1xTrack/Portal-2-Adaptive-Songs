@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">サウンドトラックを選択</string>
     <string name="import_zip">ZIPからサウンドトラックを読み込む</string>
-    <string name="long_version_checkbox">ロングバージョンを使用（メモリ多め、無音なし）</string>
-    <string name="faith_plate_threshold">Faith Plateのしきい値: %1$d km/h</string>
+    
+    <string name="faith_plate_threshold">ジャンプ台のしきい値: %1$d km/h</string>
+    <string name="faith_plate_threshold_label">フェイスプレートのしきい値 (km/h)</string>
     <string name="burst_threshold">トリガーしきい値 (km/h)</string>
     <string name="hint_sort_tracks">トラックの並び替え</string>
     <string name="sort_alpha">アルファベット順</string>
@@ -11,12 +13,136 @@
     <string name="sort_duration">長さ順</string>
     <string name="settings_title">設定</string>
     <string name="settings_section_import">サウンドトラックのインポート</string>
-    <string name="settings_section_long">ロングバージョン</string>
+    <string name="settings_section_tracks">トラック設定</string>
+    <string name="settings_tracks_placeholder">このセクションは将来のバージョンで利用可能になります</string>
+    <string name="settings_section_route_recording">ルート記録</string>
+    
     <string name="settings_section_desync">非同期の修正</string>
     <string name="settings_import_zip">ZIPからインポート</string>
     <string name="settings_import_folder">フォルダからインポート</string>
     <string name="settings_import_file">単一ファイルをインポート</string>
-    <string name="settings_long_enable">ロングバージョンを有効にする</string>
-    <string name="settings_long_disable">ロングバージョンを無効にする</string>
+    
     <string name="settings_desync_fix">どちらかが終了したら両方を同期</string>
-</resources> 
+
+    <!-- ストレージメニュー -->
+    <string name="menu_storage">ストレージ</string>
+    <string name="storage_title">ストレージ管理</string>
+    <string name="storage_builtin_label">内蔵</string>
+    <string name="storage_imported_label">インポート済み</string>
+    <string name="storage_hide">非表示</string>
+    <string name="storage_unhide">表示</string>
+    <string name="storage_delete">削除</string>
+    <string name="storage_delete_all_user">インポート済みをすべて削除</string>
+    <string name="storage_unhide_all">内蔵をすべて表示</string>
+    <string name="storage_clear_stats">統計をクリア</string>
+    <string name="storage_routes_coming_soon">ルート履歴をクリア（近日公開）</string>
+    <string name="storage_confirm_delete_track">トラック「%1$s」を削除しますか？</string>
+    <string name="storage_confirm_delete_all_user">インポートされたすべてのトラックを削除しますか？</string>
+    <string name="storage_confirm_clear_stats">統計（トラック数を除く）をクリアしますか？</string>
+    <string name="storage_done">完了</string>
+    <string name="hysteresis_value">ヒステリシス: %1$d km/h</string>
+    <string name="hysteresis_label">ヒステリシス (km/h)</string>
+    <string name="hysteresis_value_initial">ヒステリシス: 3 km/h</string>
+    
+    <!-- 実績: 高速モード / ジャンプ台 -->
+    <string name="achievement_super_10_title">ジャンプ台で10分</string>
+    <string name="achievement_super_60_title">ジャンプ台で1時間</string>
+    <string name="achievement_super_600_title">ジャンプ台10時間</string>
+    <string name="achievement_super_10_desc">高速モードで10分</string>
+    <string name="achievement_super_60_desc">高速モードで60分</string>
+    <string name="achievement_super_600_desc">高速モードで600分</string>
+    
+    <!-- サイドメニューのヒント -->
+    <string name="hint_open_drawer">ヒント：左端からスワイプするか、左のアイコンをタップしてメニューを開きます</string>
+    <string name="action_got_it">了解</string>
+
+    <string name="search_hint">トラックを検索</string>
+
+    <!-- メニュー追加 -->
+    <string name="menu_language">言語</string>
+    <string name="menu_theme">テーマ</string>
+    <string name="menu_time_attack">タイムアタック</string>
+
+    <!-- 言語ダイアログ -->
+    <string name="dialog_language_title">言語を選択</string>
+    <string name="language_system_default">システム（デフォルト）</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <!-- 共通 -->
+    <string name="action_back">戻る</string>
+    
+    <!-- 履歴 -->
+    <string name="menu_route_history">ルート履歴</string>
+    <string name="history_title">ルート履歴</string>
+    <string name="history_no_routes">まだ記録されたルートはありません</string>
+    <string name="history_legend_hint">太い線 — 高速モード</string>
+    <string name="history_change_map_provider">マッププロバイダーを変更</string>
+    <string name="history_color_scheme">カラースキーム</string>
+    <string-array name="history_color_scheme_options">
+        <item>トラックごと</item>
+        <item>速度ごと</item>
+        <item>標高ごと</item>
+    </string-array>
+    <string name="history_time_period">期間</string>
+    <string-array name="history_time_period_options">
+        <item>過去24時間</item>
+        <item>過去7日間</item>
+        <item>過去30日間</item>
+        <item>全期間</item>
+    </string-array>
+
+    <!-- 実績：コードキーのエイリアス -->
+    <string name="ach_sup_10m_title">ジャンプ台10分</string>
+    <string name="ach_sup_10m_desc">高速モードで10分</string>
+    <string name="ach_sup_60m_title">ジャンプ台1時間</string>
+    <string name="ach_sup_60m_desc">高速モードで60分</string>
+    <string name="ach_sup_600m_title">ジャンプ台10時間</string>
+    <string name="ach_sup_600m_desc">高速モードで600分</string>
+
+    <!-- GPS設定 -->
+    <string name="gps_settings_title">GPS設定</string>
+    <string name="gps_accuracy">GPS精度</string>
+    <string name="gps_accuracy_high">高（GPSのみ）</string>
+    <string name="gps_accuracy_balanced">バランス（Wi-Fi/携帯）</string>
+    <string name="gps_accuracy_low">低</string>
+
+    <!-- 表示モードセレクター -->
+    <string name="view_mode_tracks">トラック</string>
+    <string name="view_mode_speed">速度</string>
+    <string name="view_mode_elevation">標高</string>
+    <string name="storage_clear_route_history">ルート履歴をクリア</string>
+    <string name="storage_confirm_clear_routes">ルート履歴をクリアしますか？</string>
+
+    <!-- 実績：距離 -->
+    <string name="ach_km_1_title">1 km 走行</string>
+    <string name="ach_km_1_desc">総距離: 1 km</string>
+    <string name="ach_km_10_title">10 km 走行</string>
+    <string name="ach_km_10_desc">総距離: 10 km</string>
+    <string name="ach_km_100_title">100 km 走行</string>
+    <string name="ach_km_100_desc">総距離: 100 km</string>
+
+    <!-- 実績：ライブラリのサイズ -->
+    <string name="ach_lib_1_title">ライブラリに1曲</string>
+    <string name="ach_lib_1_desc">利用可能なトラック合計: 1</string>
+    <string name="ach_lib_10_title">ライブラリに10曲</string>
+    <string name="ach_lib_10_desc">利用可能なトラック合計: 10</string>
+    <string name="ach_lib_100_title">ライブラリに100曲</string>
+    <string name="ach_lib_100_desc">利用可能なトラック合計: 100</string>
+
+    <!-- 複数形 -->
+    <plurals name="plays_count">
+        <item quantity="other">%d 回再生</item>
+    </plurals>
+
+    <string name="achievements_title">実績</string>
+    <string name="menu_track_settings">トラック設定</string>
+    <string name="menu_achievements">実績</string>
+    <string name="achievement_icon_desc">実績アイコン</string>
+
+    <!-- 統計 -->
+    <string name="stats_title">一般統計</string>
+    <string name="stats_total_distance">総距離</string>
+    <string name="stats_unique_tracks">ユニークなトラック</string>
+    <string name="stats_superspeed_time">スーパースピードモード時間</string>
+</resources>

@@ -1,29 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:background="@color/portal_bg_dark">
+    android:layout_height="match_parent">
 
-    <!-- Левая панель: список треков -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="?attr/backgroundColor">
+
+    <!-- Левая панель: меню и список треков -->
     <androidx.cardview.widget.CardView
-        android:layout_width="300dp"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/portal_card_bg">
+        app:cardBackgroundColor="?attr/cardBackgroundColor">
 
-        <ListView
-            android:id="@+id/listTracks"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/portal_orange"
-            android:dividerHeight="1dp"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            android:scrollbars="vertical" />
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/textMenuTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Меню"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="?attr/colorSecondary"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMenuSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Настройки"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="6dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMenuImportZip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Импорт из ZIP"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="6dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMenuImportFolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Импорт из папки"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="6dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMenuLongVersions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Длинные версии"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="6dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMenuDesyncFix"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Рассинхронизация"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="6dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMenuClearCache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Очистить кэш длинных версий"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/colorSecondary"
+                android:alpha="0.3"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Саундтреки"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?attr/textPrimaryOnBackground"
+                android:layout_marginBottom="4dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerTracks"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:padding="8dp"
+                android:scrollbars="vertical" />
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <!-- Правая панель: все остальные элементы -->
@@ -32,7 +115,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:padding="16dp"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:background="?attr/backgroundColor">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:text="Portal 2 Adaptive Songs"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                android:textColor="@color/portal_orange"
+                android:textColor="?attr/colorSecondary"
                 android:textStyle="bold"
                 android:layout_gravity="center_horizontal" />
 
@@ -62,22 +146,22 @@
                 android:layout_marginTop="24dp"
                 android:text="@string/faith_plate_threshold"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                android:textColor="@color/portal_white" />
+                android:textColor="?attr/textPrimaryOnBackground" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textHysteresis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Гистерезис: 3 км/ч"
+                android:text="@string/hysteresis_value_initial"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                android:textColor="@color/portal_white" />
+                android:textColor="?attr/textPrimaryOnBackground" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/burst_threshold"
-                android:textColor="@color/portal_white"
-                android:layout_marginTop="24dp" />
+                android:text="@string/hysteresis_label"
+                android:textColor="?attr/textPrimaryOnBackground"
+                android:layout_marginTop="16dp" />
 
             <com.google.android.material.slider.Slider
                 android:id="@+id/seekBurst"
@@ -86,15 +170,15 @@
                 android:valueFrom="0"
                 android:valueTo="100"
                 android:value="10"
-                app:trackColorActive="@color/portal_orange"
-                app:trackColorInactive="@color/portal_white"
-                app:thumbColor="@color/portal_orange" />
+                app:trackColorActive="?attr/sliderTrackActiveColor"
+                app:trackColorInactive="?attr/sliderTrackInactiveColor"
+                app:thumbColor="?attr/sliderThumbColor" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Гистерезис (км/ч)"
-                android:textColor="@color/portal_white"
+                android:text="@string/hysteresis_label"
+                android:textColor="?attr/textPrimaryOnBackground"
                 android:layout_marginTop="16dp" />
 
             <com.google.android.material.slider.Slider
@@ -104,9 +188,10 @@
                 android:valueFrom="0"
                 android:valueTo="10"
                 android:value="3"
-                app:trackColorActive="@color/portal_blue"
-                app:trackColorInactive="@color/portal_white"
-                app:thumbColor="@color/portal_blue" />
+                app:trackColorActive="?attr/sliderTrackActiveColor"
+                app:trackColorInactive="?attr/sliderTrackInactiveColor"
+                app:thumbColor="?attr/sliderThumbColor" />
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+    </LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

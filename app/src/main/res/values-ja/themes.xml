@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Localize only official brand names -->
+    <string name="theme_portal2_default">Portal 2（デフォルト）</string>
+    <string name="theme_asi">ASI (Aperture Science Innovators)</string>
+    <string name="theme_portal2_overgrowth">Portal 2（繁茂）</string>
+    <string name="theme_portal1">Portal 1</string>
+</resources>

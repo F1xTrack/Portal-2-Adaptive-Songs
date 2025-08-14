@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">Wybierz ścieżkę dźwiękową</string>
     <string name="import_zip">Wczytaj ścieżkę z ZIP</string>
-    <string name="long_version_checkbox">Użyj długich wersji (więcej pamięci, bez przerw)</string>
-    <string name="faith_plate_threshold">Próg Faith Plate: %1$d km/h</string>
+    
+    <string name="faith_plate_threshold">Próg platformy skokowej: %1$d km/h</string>
+    <string name="faith_plate_threshold_label">Próg płyty wiary (km/h)</string>
     <string name="burst_threshold">Próg wyzwolenia (km/h)</string>
     <string name="hint_sort_tracks">Sortowanie utworów</string>
     <string name="sort_alpha">Alfabetycznie</string>
@@ -11,12 +13,138 @@
     <string name="sort_duration">Według długości</string>
     <string name="settings_title">Ustawienia</string>
     <string name="settings_section_import">Importuj ścieżki dźwiękowe</string>
-    <string name="settings_section_long">Długie wersje utworów</string>
+    <string name="settings_section_tracks">Ustawienia ścieżki</string>
+    <string name="settings_tracks_placeholder">Ta sekcja będzie dostępna w przyszłych wersjach</string>
+    <string name="settings_section_route_recording">Nagrywanie trasy</string>
+    
     <string name="settings_section_desync">Korekcja desynchronizacji</string>
     <string name="settings_import_zip">Importuj z ZIP</string>
     <string name="settings_import_folder">Importuj z folderu</string>
     <string name="settings_import_file">Importuj pojedynczy plik</string>
-    <string name="settings_long_enable">Włącz wersję długą</string>
-    <string name="settings_long_disable">Wyłącz wersję długą</string>
+    
     <string name="settings_desync_fix">Synchronizuj oba strumienie po zakończeniu jednego</string>
-</resources> 
+
+    <!-- Menu pamięci masowej -->
+    <string name="menu_storage">Pamięć masowa</string>
+    <string name="storage_title">Zarządzanie pamięcią masową</string>
+    <string name="storage_builtin_label">Wbudowane</string>
+    <string name="storage_imported_label">Zaimportowane</string>
+    <string name="storage_hide">Ukryj</string>
+    <string name="storage_unhide">Pokaż</string>
+    <string name="storage_delete">Usuń</string>
+    <string name="storage_delete_all_user">Usuń wszystkie zaimportowane</string>
+    <string name="storage_unhide_all">Pokaż wszystkie wbudowane</string>
+    <string name="storage_clear_stats">Wyczyść statystyki</string>
+    <string name="storage_routes_coming_soon">Wyczyść historię tras (wkrótce)</string>
+    <string name="storage_confirm_delete_track">Czy na pewno usunąć ścieżkę &quot;%1$s&quot;?</string>
+    <string name="storage_confirm_delete_all_user">Czy na pewno usunąć wszystkie zaimportowane ścieżki?</string>
+    <string name="storage_confirm_clear_stats">Czy na pewno wyczyścić statystyki (oprócz liczby ścieżek)?</string>
+    <string name="storage_done">Gotowe</string>
+    <string name="hysteresis_value">Histereza: %1$d km/h</string>
+    <string name="hysteresis_label">Histereza (km/h)</string>
+    <string name="hysteresis_value_initial">Histereza: 3 km/h</string>
+    
+    <!-- Osiągnięcia: tryb przyspieszony / platforma skokowa -->
+    <string name="achievement_super_10_title">10 minut platformy skokowej</string>
+    <string name="achievement_super_60_title">1 godzina platformy skokowej</string>
+    <string name="achievement_super_600_title">10 godzin platformy skokowej</string>
+    <string name="achievement_super_10_desc">W trybie przyspieszonym 10 minut</string>
+    <string name="achievement_super_60_desc">W trybie przyspieszonym 60 minut</string>
+    <string name="achievement_super_600_desc">W trybie przyspieszonym 600 minut</string>
+    
+    <!-- Wskazówka menu bocznego -->
+    <string name="hint_open_drawer">Wskazówka: otwórz menu, przesuwając palcem od lewej krawędzi lub dotykając ikony po lewej stronie</string>
+    <string name="action_got_it">Rozumiem</string>
+
+    <string name="search_hint">Szukaj utworów</string>
+
+    <!-- Dodatki do menu -->
+    <string name="menu_language">Język</string>
+    <string name="menu_theme">Theme</string>
+
+    <!-- Dialog języka -->
+    <string name="dialog_language_title">Wybierz język</string>
+    <string name="language_system_default">Systemowy (domyślny)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <!-- Wspólne -->
+    <string name="action_back">Wstecz</string>
+
+    <!-- Historia -->
+    <string name="menu_route_history">Historia tras</string>
+    <string name="history_title">Historia tras</string>
+    <string name="history_no_routes">Brak zarejestrowanych tras</string>
+    <string name="history_legend_hint">Gruba linia — tryb przyspieszony</string>
+    <string name="history_change_map_provider">Zmień dostawcę map</string>
+    <string name="history_color_scheme">Schemat kolorów</string>
+    <string-array name="history_color_scheme_options">
+        <item>Według ścieżki</item>
+        <item>Według prędkości</item>
+        <item>Według wysokości</item>
+    </string-array>
+    <string name="history_time_period">Okres</string>
+    <string-array name="history_time_period_options">
+        <item>Ostatnie 24 godziny</item>
+        <item>Ostatnie 7 dni</item>
+        <item>Ostatnie 30 dni</item>
+        <item>Cały okres</item>
+    </string-array>
+
+    <!-- Osiągnięcia: aliasy dla kluczy w kodzie -->
+    <string name="ach_sup_10m_title">10 minut platformy skokowej</string>
+    <string name="ach_sup_10m_desc">W trybie przyspieszonym 10 minut</string>
+    <string name="ach_sup_60m_title">1 godzina platformy skokowej</string>
+    <string name="ach_sup_60m_desc">W trybie przyspieszonym 60 minut</string>
+    <string name="ach_sup_600m_title">10 godzin platformy skokowej</string>
+    <string name="ach_sup_600m_desc">W trybie przyspieszonym 600 minut</string>
+
+    <!-- Ustawienia GPS -->
+    <string name="gps_settings_title">Ustawienia GPS</string>
+    <string name="gps_accuracy">Dokładność GPS</string>
+    <string name="gps_accuracy_high">Wysoka (tylko GPS)</string>
+    <string name="gps_accuracy_balanced">Zrównoważona (Wi-Fi/komórkowa)</string>
+    <string name="gps_accuracy_low">Niska</string>
+
+    <!-- Wybór trybu widoku -->
+    <string name="view_mode_tracks">Ścieżki</string>
+    <string name="view_mode_speed">Prędkość</string>
+    <string name="view_mode_elevation">Wysokość</string>
+    <string name="storage_clear_route_history">Wyczyść historię tras</string>
+    <string name="storage_confirm_clear_routes">Czy na pewno wyczyścić historię tras?</string>
+
+    <!-- Osiągnięcia: dystans -->
+    <string name="ach_km_1_title">Pokonano 1 km</string>
+    <string name="ach_km_1_desc">Łączny dystans: 1 km</string>
+    <string name="ach_km_10_title">Pokonano 10 km</string>
+    <string name="ach_km_10_desc">Łączny dystans: 10 km</string>
+    <string name="ach_km_100_title">Pokonano 100 km</string>
+    <string name="ach_km_100_desc">Łączny dystans: 100 km</string>
+
+    <!-- Osiągnięcia: rozmiar biblioteki -->
+    <string name="ach_lib_1_title">1 utwór w bibliotece</string>
+    <string name="ach_lib_1_desc">Łącznie dostępnych utworów: 1</string>
+    <string name="ach_lib_10_title">10 utworów w bibliotece</string>
+    <string name="ach_lib_10_desc">Łącznie dostępnych utworów: 10</string>
+    <string name="ach_lib_100_title">100 utworów w bibliotece</string>
+    <string name="ach_lib_100_desc">Łącznie dostępnych utworów: 100</string>
+
+    <!-- Liczba odtworzeń -->
+    <plurals name="plays_count">
+        <item quantity="one">%d odtworzenie</item>
+        <item quantity="few">%d odtworzenia</item>
+        <item quantity="many">%d odtworzeń</item>
+        <item quantity="other">%d odtworzenia</item>
+    </plurals>
+
+    <string name="achievements_title">Osiągnięcia</string>
+    <string name="menu_track_settings">Ustawienia ścieżki</string>
+    <string name="menu_achievements">Osiągnięcia</string>
+    <string name="achievement_icon_desc">Ikona osiągnięcia</string>
+
+    <!-- Statystyki -->
+    <string name="stats_title">Statystyki ogólne</string>
+    <string name="stats_total_distance">Całkowity dystans</string>
+    <string name="stats_unique_tracks">Unikalne ścieżki</string>
+    <string name="stats_superspeed_time">Czas w trybie superprędkości</string>
+</resources>

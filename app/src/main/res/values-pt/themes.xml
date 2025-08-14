@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_portal2_default">Portal 2 (padrão)</string>
+    <string name="theme_asi">ASI (Aperture Science Innovators)</string>
+    <string name="theme_portal2_overgrowth">Portal 2 (Crescimento excessivo)</string>
+    <string name="theme_portal1">Portal 1</string>
+</resources>
