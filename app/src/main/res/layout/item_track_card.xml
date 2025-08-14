@@ -6,7 +6,7 @@
     android:layout_marginBottom="8dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="@color/portal_card_bg">
+    app:cardBackgroundColor="?attr/cardBackgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@android:drawable/ic_media_play"
-            android:tint="@color/portal_orange"
+            android:tint="?attr/colorSecondary"
             android:contentDescription="icon" />
 
         <LinearLayout
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="Название трека"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/portal_white"
+                android:textColor="?attr/textPrimaryOnBackground"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:text="3:45"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:textColor="@color/portal_blue"
+                    android:textColor="?attr/colorInfo"
                     android:layout_marginEnd="12dp" />
                 <TextView
                     android:id="@+id/textTrackPlays"
@@ -59,8 +59,8 @@
                     android:layout_height="wrap_content"
                     android:text="12 прослушиваний"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:textColor="@color/portal_orange" />
+                    android:textColor="?attr/colorSecondary" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</com.google.android.material.card.MaterialCardView> 
+</com.google.android.material.card.MaterialCardView>

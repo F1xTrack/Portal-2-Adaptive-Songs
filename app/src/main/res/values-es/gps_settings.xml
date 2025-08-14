@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_map_gps">Mapa y GPS</string>
+    <string name="settings_use_network_location">Usar Wi‑Fi/redes para la ubicación</string>
+    <string name="settings_recording_interval">Intervalo de registro</string>
+    <string name="recording_interval_value">Cada %1$d s</string>
+</resources>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">사운드트랙 선택</string>
     <string name="import_zip">ZIP에서 사운드트랙 불러오기</string>
-    <string name="long_version_checkbox">롱 버전 사용 (메모리 사용 증가, 끊김 없음)</string>
-    <string name="faith_plate_threshold">Faith Plate 임계값: %1$d km/h</string>
+    
+    <string name="faith_plate_threshold">점프대 임계값: %1$d km/h</string>
+    <string name="faith_plate_threshold_label">신뢰의 도약대 임계값 (km/h)</string>
     <string name="burst_threshold">트리거 임계값 (km/h)</string>
     <string name="hint_sort_tracks">트랙 정렬</string>
     <string name="sort_alpha">알파벳순</string>
@@ -11,12 +13,161 @@
     <string name="sort_duration">길이순</string>
     <string name="settings_title">설정</string>
     <string name="settings_section_import">사운드트랙 가져오기</string>
-    <string name="settings_section_long">롱 버전</string>
+    <string name="settings_section_tracks">트랙 설정</string>
+    <string name="settings_tracks_placeholder">이 섹션은 향후 버전에서 사용할 수 있습니다</string>
+    <string name="settings_section_route_recording">경로 기록</string>
+    
     <string name="settings_section_desync">비동기 수정</string>
     <string name="settings_import_zip">ZIP에서 가져오기</string>
     <string name="settings_import_folder">폴더에서 가져오기</string>
     <string name="settings_import_file">단일 파일 가져오기</string>
-    <string name="settings_long_enable">롱 버전 사용</string>
-    <string name="settings_long_disable">롱 버전 해제</string>
+    
     <string name="settings_desync_fix">한쪽이 끝나면 두 스트림 동기화</string>
-</resources> 
+
+    <!-- 저장소 메뉴 -->
+    <string name="menu_storage">저장소</string>
+    <string name="storage_title">저장소 관리</string>
+    <string name="storage_builtin_label">내장</string>
+    <string name="storage_imported_label">가져옴</string>
+    <string name="storage_hide">숨기기</string>
+    <string name="storage_unhide">숨기기 해제</string>
+    <string name="storage_delete">삭제</string>
+    <string name="storage_delete_all_user">가져온 모든 항목 삭제</string>
+    <string name="storage_unhide_all">모든 내장 항목 숨기기 해제</string>
+    <string name="storage_clear_stats">통계 지우기</string>
+    <string name="storage_routes_coming_soon">경로 기록 지우기 (곧 제공)</string>
+    <string name="storage_confirm_delete_track">&quot;%1$s&quot; 트랙을 삭제하시겠습니까?</string>
+    <string name="storage_confirm_delete_all_user">가져온 모든 트랙을 삭제하시겠습니까?</string>
+    <string name="storage_confirm_clear_stats">통계(트랙 수 제외)를 지우시겠습니까?</string>
+    <string name="storage_done">완료</string>
+    <string name="hysteresis_value">히스테리시스: %1$d km/h</string>
+    <string name="hysteresis_label">히스테리시스 (km/h)</string>
+    <string name="hysteresis_value_initial">히스테리시스: 3 km/h</string>
+    
+    <!-- 업적: 가속 모드 / 점프대 -->
+    <string name="achievement_super_10_title">점프대 10분</string>
+    <string name="achievement_super_60_title">점프대 1시간</string>
+    <string name="achievement_super_600_title">점프대 10시간</string>
+    <string name="achievement_super_10_desc">가속 모드에서 10분</string>
+    <string name="achievement_super_60_desc">가속 모드에서 60분</string>
+    <string name="achievement_super_600_desc">가속 모드에서 600분</string>
+    
+    <!-- 사이드 메뉴 힌트 -->
+    <string name="hint_open_drawer">힌트: 왼쪽 가장자리에서 스와이프하거나 왼쪽 아이콘을 탭하여 메뉴를 엽니다</string>
+    <string name="action_got_it">알겠습니다</string>
+
+    <string name="search_hint">트랙 검색</string>
+
+    <!-- 메뉴 추가 -->
+    <string name="menu_language">언어</string>
+    <string name="menu_theme">테마</string>
+    <string name="menu_time_attack">타임 어택</string>
+
+    <!-- 언어 대화상자 -->
+    <string name="dialog_language_title">언어 선택</string>
+    <string name="language_system_default">시스템 (기본값)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <!-- 테마 대화상자 -->
+    <string name="dialog_theme_title">테마 선택</string>
+    <string name="theme_system">시스템</string>
+    <string name="theme_light">라이트</string>
+    <string name="theme_dark">다크</string>
+    <string name="theme_p1">Portal</string>
+    <string name="theme_p2o">Portal 2 (주황색)</string>
+    <string name="theme_asi">Aperture Science Innovators</string>
+
+    <!-- 타임 어택 -->
+    <string name="settings_section_time_attack">타임 어택</string>
+    <string name="difficulty">난이도</string>
+    <string name="difficulty_easy">쉬움</string>
+    <string name="difficulty_normal">보통</string>
+    <string name="difficulty_hard">어려움</string>
+    <string name="time_attack_trigger_now">지금 타임 어택 시작</string>
+    <string name="time_attack_title">타임 어택</string>
+    <string name="time_attack_desc_keep_above">속도를 %2$d초 동안 최소 %1$d km/h로 유지</string>
+    <string name="time_attack_progress">진행률</string>
+    <string name="time_attack_success">성공!</string>
+    <string name="time_attack_failed">실패</string>
+    <string name="time_attack_finished">완료</string>
+    <string name="time_attack_next_mission_in">다음 미션까지: %1$s</string>
+    <string name="time_attack_next_mission_now">다음 미션을 지금 이용할 수 있습니다</string>
+
+    <!-- 일반 -->
+    <string name="action_back">뒤로</string>
+    
+    <!-- 기록 -->
+    <string name="menu_route_history">경로 기록</string>
+    <string name="history_title">경로 기록</string>
+    <string name="history_no_routes">아직 기록된 경로가 없습니다</string>
+    <string name="history_legend_hint">두꺼운 선 — 가속 모드</string>
+    <string name="history_change_map_provider">지도 제공자 변경</string>
+    <string name="history_color_scheme">색 구성표</string>
+    <string-array name="history_color_scheme_options">
+        <item>트랙별</item>
+        <item>속도별</item>
+        <item>고도별</item>
+    </string-array>
+    <string name="history_time_period">기간</string>
+    <string-array name="history_time_period_options">
+        <item>지난 24시간</item>
+        <item>지난 7일</item>
+        <item>지난 30일</item>
+        <item>전체 기간</item>
+    </string-array>
+
+    <!-- 업적: 코드 키의 별칭 -->
+    <string name="ach_sup_10m_title">점프대 10분</string>
+    <string name="ach_sup_10m_desc">가속 모드에서 10분</string>
+    <string name="ach_sup_60m_title">점프대 1시간</string>
+    <string name="ach_sup_60m_desc">가속 모드에서 60분</string>
+    <string name="ach_sup_600m_title">점프대 10시간</string>
+    <string name="ach_sup_600m_desc">가속 모드에서 600분</string>
+
+    <!-- GPS 설정 -->
+    <string name="gps_settings_title">GPS 설정</string>
+    <string name="gps_accuracy">GPS 정확도</string>
+    <string name="gps_accuracy_high">높음 (GPS만)</string>
+    <string name="gps_accuracy_balanced">균형 (Wi-Fi/셀룰러)</string>
+    <string name="gps_accuracy_low">낮음</string>
+
+    <!-- 보기 모드 선택기 -->
+    <string name="view_mode_tracks">트랙</string>
+    <string name="view_mode_speed">속도</string>
+    <string name="view_mode_elevation">고도</string>
+    <string name="storage_clear_route_history">경로 기록 지우기</string>
+    <string name="storage_confirm_clear_routes">경로 기록을 지우시겠습니까?</string>
+
+    <!-- 업적: 거리 -->
+    <string name="ach_km_1_title">1km 이동</string>
+    <string name="ach_km_1_desc">총 거리: 1km</string>
+    <string name="ach_km_10_title">10km 이동</string>
+    <string name="ach_km_10_desc">총 거리: 10km</string>
+    <string name="ach_km_100_title">100km 이동</string>
+    <string name="ach_km_100_desc">총 거리: 100km</string>
+
+    <!-- 업적: 라이브러리 크기 -->
+    <string name="ach_lib_1_title">라이브러리에 트랙 1개</string>
+    <string name="ach_lib_1_desc">사용 가능한 총 트랙: 1</string>
+    <string name="ach_lib_10_title">라이브러리에 트랙 10개</string>
+    <string name="ach_lib_10_desc">사용 가능한 총 트랙: 10</string>
+    <string name="ach_lib_100_title">라이브러리에 트랙 100개</string>
+    <string name="ach_lib_100_desc">사용 가능한 총 트랙: 100</string>
+
+    <!-- 복수형 -->
+    <plurals name="plays_count">
+        <item quantity="other">%d회 재생</item>
+    </plurals>
+
+    <string name="achievements_title">업적</string>
+    <string name="menu_track_settings">트랙 설정</string>
+    <string name="menu_achievements">업적</string>
+    <string name="achievement_icon_desc">업적 아이콘</string>
+
+    <!-- 통계 -->
+    <string name="stats_title">일반 통계</string>
+    <string name="stats_total_distance">총 거리</string>
+    <string name="stats_unique_tracks">고유 트랙</string>
+    <string name="stats_superspeed_time">초고속 모드 시간</string>
+</resources>

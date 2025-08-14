@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_map_gps">地图与GPS</string>
+    <string name="settings_use_network_location">使用 Wi‑Fi/网络进行定位</string>
+    <string name="settings_recording_interval">记录间隔</string>
+    <string name="recording_interval_value">每 %1$d 秒</string>
+</resources>

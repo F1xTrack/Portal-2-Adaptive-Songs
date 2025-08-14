@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">Soundtrack wählen</string>
     <string name="import_zip">Soundtrack aus ZIP laden</string>
-    <string name="long_version_checkbox">Lange Versionen verwenden (mehr Speicher, keine Pausen)</string>
-    <string name="faith_plate_threshold">Faith Plate Schwelle: %1$d km/h</string>
+    
+    <string name="faith_plate_threshold">Sprungplatte-Schwelle: %1$d km/h</string>
+    <string name="faith_plate_threshold_label">Sprungplatte-Schwelle (km/h)</string>
     <string name="burst_threshold">Auslöseschwelle (km/h)</string>
     <string name="hint_sort_tracks">Titel sortieren</string>
     <string name="sort_alpha">Alphabetisch</string>
@@ -11,12 +13,152 @@
     <string name="sort_duration">Nach Dauer</string>
     <string name="settings_title">Einstellungen</string>
     <string name="settings_section_import">Soundtracks importieren</string>
-    <string name="settings_section_long">Lange Versionen der Titel</string>
+    <string name="settings_section_tracks">Track-Einstellungen</string>
+    <string name="settings_tracks_placeholder">Dieser Abschnitt wird in zukünftigen Versionen verfügbar sein</string>
+    <string name="settings_section_route_recording">Routenaufzeichnung</string>
+    
     <string name="settings_section_desync">Desynchronisationskorrektur</string>
     <string name="settings_import_zip">Aus ZIP importieren</string>
     <string name="settings_import_folder">Aus Ordner importieren</string>
     <string name="settings_import_file">Einzelne Datei importieren</string>
-    <string name="settings_long_enable">Lange Version aktivieren</string>
-    <string name="settings_long_disable">Lange Version deaktivieren</string>
+    
     <string name="settings_desync_fix">Beide Streams synchronisieren, wenn einer endet</string>
-</resources> 
+
+    <!-- Speichermenü -->
+    <string name="menu_storage">Speicher</string>
+    <string name="storage_title">Speicherverwaltung</string>
+    <string name="storage_builtin_label">Integriert</string>
+    <string name="storage_imported_label">Importiert</string>
+    <string name="storage_hide">Ausblenden</string>
+    <string name="storage_unhide">Einblenden</string>
+    <string name="storage_delete">Löschen</string>
+    <string name="storage_delete_all_user">Alle importierten löschen</string>
+    <string name="storage_unhide_all">Alle integrierten einblenden</string>
+    <string name="storage_clear_stats">Statistiken löschen</string>
+    <string name="storage_routes_coming_soon">Routenverlauf löschen (bald)</string>
+    <string name="storage_confirm_delete_track">Track "%1$s" löschen?</string>
+    <string name="storage_confirm_delete_all_user">Alle importierten Tracks löschen?</string>
+    <string name="storage_confirm_clear_stats">Statistiken löschen (außer Track-Anzahl)?</string>
+    <string name="storage_done">Fertig</string>
+    <string name="hysteresis_value">Hysterese: %1$d km/h</string>
+    <string name="hysteresis_label">Hysterese (km/h)</string>
+    <string name="hysteresis_value_initial">Hysterese: 3 km/h</string>
+    
+    <!-- Erfolge: Hochgeschwindigkeitsmodus / Sprungplatte -->
+    <string name="achievement_super_10_title">10 Minuten Sprungplatte</string>
+    <string name="achievement_super_60_title">1 Stunde Sprungplatte</string>
+    <string name="achievement_super_600_title">10 Stunden Sprungplatte</string>
+    <string name="achievement_super_10_desc">Im beschleunigten Modus 10 Minuten</string>
+    <string name="achievement_super_60_desc">Im beschleunigten Modus 60 Minuten</string>
+    <string name="achievement_super_600_desc">Im beschleunigten Modus 600 Minuten</string>
+    
+    <!-- Schubladen-Hinweis -->
+    <string name="hint_open_drawer">Hinweis: Öffnen Sie das Menü, indem Sie vom linken Rand wischen oder auf das Symbol links tippen</string>
+    <string name="action_got_it">Verstanden</string>
+    <string name="search_hint">Tracks durchsuchen</string>
+
+    <!-- Menü-Ergänzungen -->
+    <string name="menu_language">Sprache</string>
+    <string name="menu_time_attack">Zeitangriff</string>
+    <string name="menu_theme">Theme</string>
+
+    <!-- Sprachdialog -->
+    <string name="dialog_language_title">Sprache auswählen</string>
+    <string name="language_system_default">System (Standard)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <!-- Zeitangriff -->
+    <string name="settings_section_time_attack">Zeitangriff</string>
+    <string name="difficulty">Schwierigkeit</string>
+    <string name="difficulty_easy">Einfach</string>
+    <string name="difficulty_normal">Normal</string>
+    <string name="difficulty_hard">Schwer</string>
+    <string name="time_attack_trigger_now">Zeitangriff jetzt starten</string>
+    <string name="time_attack_title">Zeitangriff</string>
+    <string name="time_attack_desc_keep_above">Geschwindigkeit für %2$d s bei mindestens %1$d km/h halten</string>
+    <string name="time_attack_progress">Fortschritt</string>
+    <string name="time_attack_success">Erfolg!</string>
+    <string name="time_attack_failed">Fehlgeschlagen</string>
+    <string name="time_attack_finished">Beendet</string>
+    <string name="time_attack_next_mission_in">Nächste Mission in: %1$s</string>
+    <string name="time_attack_next_mission_now">Nächste Mission ist jetzt verfügbar</string>
+
+    <!-- Common -->
+    <string name="action_back">Zurück</string>
+    
+    <!-- History -->
+    <string name="menu_route_history">Routenverlauf</string>
+    <string name="history_title">Routenverlauf</string>
+    <string name="history_no_routes">Noch keine Routen aufgezeichnet</string>
+    <string name="history_legend_hint">Dicke Linie — Hochgeschwindigkeit</string>
+    <string name="history_change_map_provider">Kartenanbieter wechseln</string>
+    <string name="history_color_scheme">Farbschema</string>
+    <string-array name="history_color_scheme_options">
+        <item>Nach Track</item>
+        <item>Nach Geschwindigkeit</item>
+        <item>Nach Höhe</item>
+    </string-array>
+    <string name="history_time_period">Zeitraum</string>
+    <string-array name="history_time_period_options">
+        <item>Letzte 24 Stunden</item>
+        <item>Letzte 7 Tage</item>
+        <item>Letzte 30 Tage</item>
+        <item>Gesamte Zeit</item>
+    </string-array>
+
+    <!-- Erfolge: Aliasse für Code-Schlüssel -->
+    <string name="ach_sup_10m_title">10 Minuten Sprungplatte</string>
+    <string name="ach_sup_10m_desc">Im beschleunigten Modus 10 Minuten</string>
+    <string name="ach_sup_60m_title">1 Stunde Sprungplatte</string>
+    <string name="ach_sup_60m_desc">Im beschleunigten Modus 60 Minuten</string>
+    <string name="ach_sup_600m_title">10 Stunden Sprungplatte</string>
+    <string name="ach_sup_600m_desc">Im beschleunigten Modus 600 Minuten</string>
+
+    <!-- GPS-Einstellungen -->
+    <string name="gps_settings_title">GPS-Einstellungen</string>
+    <string name="gps_accuracy">GPS-Genauigkeit</string>
+    <string name="gps_accuracy_high">Hoch (nur GPS)</string>
+    <string name="gps_accuracy_balanced">Ausgeglichen (WLAN/Mobilfunk)</string>
+    <string name="gps_accuracy_low">Niedrig</string>
+
+    <!-- Ansichtsmodus-Umschalter -->
+    <string name="view_mode_tracks">Tracks</string>
+    <string name="view_mode_speed">Geschwindigkeit</string>
+    <string name="view_mode_elevation">Höhe</string>
+    <string name="storage_clear_route_history">Routenverlauf löschen</string>
+    <string name="storage_confirm_clear_routes">Routenverlauf löschen?</string>
+
+    <!-- Erfolge: Distanz -->
+    <string name="ach_km_1_title">1 km zurückgelegt</string>
+    <string name="ach_km_1_desc">Zurückgelegte Distanz: 1 km</string>
+    <string name="ach_km_10_title">10 km zurückgelegt</string>
+    <string name="ach_km_10_desc">Zurückgelegte Distanz: 10 km</string>
+    <string name="ach_km_100_title">100 km zurückgelegt</string>
+    <string name="ach_km_100_desc">Zurückgelegte Distanz: 100 km</string>
+
+    <!-- Erfolge: Bibliotheksgröße -->
+    <string name="ach_lib_1_title">1 Titel in der Bibliothek</string>
+    <string name="ach_lib_1_desc">Verfügbare Titel insgesamt: 1</string>
+    <string name="ach_lib_10_title">10 Titel in der Bibliothek</string>
+    <string name="ach_lib_10_desc">Verfügbare Titel insgesamt: 10</string>
+    <string name="ach_lib_100_title">100 Titel in der Bibliothek</string>
+    <string name="ach_lib_100_desc">Verfügbare Titel insgesamt: 100</string>
+
+    <!-- Pluralformen -->
+    <plurals name="plays_count">
+        <item quantity="one">%d Wiedergabe</item>
+        <item quantity="other">%d Wiedergaben</item>
+    </plurals>
+
+    <string name="achievements_title">Erfolge</string>
+    <string name="menu_track_settings">Track-Einstellungen</string>
+    <string name="menu_achievements">Erfolge</string>
+    <string name="achievement_icon_desc">Erfolgssymbol</string>
+
+    <!-- Statistiken -->
+    <string name="stats_title">Gesamtstatistiken</string>
+    <string name="stats_total_distance">Gesamtstrecke</string>
+    <string name="stats_unique_tracks">Einzigartige Tracks</string>
+    <string name="stats_superspeed_time">Zeit im Hochgeschwindigkeitsmodus</string>
+</resources>

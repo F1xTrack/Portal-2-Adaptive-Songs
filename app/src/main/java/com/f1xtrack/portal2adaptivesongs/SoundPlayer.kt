@@ -5,7 +5,6 @@ import android.media.MediaPlayer
 import android.os.Handler
 import android.util.Log
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import kotlin.random.Random
 
@@ -22,28 +21,7 @@ class SoundPlayer(private val context: Context) {
     private var lastNormalVariant: String? = null
     private var lastSuperVariant: String? = null
 
-    // Генерация длинного файла (20x) в кэше для конкретной вариации (например, normal2)
-    private fun getOrCreateLongFile(trackName: String, fileName: String, isUserTrack: Boolean, force: Boolean = false): File {
-        val cacheFile = File(context.cacheDir, "${trackName}_${fileName}_long.wav")
-        if (cacheFile.exists() && !force) return cacheFile
-        try {
-            val data = if (isUserTrack) {
-                val userFile = File(context.filesDir, "soundtracks/$trackName/$fileName.wav")
-                userFile.readBytes()
-            } else {
-                val input = context.assets.open("$trackName/$fileName.wav")
-                val bytes = input.readBytes()
-                input.close()
-                bytes
-            }
-            val out = FileOutputStream(cacheFile)
-            repeat(20) { out.write(data) }
-            out.close()
-        } catch (e: IOException) {
-            Log.e("SoundPlayer", "Error creating long file", e)
-        }
-        return cacheFile
-    }
+    // Удалены длинные версии: используем только оригинальные файлы вариаций
 
     private fun getShortFile(trackName: String, fileName: String, isUserTrack: Boolean): File {
         return if (isUserTrack) {
@@ -88,19 +66,11 @@ class SoundPlayer(private val context: Context) {
         return if (pool.isNotEmpty()) pool.random() else variants.random()
     }
 
-    private fun getSourceFileFor(trackName: String, variantName: String, isUserTrack: Boolean, useLong: Boolean): File {
-        return if (useLong) getOrCreateLongFile(trackName, variantName, isUserTrack) else getShortFile(trackName, variantName, isUserTrack)
+    private fun getSourceFileFor(trackName: String, variantName: String, isUserTrack: Boolean): File {
+        return getShortFile(trackName, variantName, isUserTrack)
     }
 
-    // Удалить длинные файлы и флаги для конкретного трека (все вариации)
-    fun removeLongFilesForTrack(trackName: String, isUserTrack: Boolean) {
-        context.cacheDir.listFiles()?.forEach { file ->
-            val name = file.name
-            if (name.startsWith("${trackName}_") && (name.endsWith("_long.wav") || name.endsWith("_long.flag"))) {
-                file.delete()
-            }
-        }
-    }
+    // Удалены операции с длинными файлами
 
     // Запуск обоих режимов одновременно с выбором случайной вариации
     fun playBoth(trackName: String, isUserTrack: Boolean) {
@@ -115,13 +85,12 @@ class SoundPlayer(private val context: Context) {
         lastSuperVariant = null
         try {
             val prefs = context.getSharedPreferences("track_settings", Context.MODE_PRIVATE)
-            val useLong = prefs.getBoolean("long_$trackName", false)
 
             val normalVariant = chooseRandomVariant(trackName, "normal", isUserTrack, exclude = null).also { lastNormalVariant = it }
             val superVariant = chooseRandomVariant(trackName, "superspeed", isUserTrack, exclude = null).also { lastSuperVariant = it }
 
-            val fileNormal = getSourceFileFor(trackName, normalVariant, isUserTrack, useLong)
-            val fileSuper = getSourceFileFor(trackName, superVariant, isUserTrack, useLong)
+            val fileNormal = getSourceFileFor(trackName, normalVariant, isUserTrack)
+            val fileSuper = getSourceFileFor(trackName, superVariant, isUserTrack)
 
             mediaPlayer?.setDataSource(fileNormal.absolutePath)
             mediaPlayerAlt?.setDataSource(fileSuper.absolutePath)
@@ -144,7 +113,6 @@ class SoundPlayer(private val context: Context) {
     // Кроссфейд между двумя MediaPlayer с переинициализацией целевого плеера на случайную вариацию
     fun crossfadeTo(trackName: String, toSuperSpeed: Boolean, isUserTrack: Boolean) {
         val prefs = context.getSharedPreferences("track_settings", Context.MODE_PRIVATE)
-        val useLong = prefs.getBoolean("long_$trackName", false)
 
         // Если сменился трек, сбрасываем последние вариации
         if (currentTrackName != trackName) {
@@ -160,7 +128,7 @@ class SoundPlayer(private val context: Context) {
                 lastSuperVariant = newVariant
                 val target = mediaPlayerAlt ?: MediaPlayer().also { mediaPlayerAlt = it }
                 target.reset()
-                val file = getSourceFileFor(trackName, newVariant, isUserTrack, useLong)
+                val file = getSourceFileFor(trackName, newVariant, isUserTrack)
                 target.setDataSource(file.absolutePath)
                 target.prepare()
                 target.seekTo(0)
@@ -172,7 +140,7 @@ class SoundPlayer(private val context: Context) {
                 lastNormalVariant = newVariant
                 val target = mediaPlayer ?: MediaPlayer().also { mediaPlayer = it }
                 target.reset()
-                val file = getSourceFileFor(trackName, newVariant, isUserTrack, useLong)
+                val file = getSourceFileFor(trackName, newVariant, isUserTrack)
                 target.setDataSource(file.absolutePath)
                 target.prepare()
                 target.seekTo(0)
@@ -219,41 +187,7 @@ class SoundPlayer(private val context: Context) {
         }
     }
 
-    // Проверка, используется ли длинная версия для трека (по флагу конкретной вариации)
-    fun isLongVersionEnabled(trackName: String, fileName: String): Boolean {
-        val flagFile = File(context.cacheDir, "${trackName}_${fileName}_long.flag")
-        return flagFile.exists()
-    }
-
-    // Установить/снять флаг длинной версии для конкретной вариации
-    fun setLongVersionEnabled(trackName: String, fileName: String, enabled: Boolean) {
-        val flagFile = File(context.cacheDir, "${trackName}_${fileName}_long.flag")
-        if (enabled) flagFile.writeText("1") else flagFile.delete()
-    }
-
-    // Асинхронное создание длинных файлов для ВСЕХ вариаций normal/superspeed
-    fun createAllLongFilesForTrackAsync(trackName: String, isUserTrack: Boolean, onDone: () -> Unit) {
-        Thread {
-            try {
-                val normals = listVariantNames(trackName, "normal", isUserTrack).ifEmpty { listOf("normal") }
-                val supers = listVariantNames(trackName, "superspeed", isUserTrack).ifEmpty { listOf("superspeed") }
-                (normals + supers).forEach { variant ->
-                    getOrCreateLongFile(trackName, variant, isUserTrack, force = true)
-                    setLongVersionEnabled(trackName, variant, true)
-                }
-            } catch (_: Exception) {
-            } finally {
-                onDone()
-            }
-        }.start()
-    }
-
-    // Очистка кэша длинных файлов и флагов (всех треков)
-    fun clearCache() {
-        context.cacheDir.listFiles()?.forEach {
-            if (it.name.endsWith("_long.wav") || it.name.endsWith("_long.flag")) it.delete()
-        }
-    }
+    // Удалены проверки и генерация длинных версий
 
     // Синхронный рестарт обоих плееров
     private fun restartBothPlayers() {

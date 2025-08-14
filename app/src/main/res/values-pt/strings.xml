@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">Escolha a trilha sonora</string>
     <string name="import_zip">Carregar trilha sonora do ZIP</string>
-    <string name="long_version_checkbox">Usar versões longas (mais memória, sem pausas)</string>
-    <string name="faith_plate_threshold">Limite do Faith Plate: %1$d km/h</string>
+    
+    <string name="faith_plate_threshold">Limite da plataforma de salto: %1$d km/h</string>
+    <string name="faith_plate_threshold_label">Limite da Placa de Fé (km/h)</string>
     <string name="burst_threshold">Limite de acionamento (km/h)</string>
     <string name="hint_sort_tracks">Ordenar faixas</string>
     <string name="sort_alpha">Alfabética</string>
@@ -11,12 +13,136 @@
     <string name="sort_duration">Por duração</string>
     <string name="settings_title">Configurações</string>
     <string name="settings_section_import">Importar trilhas sonoras</string>
-    <string name="settings_section_long">Versões longas das faixas</string>
+    <string name="settings_section_tracks">Configurações de Faixa</string>
+    <string name="settings_tracks_placeholder">Esta seção estará disponível em versões futuras</string>
+    <string name="settings_section_route_recording">Gravação de rota</string>
+    
     <string name="settings_section_desync">Correção de dessincronização</string>
     <string name="settings_import_zip">Importar do ZIP</string>
     <string name="settings_import_folder">Importar da pasta</string>
     <string name="settings_import_file">Importar arquivo único</string>
-    <string name="settings_long_enable">Ativar versão longa</string>
-    <string name="settings_long_disable">Desativar versão longa</string>
+    
     <string name="settings_desync_fix">Sincronizar ambos os fluxos ao terminar um</string>
-</resources> 
+
+    <!-- Menu de armazenamento -->
+    <string name="menu_storage">Armazenamento</string>
+    <string name="storage_title">Gerenciamento de Armazenamento</string>
+    <string name="storage_builtin_label">Embutido</string>
+    <string name="storage_imported_label">Importado</string>
+    <string name="storage_hide">Ocultar</string>
+    <string name="storage_unhide">Mostrar</string>
+    <string name="storage_delete">Excluir</string>
+    <string name="storage_delete_all_user">Excluir todos os importados</string>
+    <string name="storage_unhide_all">Mostrar todos os embutidos</string>
+    <string name="storage_clear_stats">Limpar estatísticas</string>
+    <string name="storage_routes_coming_soon">Limpar histórico de rotas (em breve)</string>
+    <string name="storage_confirm_delete_track">Excluir a faixa &quot;%1$s&quot;?</string>
+    <string name="storage_confirm_delete_all_user">Excluir todas as faixas importadas?</string>
+    <string name="storage_confirm_clear_stats">Limpar estatísticas (exceto contagem de faixas)?</string>
+    <string name="storage_done">Feito</string>
+    <string name="hysteresis_value">Histerese: %1$d km/h</string>
+    <string name="hysteresis_label">Histerese (km/h)</string>
+    <string name="hysteresis_value_initial">Histerese: 3 km/h</string>
+    
+    <!-- Conquistas: modo acelerado / plataforma de salto -->
+    <string name="achievement_super_10_title">10 minutos de plataforma de salto</string>
+    <string name="achievement_super_60_title">1 hora de plataforma de salto</string>
+    <string name="achievement_super_600_title">10 horas de plataforma de salto</string>
+    <string name="achievement_super_10_desc">Em modo acelerado por 10 minutos</string>
+    <string name="achievement_super_60_desc">Em modo acelerado por 60 minutos</string>
+    <string name="achievement_super_600_desc">Em modo acelerado por 600 minutos</string>
+    
+    <!-- Dica do menu lateral -->
+    <string name="hint_open_drawer">Dica: abra o menu deslizando da borda esquerda ou tocando no ícone à esquerda</string>
+    <string name="action_got_it">Entendi</string>
+
+    <string name="search_hint">Pesquisar faixas</string>
+
+    <!-- Adições ao menu -->
+    <string name="menu_language">Idioma</string>
+    <string name="menu_theme">Theme</string>
+
+    <!-- Diálogo de idioma -->
+    <string name="dialog_language_title">Selecionar Idioma</string>
+    <string name="language_system_default">Sistema (padrão)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <!-- Comum -->
+    <string name="action_back">Voltar</string>
+    
+    <!-- Histórico -->
+    <string name="menu_route_history">Histórico de Rotas</string>
+    <string name="history_title">Histórico de Rotas</string>
+    <string name="history_no_routes">Nenhuma rota gravada ainda</string>
+    <string name="history_legend_hint">Linha grossa — modo acelerado</string>
+    <string name="history_change_map_provider">Mudar provedor de mapa</string>
+    <string name="history_color_scheme">Esquema de cores</string>
+    <string-array name="history_color_scheme_options">
+        <item>Por faixa</item>
+        <item>Por velocidade</item>
+        <item>Por elevação</item>
+    </string-array>
+    <string name="history_time_period">Período</string>
+    <string-array name="history_time_period_options">
+        <item>Últimas 24 horas</item>
+        <item>Últimos 7 dias</item>
+        <item>Últimos 30 dias</item>
+        <item>Todo o período</item>
+    </string-array>
+
+    <!-- Conquistas: aliases para chaves no código -->
+    <string name="ach_sup_10m_title">10 minutos de plataforma de salto</string>
+    <string name="ach_sup_10m_desc">Em modo acelerado por 10 minutos</string>
+    <string name="ach_sup_60m_title">1 hora de plataforma de salto</string>
+    <string name="ach_sup_60m_desc">Em modo acelerado por 60 minutos</string>
+    <string name="ach_sup_600m_title">10 horas de plataforma de salto</string>
+    <string name="ach_sup_600m_desc">Em modo acelerado por 600 minutos</string>
+
+    <!-- Configurações de GPS -->
+    <string name="gps_settings_title">Configurações de GPS</string>
+    <string name="gps_accuracy">Precisão do GPS</string>
+    <string name="gps_accuracy_high">Alta (somente GPS)</string>
+    <string name="gps_accuracy_balanced">Equilibrada (Wi-Fi/celular)</string>
+    <string name="gps_accuracy_low">Baixa</string>
+
+    <!-- Seletor de modo de visualização -->
+    <string name="view_mode_tracks">Faixas</string>
+    <string name="view_mode_speed">Velocidade</string>
+    <string name="view_mode_elevation">Elevação</string>
+    <string name="storage_clear_route_history">Limpar histórico de rotas</string>
+    <string name="storage_confirm_clear_routes">Limpar o histórico de rotas?</string>
+
+    <!-- Conquistas: distância -->
+    <string name="ach_km_1_title">1 km percorrido</string>
+    <string name="ach_km_1_desc">Distância total: 1 km</string>
+    <string name="ach_km_10_title">10 km percorridos</string>
+    <string name="ach_km_10_desc">Distância total: 10 km</string>
+    <string name="ach_km_100_title">100 km percorridos</string>
+    <string name="ach_km_100_desc">Distância total: 100 km</string>
+
+    <!-- Conquistas: tamanho da biblioteca -->
+    <string name="ach_lib_1_title">1 faixa na biblioteca</string>
+    <string name="ach_lib_1_desc">Total de faixas disponíveis: 1</string>
+    <string name="ach_lib_10_title">10 faixas na biblioteca</string>
+    <string name="ach_lib_10_desc">Total de faixas disponíveis: 10</string>
+    <string name="ach_lib_100_title">100 faixas na biblioteca</string>
+    <string name="ach_lib_100_desc">Total de faixas disponíveis: 100</string>
+
+    <!-- Plurais -->
+    <plurals name="plays_count">
+        <item quantity="one">%d reprodução</item>
+        <item quantity="other">%d reproduções</item>
+    </plurals>
+
+    <string name="achievements_title">Conquistas</string>
+    <string name="menu_track_settings">Configurações de Faixa</string>
+    <string name="menu_achievements">Conquistas</string>
+    <string name="achievement_icon_desc">Ícone de conquista</string>
+
+    <!-- Estatísticas -->
+    <string name="stats_title">Estatísticas Gerais</string>
+    <string name="stats_total_distance">Distância Total</string>
+    <string name="stats_unique_tracks">Faixas Únicas</string>
+    <string name="stats_superspeed_time">Tempo em modo super-velocidade</string>
+</resources>

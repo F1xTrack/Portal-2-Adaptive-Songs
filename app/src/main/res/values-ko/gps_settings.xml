@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_map_gps">지도 및 GPS</string>
+    <string name="settings_use_network_location">위치에 Wi‑Fi/네트워크 사용</string>
+    <string name="settings_recording_interval">기록 간격</string>
+    <string name="recording_interval_value">%1$d초마다</string>
+</resources>

@@ -1,22 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">اختر الموسيقى التصويرية</string>
     <string name="import_zip">تحميل الموسيقى من ملف ZIP</string>
-    <string name="long_version_checkbox">استخدم الإصدارات الطويلة (ذاكرة أكثر، دون توقف)</string>
-    <string name="faith_plate_threshold">حد Faith Plate: %1$d كم/س</string>
+    
+    <string name="faith_plate_threshold">حد منصة القفز: %1$d كم/س</string>
+    <string name="faith_plate_threshold_label">عتبة لوحة الإيمان (كم/س)</string>
     <string name="burst_threshold">حد التفعيل (كم/س)</string>
+    <string name="hysteresis_value">الهسترة: %1$d كم/س</string>
+    <string name="hysteresis_label">الهسترة (كم/س)</string>
+    <string name="hysteresis_value_initial">الهسترة: 3 كم/س</string>
     <string name="hint_sort_tracks">فرز المقاطع</string>
     <string name="sort_alpha">أبجديًا</string>
     <string name="sort_freq">حسب التكرار</string>
     <string name="sort_duration">حسب المدة</string>
     <string name="settings_title">الإعدادات</string>
     <string name="settings_section_import">استيراد الموسيقى التصويرية</string>
-    <string name="settings_section_long">الإصدارات الطويلة للمقاطع</string>
+    <string name="settings_section_tracks">إعدادات المسار</string>
+    <string name="settings_tracks_placeholder">سيكون هذا القسم متاحًا في الإصدارات المستقبلية</string>
+    <string name="settings_section_route_recording">تسجيل المسار</string>
+    <string name="settings_section_time_attack">هجوم الوقت</string>
     <string name="settings_section_desync">إصلاح عدم التزامن</string>
     <string name="settings_import_zip">استيراد من ZIP</string>
     <string name="settings_import_folder">استيراد من مجلد</string>
     <string name="settings_import_file">استيراد ملف فردي</string>
-    <string name="settings_long_enable">تفعيل الإصدار الطويل</string>
-    <string name="settings_long_disable">تعطيل الإصدار الطويل</string>
     <string name="settings_desync_fix">مزامنة القناتين عند انتهاء إحداهما</string>
-</resources> 
+    
+    <!-- قائمة التخزين -->
+    <string name="menu_storage">التخزين</string>
+    <string name="storage_title">إدارة التخزين</string>
+    <string name="storage_builtin_label">مدمج</string>
+    <string name="storage_imported_label">مستورد</string>
+    <string name="storage_hide">إخفاء</string>
+    <string name="storage_unhide">إظهار</string>
+    <string name="storage_delete">حذف</string>
+    <string name="storage_delete_all_user">حذف كل المستورد</string>
+    <string name="storage_unhide_all">إظهار كل المدمج</string>
+    <string name="storage_clear_stats">مسح الإحصائيات</string>
+    <string name="storage_routes_coming_soon">مسح سجل المسارات (قريبًا)</string>
+    <string name="storage_confirm_delete_track">هل تريد حذف المسار &quot;%1$s&quot;؟</string>
+    <string name="storage_confirm_delete_all_user">هل تريد حذف جميع المسارات المستوردة؟</string>
+    <string name="storage_confirm_clear_stats">هل تريد مسح الإحصائيات (باستثناء عدد المسارات)؟</string>
+    <string name="storage_done">تم</string>
+    
+    <!-- الإنجازات: وضع السرعة العالية / منصة القفز -->
+    <string name="achievement_super_10_title">10 دقائق على منصة القفز</string>
+    <string name="achievement_super_60_title">1 ساعة على منصة القفز</string>
+    <string name="achievement_super_600_title">10 ساعات على منصة القفز</string>
+    <string name="achievement_super_10_desc">في وضع السرعة العالية لمدة 10 دقائق</string>
+    <string name="achievement_super_60_desc">في وضع السرعة العالية لمدة 60 دقيقة</string>
+    <string name="achievement_super_600_desc">في وضع السرعة العالية لمدة 600 دقيقة</string>
+    
+    <!-- تلميح القائمة الجانبية -->
+    <string name="hint_open_drawer">تلميح: افتح القائمة بالسحب من الحافة اليسرى أو بالنقر على الأيقونة على اليسار</string>
+    <string name="action_got_it">فهمت</string>
+    <string name="search_hint">ابحث في المسارات</string>
+
+    <!-- إضافات القائمة -->
+    <string name="menu_language">اللغة</string>
+    <string name="menu_theme">السمة</string>
+    <string name="menu_time_attack">هجوم الوقت</string>
+    <string name="menu_history">سجل المسارات</string>
+    <string name="menu_achievements">الإنجازات</string>
+    <string name="menu_track_settings">إعدادات المسار</string>
+
+    <!-- حوار اللغة -->
+    <string name="dialog_language_title">اختر اللغة</string>
+    <string name="language_system_default">النظام (الافتراضي)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+    <string name="language_arabic">العربية</string>
+
+    <!-- حوار السمة -->
+    <string name="dialog_theme_title">اختر السمة</string>
+    <string name="theme_portal2_default">Portal 2 (افتراضي)</string>
+    <string name="theme_asi">ASI (Aperture Science Innovators)</string>
+    <string name="theme_portal2_overgrowth">Portal 2 (النمو الزائد)</string>
+    <string name="theme_portal1">Portal 1</string>
+
+    <!-- هجوم الوقت -->
+    <string name="time_attack_difficulty">الصعوبة</string>
+    <string name="difficulty_easy">سهل</string>
+    <string name="difficulty_normal">عادي</string>
+    <string name="difficulty_hard">صعب</string>
+    <string name="time_attack_trigger_now">ابدأ هجوم الوقت الآن</string>
+    <string name="time_attack_title">هجوم الوقت</string>
+    <string name="time_attack_desc_keep_above">حافظ على سرعة لا تقل عن %1$d كم/س لمدة %2$d ثانية</string>
+    <string name="time_attack_progress">التقدم</string>
+    <string name="time_attack_cancel">إلغاء</string>
+    <string name="time_attack_success">نجاح!</string>
+    <string name="time_attack_fail">فشل</string>
+
+    <!-- السجل -->
+    <string name="history_title">سجل المسارات</string>
+    <string name="history_legend">وسيلة الإيضاح</string>
+    <string name="history_no_routes">لم يتم تسجيل أي مسارات بعد</string>
+    <string name="history_legend_hint">الخط السميك — وضع السرعة العالية</string>
+    <string name="history_change_map_provider">تغيير مزود الخريطة</string>
+    <string name="history_color_scheme">نظام الألوان</string>
+    <string-array name="history_color_scheme_options">
+        <item>حسب المسار</item>
+        <item>حسب السرعة</item>
+        <item>حسب الارتفاع</item>
+    </string-array>
+    <string name="history_time_period">الفترة</string>
+    <string-array name="history_time_period_options">
+        <item>آخر 24 ساعة</item>
+        <item>آخر 7 أيام</item>
+        <item>آخر 30 يومًا</item>
+        <item>كل الوقت</item>
+    </string-array>
+
+    <!-- الإنجازات: مفاتيح بديلة للكود -->
+    <string name="ach_sup_10m_title">10 دقائق على منصة القفز</string>
+    <string name="ach_sup_10m_desc">في وضع السرعة العالية لمدة 10 دقائق</string>
+    <string name="ach_sup_60m_title">1 ساعة على منصة القفز</string>
+    <string name="ach_sup_60m_desc">في وضع السرعة العالية لمدة 60 دقيقة</string>
+    <string name="ach_sup_600m_title">10 ساعات على منصة القفز</string>
+    <string name="ach_sup_600m_desc">في وضع السرعة العالية لمدة 600 دقيقة</string>
+
+    <!-- إعدادات GPS -->
+    <string name="settings_section_map_gps">الخريطة و GPS</string>
+    <string name="settings_map_provider">مزود الخريطة</string>
+    <string name="map_provider_osm">OpenStreetMap (OSMDroid)</string>
+    <string name="settings_gps_accuracy">دقة تسجيل GPS</string>
+    <string name="gps_accuracy_high">عالية (GPS فقط)</string>
+    <string name="gps_accuracy_balanced">متوازنة (Wi-Fi/خلوي)</string>
+    <string name="gps_accuracy_low">منخفضة</string>
+
+    <!-- تبديل وضع العرض -->
+    <string name="view_mode_tracks">المسارات</string>
+    <string name="view_mode_speed">السرعة</string>
+    <string name="view_mode_elevation">الارتفاع</string>
+    <string name="storage_clear_route_history">مسح سجل المسارات</string>
+    <string name="storage_confirm_clear_routes">هل تريد مسح سجل المسارات؟</string>
+    <string name="action_back">رجوع</string>
+
+    <!-- الإنجازات: المسافة -->
+    <string name="ach_km_1_title">تم قطع 1 كم</string>
+    <string name="ach_km_1_desc">المسافة المقطوعة: 1 كم</string>
+    <string name="ach_km_10_title">تم قطع 10 كم</string>
+    <string name="ach_km_10_desc">المسافة المقطوعة: 10 كم</string>
+    <string name="ach_km_100_title">تم قطع 100 كم</string>
+    <string name="ach_km_100_desc">المسافة المقطوعة: 100 كم</string>
+
+    <!-- الإنجازات: حجم المكتبة -->
+    <string name="ach_lib_1_title">مسار واحد في المكتبة</string>
+    <string name="ach_lib_1_desc">إجمالي المسارات المتاحة: 1</string>
+    <string name="ach_lib_10_title">10 مسارات في المكتبة</string>
+    <string name="ach_lib_10_desc">إجمالي المسارات المتاحة: 10</string>
+    <string name="ach_lib_100_title">100 مسار في المكتبة</string>
+    <string name="ach_lib_100_desc">إجمالي المسارات المتاحة: 100</string>
+
+    <!-- صيغ الجمع -->
+    <plurals name="plays_count">
+        <item quantity="zero">لا تشغيلات</item>
+        <item quantity="one">%d تشغيل</item>
+        <item quantity="two">%d تشغيلان</item>
+        <item quantity="few">%d تشغيلات</item>
+        <item quantity="many">%d تشغيلًا</item>
+        <item quantity="other">%d تشغيل</item>
+    </plurals>
+
+    <string name="achievements_title">الإنجازات</string>
+    <string name="achievement_icon_desc">أيقونة الإنجاز</string>
+
+    <!-- الإحصائيات -->
+    <string name="stats_title">الإحصائيات العامة</string>
+    <string name="stats_total_distance">المسافة الإجمالية</string>
+    <string name="stats_unique_tracks">المسارات الفريدة</string>
+    <string name="stats_superspeed_time">الوقت في وضع السرعة الفائقة</string>
+</resources>

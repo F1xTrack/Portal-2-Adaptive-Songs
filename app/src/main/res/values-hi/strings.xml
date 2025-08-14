@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">साउंडट्रैक चुनें</string>
     <string name="import_zip">ZIP से साउंडट्रैक लोड करें</string>
-    <string name="long_version_checkbox">लंबा संस्करण उपयोग करें (अधिक मेमोरी, बिना रुकावट)</string>
-    <string name="faith_plate_threshold">Faith Plate थ्रेशहोल्ड: %1$d किमी/घं</string>
+    
+    <string name="faith_plate_threshold">जंप प्लेट सीमा: %1$d किमी/घं</string>
+    <string name="faith_plate_threshold_label">फेथ प्लेट थ्रेसहोल्ड (किमी/घंटा)</string>
     <string name="burst_threshold">ट्रिगर थ्रेशहोल्ड (किमी/घं)</string>
     <string name="hint_sort_tracks">ट्रैक्स को सॉर्ट करें</string>
     <string name="sort_alpha">वर्णानुक्रम</string>
@@ -11,12 +13,137 @@
     <string name="sort_duration">अवधि के अनुसार</string>
     <string name="settings_title">सेटिंग्स</string>
     <string name="settings_section_import">साउंडट्रैक्स आयात करें</string>
-    <string name="settings_section_long">ट्रैक्स के लंबे संस्करण</string>
+    <string name="settings_section_tracks">ट्रैक सेटिंग्स</string>
+    <string name="settings_tracks_placeholder">यह अनुभाग भविष्य के संस्करणों में उपलब्ध होगा</string>
+    <string name="settings_section_route_recording">मार्ग रिकॉर्डिंग</string>
+    
     <string name="settings_section_desync">डीसिंक सुधार</string>
     <string name="settings_import_zip">ZIP से आयात करें</string>
     <string name="settings_import_folder">फ़ोल्डर से आयात करें</string>
     <string name="settings_import_file">एकल फ़ाइल आयात करें</string>
-    <string name="settings_long_enable">लंबा संस्करण सक्षम करें</string>
-    <string name="settings_long_disable">लंबा संस्करण अक्षम करें</string>
+    
     <string name="settings_desync_fix">एक समाप्त होने पर दोनों स्ट्रीम सिंक करें</string>
-</resources> 
+
+    <!-- स्टोरेज मेनू -->
+    <string name="menu_storage">भंडारण</string>
+    <string name="storage_title">भंडारण प्रबंधन</string>
+    <string name="storage_builtin_label">अंतर्निहित</string>
+    <string name="storage_imported_label">आयातित</string>
+    <string name="storage_hide">छिपाएं</string>
+    <string name="storage_unhide">दिखाएं</string>
+    <string name="storage_delete">हटाएं</string>
+    <string name="storage_delete_all_user">सभी आयातित हटाएं</string>
+    <string name="storage_unhide_all">सभी अंतर्निहित दिखाएं</string>
+    <string name="storage_clear_stats">आंकड़े साफ़ करें</string>
+    <string name="storage_routes_coming_soon">मार्ग इतिहास साफ़ करें (जल्द ही)</string>
+    <string name="storage_confirm_delete_track">क्या आप ट्रैक &quot;%1$s&quot; हटाना चाहते हैं?</string>
+    <string name="storage_confirm_delete_all_user">क्या आप सभी आयातित ट्रैक हटाना चाहते हैं?</string>
+    <string name="storage_confirm_clear_stats">क्या आप आंकड़े (ट्रैक गणना को छोड़कर) साफ़ करना चाहते हैं?</string>
+    <string name="storage_done">हो गया</string>
+    <string name="hysteresis_value">हिस्टेरिसिस: %1$d किमी/घं</string>
+    <string name="hysteresis_label">हिस्टेरिसिस (किमी/घं)</string>
+    <string name="hysteresis_value_initial">हिस्टेरिसिस: 3 किमी/घं</string>
+    
+    <!-- उपलब्धियां: तेज़ गति मोड / जंप प्लेट -->
+    <string name="achievement_super_10_title">जंप प्लेट के 10 मिनट</string>
+    <string name="achievement_super_60_title">जंप प्लेट का 1 घंटा</string>
+    <string name="achievement_super_600_title">जंप प्लेट के 10 घंटे</string>
+    <string name="achievement_super_10_desc">तेज़ गति मोड में 10 मिनट</string>
+    <string name="achievement_super_60_desc">तेज़ गति मोड में 60 मिनट</string>
+    <string name="achievement_super_600_desc">तेज़ गति मोड में 600 मिनट</string>
+    
+    <!-- साइड मेनू संकेत -->
+    <string name="hint_open_drawer">संकेत: बाएं किनारे से स्वाइप करके या बाईं ओर के आइकन पर टैप करके मेनू खोलें</string>
+    <string name="action_got_it">समझ गया</string>
+
+    <string name="search_hint">ट्रैक खोजें</string>
+
+    <!-- मेनू जोड़ -->
+    <string name="menu_language">भाषा</string>
+    <string name="menu_time_attack">टाइम अटैक</string>
+    <string name="menu_theme">Theme</string>
+
+    <!-- भाषा संवाद -->
+    <string name="dialog_language_title">भाषा चुनें</string>
+    <string name="language_system_default">सिस्टम (डिफ़ॉल्ट)</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <!-- इतिहास -->
+    <string name="menu_route_history">मार्ग इतिहास</string>
+    <string name="history_title">मार्ग इतिहास</string>
+    <string name="history_no_routes">अभी तक कोई मार्ग दर्ज नहीं किया गया है</string>
+    <string name="history_legend_hint">मोटी रेखा — तेज़ गति मोड</string>
+    <string name="history_change_map_provider">मानचित्र प्रदाता बदलें</string>
+    <string name="history_color_scheme">रंग योजना</string>
+    <string-array name="history_color_scheme_options">
+        <item>ट्रैक द्वारा</item>
+        <item>गति द्वारा</item>
+        <item>ऊंचाई द्वारा</item>
+    </string-array>
+    <string name="history_time_period">अवधि</string>
+    <string-array name="history_time_period_options">
+        <item>पिछले 24 घंटे</item>
+        <item>पिछले 7 दिन</item>
+        <item>पिछले 30 दिन</item>
+        <item>सभी समय</item>
+    </string-array>
+
+    <!-- उपलब्धियां: कोड कुंजियों के उपनाम -->
+    <string name="ach_sup_10m_title">जंप प्लेट के 10 मिनट</string>
+    <string name="ach_sup_10m_desc">तेज़ गति मोड में 10 मिनट</string>
+    <string name="ach_sup_60m_title">जंप प्लेट का 1 घंटा</string>
+    <string name="ach_sup_60m_desc">तेज़ गति मोड में 60 मिनट</string>
+    <string name="ach_sup_600m_title">जंप प्लेट के 10 घंटे</string>
+    <string name="ach_sup_600m_desc">तेज़ गति मोड में 600 मिनट</string>
+
+    <!-- GPS सेटिंग्स -->
+    <string name="gps_settings_title">GPS सेटिंग्स</string>
+    <string name="gps_accuracy">GPS सटीकता</string>
+    <string name="gps_accuracy_high">उच्च (केवल GPS)</string>
+    <string name="gps_accuracy_balanced">संतुलित (वाई-फाई/सेलुलर)</string>
+    <string name="gps_accuracy_low">कम</string>
+
+    <!-- व्यू मोड टॉगल -->
+    <string name="view_mode_tracks">ट्रैक</string>
+    <string name="view_mode_speed">गति</string>
+    <string name="view_mode_elevation">ऊंचाई</string>
+    <string name="storage_clear_route_history">मार्ग इतिहास साफ़ करें</string>
+    <string name="storage_confirm_clear_routes">क्या आप मार्ग इतिहास साफ़ करना चाहते हैं?</string>
+
+    <!-- उपलब्धियां: दूरी -->
+    <string name="ach_km_1_title">1 किमी तय</string>
+    <string name="ach_km_1_desc">कुल दूरी: 1 किमी</string>
+    <string name="ach_km_10_title">10 किमी तय</string>
+    <string name="ach_km_10_desc">कुल दूरी: 10 किमी</string>
+    <string name="ach_km_100_title">100 किमी तय</string>
+    <string name="ach_km_100_desc">कुल दूरी: 100 किमी</string>
+
+    <!-- उपलब्धियां: लाइब्रेरी का आकार -->
+    <string name="ach_lib_1_title">लाइब्रेरी में 1 ट्रैक</string>
+    <string name="ach_lib_1_desc">उपलब्ध कुल ट्रैक्स: 1</string>
+    <string name="ach_lib_10_title">लाइब्रेरी में 10 ट्रैक</string>
+    <string name="ach_lib_10_desc">उपलब्ध कुल ट्रैक्स: 10</string>
+    <string name="ach_lib_100_title">लाइब्रेरी में 100 ट्रैक</string>
+    <string name="ach_lib_100_desc">उपलब्ध कुल ट्रैक्स: 100</string>
+
+    <!-- बहुवचन -->
+    <plurals name="plays_count">
+        <item quantity="one">%d बार चलाया गया</item>
+        <item quantity="other">%d बार चलाए गए</item>
+    </plurals>
+
+    <string name="achievements_title">उपलब्धियां</string>
+    <string name="menu_track_settings">ट्रैक सेटिंग्स</string>
+    <string name="menu_achievements">उपलब्धियां</string>
+    <string name="achievement_icon_desc">उपलब्धि आइकन</string>
+
+    <!-- आँकड़े -->
+    <string name="stats_title">सामान्य आँकड़े</string>
+    <string name="stats_total_distance">कुल दूरी</string>
+    <string name="stats_unique_tracks">अद्वितीय ट्रैक</string>
+    <string name="stats_superspeed_time">सुपरस्पीड मोड में समय</string>
+
+    <!-- सामान्य -->
+    <string name="action_back">वापस</string>
+</resources>
