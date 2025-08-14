@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Additional palette for custom themes -->
+    <!-- ASI (Aperture Science Innovators) -->
+    <color name="asi_primary">#FF9800</color> <!-- orange -->
+    <color name="asi_secondary">#2196F3</color> <!-- blue -->
+
+    <!-- Portal 1 themed palette -->
+    <color name="portal1_primary">#2196F3</color> <!-- blue -->
+    <color name="portal1_secondary">#FF9800</color> <!-- orange -->
+
+    <!-- Portal 2 Overgrowth themed palette -->
+    <color name="overgrowth_primary">#098013</color> <!-- green -->
+    <color name="overgrowth_secondary">#2196F3</color> <!-- blue -->
+</resources>

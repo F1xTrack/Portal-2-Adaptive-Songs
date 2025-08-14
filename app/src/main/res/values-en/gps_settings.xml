@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- GPS / Location settings -->
+    <string name="settings_section_map_gps">Map and GPS</string>
+    <string name="settings_use_network_location">Use Wi‑Fi/networks for location</string>
+    <string name="settings_recording_interval">Recording interval</string>
+    <string name="recording_interval_value">Every %1$d s</string>
+</resources>

@@ -1,16 +1,26 @@
 <resources>
     <!-- Base application theme, наследуем от MaterialComponents (AppCompat-потомок) -->
-    <style name="Theme.Portal2AdaptiveSongs" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Portal2AdaptiveSongs" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Дополнительно: указываем, что мы используем MaterialComponents виджеты -->
-        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
+        <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
+        
+        <!-- Custom theme attributes used across layouts (night) -->
+        <item name="backgroundColor">@color/portal_bg_dark</item>
+        <item name="cardBackgroundColor">@color/portal_card_bg</item>
+        <item name="textPrimaryOnBackground">@color/portal_white</item>
+        <item name="textSecondaryOnBackground">@color/text_secondary_on_bg</item>
+        <item name="toolbarBackgroundColor">@color/portal_card_bg</item>
+        <item name="toolbarTitleTextColor">?attr/colorSecondary</item>
+        <item name="sliderThumbColor">?attr/colorSecondary</item>
+        <item name="sliderTrackActiveColor">?attr/colorSecondary</item>
+        <item name="sliderTrackInactiveColor">@color/portal_white</item>
+        <item name="overlayScrimColor">@color/overlay_scrim</item>
+        <item name="colorInfo">@color/portal_blue</item>
     </style>
 </resources>

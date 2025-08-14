@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- GPS / Location settings -->
+    <string name="settings_use_network_location">Использовать Wi‑Fi/сети для локации</string>
+    <string name="settings_recording_interval">Интервал записи</string>
+    <string name="recording_interval_value">Каждые %1$d с</string>
+</resources>

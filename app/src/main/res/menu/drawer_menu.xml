@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="@string/menu_home"
+            android:icon="@android:drawable/ic_menu_view" />
+        <item
+            android:id="@+id/nav_import_zip"
+            android:title="@string/settings_import_zip"
+            android:icon="@android:drawable/ic_menu_upload" />
+        <item
+            android:id="@+id/nav_import_folder"
+            android:title="@string/settings_import_folder"
+            android:icon="@android:drawable/ic_menu_upload" />
+        <item
+            android:id="@+id/nav_track_prefs"
+            android:title="@string/menu_track_settings"
+            android:icon="@android:drawable/ic_menu_manage" />
+        <item
+            android:id="@+id/nav_storage"
+            android:title="@string/menu_storage"
+            android:icon="@android:drawable/ic_menu_save" />
+        <item
+            android:id="@+id/nav_history"
+            android:title="@string/menu_history"
+            android:icon="@android:drawable/ic_menu_mapmode" />
+        <item
+            android:id="@+id/nav_route_settings"
+            android:title="@string/settings_routes_title"
+            android:icon="@android:drawable/ic_menu_directions" />
+        <item
+            android:id="@+id/nav_achievements"
+            android:title="@string/menu_achievements"
+            android:icon="@android:drawable/ic_menu_myplaces" />
+        <item
+            android:id="@+id/nav_language"
+            android:title="@string/menu_language"
+            android:icon="@android:drawable/ic_menu_preferences" />
+        <item
+            android:id="@+id/nav_theme"
+            android:title="@string/menu_theme"
+            android:icon="@android:drawable/ic_menu_manage" />
+        <item
+            android:id="@+id/nav_time_attack_settings"
+            android:title="@string/menu_time_attack"
+            android:icon="@android:drawable/ic_menu_recent_history" />
+    </group>
+    
+</menu>

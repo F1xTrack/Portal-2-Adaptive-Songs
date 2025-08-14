@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Localize brand name only where officially localized -->
+    <string name="theme_portal2_default">传送门 2（默认）</string>
+    <string name="theme_asi">ASI（Aperture Science Innovators）</string>
+    <string name="theme_portal2_overgrowth">传送门 2（过度生长）</string>
+    <string name="theme_portal1">传送门 1</string>
+</resources>
