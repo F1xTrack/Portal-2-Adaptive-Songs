@@ -68,6 +68,22 @@
     <string name="language_russian">Русский</string>
     <string name="language_english">English</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_title">Initial setup</string>
+    <string name="onboarding_language_title">Language selection</string>
+    <string name="onboarding_language_button">Choose language</string>
+    <string name="onboarding_download_button">Download preinstalled soundtracks</string>
+    <string name="onboarding_continue_button">Continue without downloading</string>
+    <string name="onboarding_download_title">Download soundtracks?</string>
+    <string name="onboarding_download_message">An archive with preinstalled soundtracks will be downloaded. Continue?</string>
+    <string name="onboarding_download_confirm">Download</string>
+    <string name="onboarding_downloading">Downloading… Please wait</string>
+    <string name="onboarding_done">Done: soundtracks installed</string>
+    <string name="onboarding_error_title">Download error</string>
+    <string name="onboarding_error_message">Failed to download or unpack the archive. Details: %1$s</string>
+    <string name="onboarding_progress_percent">%1$d%%</string>
+    <string name="onboarding_unpacking">Unpacking…</string>
+
     <!-- Common -->
     <string name="action_back">Back</string>
     
@@ -145,4 +161,97 @@
     <string name="stats_total_distance">Total distance</string>
     <string name="stats_unique_tracks">Unique tracks</string>
     <string name="stats_superspeed_time">Time in superspeed</string>
-</resources>
+    
+    <!-- About -->
+    <string name="menu_about">About</string>
+    <string name="about_title">About</string>
+    <string name="about_github_url">https://github.com/F1xTrack/Portal-2-Adaptive-Songs</string>
+    <string name="about_donate_url">https://www.donationalerts.com/r/portal2adaptivesongs</string>
+    <string name="about_message_html"><![CDATA[<b>%1$s</b><br/>Version: %2$s<br/><br/>
+<a href=\"%3$s\">GitHub</a><br/><br/>
+This app is free, but you can support the developer here: <a href=\"%4$s\">%4$s</a>]]></string>
+
+    <!-- Time-Attack Messages -->
+    <string name="time_attack_success">Challenge completed!</string>
+    <string name="time_attack_fail">Challenge failed</string>
+
+    <!-- Time-Attack Challenges (EN) -->
+    <!-- EASY -->
+    <string name="ta_E1_title">Warm-up</string>
+    <string name="ta_E1_desc">Enter superspeed and hold ≥10 s. Total time limit — 2 min.</string>
+    <string name="ta_E2_title">Smooth start</string>
+    <string name="ta_E2_desc">Move for 60 s without entering superspeed.</string>
+    <string name="ta_E3_title">First burst</string>
+    <string name="ta_E3_desc">Within 60 s enter superspeed at least once and hold it ≥5 s.</string>
+    <string name="ta_E4_title">Intervals 2×10</string>
+    <string name="ta_E4_desc">2 cycles: 10 s normal → 10 s superspeed.</string>
+    <string name="ta_E5_title">Half‑kilometer easy</string>
+    <string name="ta_E5_desc">Cover 0.5 km in ≤8 min (modes don’t matter).</string>
+    <string name="ta_E6_title">Fewer switches</string>
+    <string name="ta_E6_desc">No more than 3 mode switches in 3 minutes.</string>
+    <string name="ta_E7_title">Three pulses</string>
+    <string name="ta_E7_desc">Do 3 superspeed entries ≥3 s each. Rest ≤45 s.</string>
+    <string name="ta_E8_title">No stops</string>
+    <string name="ta_E8_desc">4 minutes without stops (stops &gt;2 s are forbidden).</string>
+    <string name="ta_E9_title">Smooth return</string>
+    <string name="ta_E9_desc">SS ≥5 s, then normal ≥20 s.</string>
+    <string name="ta_E10_title">Cadence 4×30</string>
+    <string name="ta_E10_desc">2 minutes: roughly every 30 s a brief SS entry (≥2 s), total ≥4 times.</string>
+
+    <!-- NORMAL -->
+    <string name="ta_N1_title">Intervals 4×20</string>
+    <string name="ta_N1_desc">4 cycles: 20 s normal → 20 s SS.</string>
+    <string name="ta_N2_title">Reverse ladder</string>
+    <string name="ta_N2_desc">SS 15 → N 20 → SS 20 → N 25 → SS 25.</string>
+    <string name="ta_N3_title">Long hold</string>
+    <string name="ta_N3_desc">Continuous superspeed ≥30 s.</string>
+    <string name="ta_N4_title">Negative split 1 km</string>
+    <string name="ta_N4_desc">1 km: the second half is ≥10% faster than the first.</string>
+    <string name="ta_N5_title">Active six</string>
+    <string name="ta_N5_desc">Within 6 minutes do ≥6 SS entries; total SS ≥90 s.</string>
+    <string name="ta_N6_title">Anti‑jitter control</string>
+    <string name="ta_N6_desc">2 minutes: no more than 1 switch per 10 s (≤12).
+    </string>
+    <string name="ta_N7_title">Near threshold</string>
+    <string name="ta_N7_desc">2 minutes stay near the threshold; brief dips allowed.</string>
+    <string name="ta_N8_title">Sprints 5×6</string>
+    <string name="ta_N8_desc">5 SS entries ≥6 s; rests ≤30 s.</string>
+    <string name="ta_N9_title">Kilometer with bursts</string>
+    <string name="ta_N9_desc">1 km in ≤9 min and ≥2 SS segments ≥10 s.</string>
+    <string name="ta_N10_title">Steady movement</string>
+    <string name="ta_N10_desc">8 minutes without stops; ≤12 switches.</string>
+
+    <!-- HARD -->
+    <string name="ta_H1_title">Long hold‑2</string>
+    <string name="ta_H1_desc">Continuous superspeed ≥60 s.</string>
+    <string name="ta_H2_title">Fartlek 8×15</string>
+    <string name="ta_H2_desc">8 cycles: 15 s SS / 15 s N.</string>
+    <string name="ta_H3_title">Three minutes in SS</string>
+    <string name="ta_H3_desc">Within 10 minutes accumulate ≥180 s in SS.</string>
+    <string name="ta_H4_title">Fast kilometer+</string>
+    <string name="ta_H4_desc">1 km in ≤6 min and ≥30% of time in SS.</string>
+    <string name="ta_H5_title">Half‑kilometer at pace</string>
+    <string name="ta_H5_desc">0.5 km in ≤2:30; at least two SS segments ≥10 s.</string>
+    <string name="ta_H6_title">10 precise switches</string>
+    <string name="ta_H6_desc">Within 7 minutes perform exactly 10 SS↔N switches.</string>
+    <string name="ta_H7_title">Ladder up</string>
+    <string name="ta_H7_desc">SS: 10 → 15 → 20 → 25 s. Rest between stages ≤3 s.</string>
+    <string name="ta_H8_title">Recovery by the rules</string>
+    <string name="ta_H8_desc">5 cycles: SS ≥8 s → then N ≥30 s.</string>
+    <string name="ta_H9_title">Anti‑jitter</string>
+    <string name="ta_H9_desc">5 minutes: no more than 1 switch per minute (≤5) and total SS ≥90 s.</string>
+    <string name="ta_H10_title">Eight sprints</string>
+    <string name="ta_H10_desc">Within 12 minutes do ≥8 SS entries ≥8 s; stops &gt;2 s are forbidden.</string>
+
+    <!-- EXTREME -->
+    <string name="difficulty_extreme">Extreme</string>
+    <string name="ta_X1_title">SS marathon 120</string>
+    <string name="ta_X1_desc">Continuous superspeed ≥120 s. Total time limit — 5 min.</string>
+    <string name="ta_X2_title">5 minutes in SS</string>
+    <string name="ta_X2_desc">Within 10 minutes accumulate ≥300 s in superspeed.</string>
+    <string name="ta_X3_title">Ladder PRO</string>
+    <string name="ta_X3_desc">SS: 20 → 25 → 30 → 35 s. Rest between stages ≤2 s.</string>
+    <string name="ta_X4_title">20 precise switches</string>
+    <string name="ta_X4_desc">Within 10 minutes perform exactly 20 SS↔N switches.</string>
+
+  </resources>
