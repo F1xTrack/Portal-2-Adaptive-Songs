@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Multi-color palette for LinearProgressIndicator indeterminate contiguous animation -->
+    <array name="progress_indicator_colors">
+        <item>@color/portal_blue</item>
+        <item>@color/portal_orange</item>
+        <item>@color/teal_200</item>
+    </array>
+</resources>

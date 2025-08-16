@@ -59,14 +59,14 @@ class ExoSoundPlayer(private val context: Context) {
         isUserTrack: Boolean,
         exclude: String?
     ): Pair<String?, ExoPlayer?> {
-        val candidates = buildList {
-            val variants = listVariantNames(trackName, base, isUserTrack)
+        val variants = listVariantNames(trackName, base, isUserTrack)
+        val candidates = mutableListOf<String>().apply {
             // Prefer anything except the excluded one
             addAll(variants.filter { it != exclude })
-            // If everything got filtered out, try the rest
+            // Then allow the excluded one to avoid being stuck
             addAll(variants.filter { it == exclude })
-            // Also try the base name itself as a fallback (e.g., normal.wav / superspeed.wav)
-            if (base !in this) add(base)
+            // Add plain base only if it actually exists
+            if (!variants.contains(base) && existsVariant(trackName, base, isUserTrack)) add(base)
         }.distinct()
         Log.d("ExoSoundPlayer-choose", "Candidates for $trackName/$base (exclude=$exclude): ${candidates.joinToString()}")
 
@@ -103,6 +103,14 @@ class ExoSoundPlayer(private val context: Context) {
                     .sortedWith(compareBy({ it.length }, { it }))
             }
         } catch (_: Exception) { emptyList() }
+    }
+
+    private fun existsVariant(trackName: String, variant: String, isUserTrack: Boolean): Boolean {
+        return if (isUserTrack) {
+            File(context.filesDir, "soundtracks/$trackName/$variant.wav").exists()
+        } else {
+            try { context.assets.list(trackName)?.contains("$variant.wav") == true } catch (_: Exception) { false }
+        }
     }
 
     private fun buildMediaItem(trackName: String, variant: String, isUserTrack: Boolean): MediaItem {

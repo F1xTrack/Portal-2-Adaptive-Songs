@@ -31,6 +31,9 @@ import androidx.core.os.LocaleListCompat
 import android.content.Context
 import kotlin.random.Random
 import androidx.core.widget.doOnTextChanged
+import android.widget.TextView
+import android.text.method.LinkMovementMethod
+import androidx.core.text.HtmlCompat
 
 class MainActivity : AppCompatActivity() {
     internal lateinit var binding: ActivityMainBinding
@@ -60,6 +63,22 @@ class MainActivity : AppCompatActivity() {
     private fun getHiddenAssets(): Set<String> {
         val prefs = getSharedPreferences("storage_prefs", Context.MODE_PRIVATE)
         return prefs.getStringSet("hidden_assets", emptySet()) ?: emptySet()
+    }
+
+    private fun showAboutDialog() {
+        val version = try {
+            packageManager.getPackageInfo(packageName, 0).versionName ?: "?"
+        } catch (_: Exception) { "?" }
+        val appName = getString(R.string.app_name)
+        val github = getString(R.string.about_github_url)
+        val donate = getString(R.string.about_donate_url)
+        val html = getString(R.string.about_message_html, appName, version, github, donate)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
+            .setTitle(R.string.about_title)
+            .setMessage(HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY))
+            .setPositiveButton(R.string.action_got_it, null)
+            .show()
+        dialog.findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
     }
 
     // Одноразовая миграция: переносит скрытые треки со старых имён папок [PSM]/[Rev]
@@ -198,6 +217,17 @@ class MainActivity : AppCompatActivity() {
         applyThemeFromPrefs()
         super.onCreate(savedInstanceState)
 
+        // Онбординг: показываем один раз при первом запуске
+        run {
+            val ob = getSharedPreferences("onboarding_prefs", Context.MODE_PRIVATE)
+            val completed = ob.getBoolean("onboarding_completed", false)
+            if (!completed) {
+                startActivity(Intent(this, OnboardingActivity::class.java))
+                finish()
+                return
+            }
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -238,6 +268,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_route_settings -> {
                     startActivity(Intent(this, RouteSettingsActivity::class.java))
+                }
+                R.id.nav_about -> {
+                    showAboutDialog()
                 }
             }
             val v: View? = binding.root.findViewById(R.id.drawerLayout)
@@ -674,12 +707,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        player.releaseAll()
+        if (this::player.isInitialized) {
+            player.releaseAll()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        player.releaseAll()
+        if (this::player.isInitialized) {
+            player.releaseAll()
+        }
         timeAttackManager?.dispose()
     }
 
@@ -819,10 +856,10 @@ private fun MainActivity.applyThemeFromPrefs() {
     }
     // Применяем сохранённый язык
     val lang = prefs.getString("app_lang", "system")
-    val locales = when (lang) {
-        "ru" -> LocaleListCompat.forLanguageTags("ru")
-        "en" -> LocaleListCompat.forLanguageTags("en")
-        else -> LocaleListCompat.getEmptyLocaleList()
+    val locales = if (lang == null || lang == "system" || lang.isBlank()) {
+        LocaleListCompat.getEmptyLocaleList()
+    } else {
+        LocaleListCompat.forLanguageTags(lang)
     }
     AppCompatDelegate.setApplicationLocales(locales)
 }

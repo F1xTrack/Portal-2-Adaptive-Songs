@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -10,8 +11,8 @@ android {
         applicationId = "com.f1xtrack.portal2adaptivesongs"
         minSdk = 30
         targetSdk = 33
-        versionCode = 2
-        versionName = "1.3"
+        versionCode = 3
+        versionName = "1.3.1"
     }
     buildFeatures {
         viewBinding = true
@@ -44,9 +45,14 @@ dependencies {
         implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("com.google.android.exoplayer:exoplayer:2.19.1")
     // Maps
     implementation("org.osmdroid:osmdroid-android:6.1.18")
+    // Room (database)
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

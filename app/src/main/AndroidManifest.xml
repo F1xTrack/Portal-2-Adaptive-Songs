@@ -29,6 +29,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".OnboardingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Portal2AdaptiveSongs" />
+
         <activity android:name=".SettingsActivity" />
         <activity android:name=".AchievementsActivity" />
         <activity android:name=".StorageActivity" />
