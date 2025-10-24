@@ -12,7 +12,7 @@ android {
         minSdk = 30
         targetSdk = 33
         versionCode = 3
-        versionName = "1.3.1"
+        versionName = "1.3.2"
     }
     buildFeatures {
         viewBinding = true
