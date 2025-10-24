@@ -174,15 +174,11 @@
     <!-- Map provider settings -->
     <string name="map_provider_label">Поставщик карт</string>
     <string name="map_provider_osm">OpenStreetMap (встроенный)</string>
-    <string name="map_provider_google">Google Maps (внешнее)</string>
-    <string name="map_provider_yandex">Yandex Maps (внешнее)</string>
     <string name="osm_tile_source_label">Источник тайлов (OSM)</string>
     <string name="osm_source_mapnik">Mapnik</string>
     <string name="osm_source_usgs_topo">USGS Topo</string>
     <string name="osm_source_usgs_sat">USGS Sat</string>
     <string name="map_open_in_browser">Открываю в браузере</string>
-    <string name="map_open_in_google">Открыть в Google Maps</string>
-    <string name="map_open_in_yandex">Открыть в Яндекс Картах</string>
 
     <string name="stats_title">Общая статистика</string>
     <string name="stats_total_distance">Общее расстояние</string>
@@ -211,4 +207,108 @@
     <string name="time_attack_finished">Finished</string>
     <string name="time_attack_next_mission_in">Next mission in %d seconds</string>
     <string name="time_attack_next_mission_now">Next mission now</string>
-</resources>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Первоначальная настройка</string>
+    <string name="onboarding_language_title">Выбор языка</string>
+    <string name="onboarding_language_button">Выбрать язык</string>
+    <string name="onboarding_download_button">Скачать предустановленные саундтреки</string>
+    <string name="onboarding_continue_button">Продолжить без скачивания</string>
+    <string name="onboarding_download_title">Скачать саундтреки?</string>
+    <string name="onboarding_download_message">Будет загружен архив с предустановленными саундтреками. Продолжить?</string>
+    <string name="onboarding_download_confirm">Скачать</string>
+    <string name="onboarding_downloading">Загрузка… Пожалуйста, подождите</string>
+    <string name="onboarding_done">Готово: саундтреки установлены</string>
+    <string name="onboarding_error_title">Ошибка загрузки</string>
+    <string name="onboarding_error_message">Не удалось скачать или распаковать архив. Подробности: %1$s</string>
+    <string name="onboarding_progress_percent">%1$d%%</string>
+    <string name="onboarding_unpacking">Распаковка…</string>
+    
+    <!-- About -->
+    <string name="menu_about">О приложении</string>
+    <string name="about_title">О приложении</string>
+    <string name="about_github_url">https://github.com/F1xTrack/Portal-2-Adaptive-Songs</string>
+    <string name="about_donate_url">https://www.donationalerts.com/r/portal2adaptivesongs</string>
+    <string name="about_message_html"><![CDATA[<b>%1$s</b><br/>Версия: %2$s<br/><br/>
+<a href=\"%3$s\">GitHub</a><br/><br/>
+Приложение бесплатное, но вы можете поддержать разработчика по ссылке: <a href=\"%4$s\">%4$s</a>]]></string>
+
+    <!-- Time-Attack Challenges (RU) -->
+    <!-- EASY -->
+    <string name="ta_E1_title">Разогрев</string>
+    <string name="ta_E1_desc">Включите superspeed и удерживайте ≥10 с. На всё — 2 минуты.</string>
+    <string name="ta_E2_title">Ровный старт</string>
+    <string name="ta_E2_desc">60 с двигайтесь без входа в superspeed.</string>
+    <string name="ta_E3_title">Первый рывок</string>
+    <string name="ta_E3_desc">За 60 с хотя бы раз войдите в superspeed и удержите ≥5 с.</string>
+    <string name="ta_E4_title">Интервалы 2×10</string>
+    <string name="ta_E4_desc">2 цикла: 10 с normal → 10 с superspeed.</string>
+    <string name="ta_E5_title">Полкилометра спокойно</string>
+    <string name="ta_E5_desc">Пройдите 0.5 км за ≤8 минут (режимы не важны).</string>
+    <string name="ta_E6_title">Меньше переключений</string>
+    <string name="ta_E6_desc">За 3 минуты не более 3 переключений режимов.</string>
+    <string name="ta_E7_title">Три импульса</string>
+    <string name="ta_E7_desc">Сделайте 3 включения superspeed по ≥3 с. Пауза ≤45 с.</string>
+    <string name="ta_E8_title">Без пауз</string>
+    <string name="ta_E8_desc">4 минуты без остановок (остановка &gt;2 с запрещена).</string>
+    <string name="ta_E9_title">Плавное возвращение</string>
+    <string name="ta_E9_desc">SS ≥5 с, затем normal ≥20 с.</string>
+    <string name="ta_E10_title">Каденс 4×30</string>
+    <string name="ta_E10_desc">2 минуты: каждые ~30 с краткий вход в SS (≥2 с), всего ≥4 раза.</string>
+
+    <!-- NORMAL -->
+    <string name="ta_N1_title">Интервалы 4×20</string>
+    <string name="ta_N1_desc">4 цикла: 20 с normal → 20 с SS.</string>
+    <string name="ta_N2_title">Реверс‑лесенка</string>
+    <string name="ta_N2_desc">SS 15 → N 20 → SS 20 → N 25 → SS 25.</string>
+    <string name="ta_N3_title">Длинное удержание</string>
+    <string name="ta_N3_desc">Непрерывный superspeed ≥30 с.</string>
+    <string name="ta_N4_title">Негативный сплит 1 км</string>
+    <string name="ta_N4_desc">1 км: вторая половина быстрее первой на ≥10%.</string>
+    <string name="ta_N5_title">Активная шестерка</string>
+    <string name="ta_N5_desc">За 6 минут ≥6 включений SS; суммарно SS ≥90 с.</string>
+    <string name="ta_N6_title">Контроль дрожания</string>
+    <string name="ta_N6_desc">2 минуты: не чаще 1 переключения в 10 с (≤12).</string>
+    <string name="ta_N7_title">Почти порог</string>
+    <string name="ta_N7_desc">2 минуты держитесь около порога; допускаются краткие провалы.</string>
+    <string name="ta_N8_title">Спринты 5×6</string>
+    <string name="ta_N8_desc">5 включений SS по ≥6 с; паузы ≤30 с.</string>
+    <string name="ta_N9_title">Километр с рывками</string>
+    <string name="ta_N9_desc">1 км за ≤9 мин и ≥2 отрезка SS по ≥10 с.</string>
+    <string name="ta_N10_title">Стабильное движение</string>
+    <string name="ta_N10_desc">8 минут без остановок; ≤12 переключений.</string>
+
+    <!-- HARD -->
+    <string name="ta_H1_title">Длинное удержание‑2</string>
+    <string name="ta_H1_desc">Непрерывный superspeed ≥60 с.</string>
+    <string name="ta_H2_title">Фартлек 8×15</string>
+    <string name="ta_H2_desc">8 циклов: 15 с SS / 15 с N.</string>
+    <string name="ta_H3_title">Три минуты SS</string>
+    <string name="ta_H3_desc">За 10 минут накопите ≥180 с в SS.</string>
+    <string name="ta_H4_title">Быстрый километр+</string>
+    <string name="ta_H4_desc">1 км за ≤6 мин и ≥30% времени в SS.</string>
+    <string name="ta_H5_title">Полукилометра на темпе</string>
+    <string name="ta_H5_desc">0.5 км за ≤2:30; хотя бы 2 SS-отрезка по ≥10 с.</string>
+    <string name="ta_H6_title">10 чётких переключений</string>
+    <string name="ta_H6_desc">За 7 минут выполните ровно 10 переключений SS↔N.</string>
+    <string name="ta_H7_title">Лесенка вверх</string>
+    <string name="ta_H7_desc">SS: 10 → 15 → 20 → 25 с. Отдых между этапами ≤3 с.</string>
+    <string name="ta_H8_title">Восстановление по правилам</string>
+    <string name="ta_H8_desc">5 циклов: SS ≥8 с → затем N ≥30 с.</string>
+    <string name="ta_H9_title">Анти‑дрожание</string>
+    <string name="ta_H9_desc">5 минут: не чаще 1 переключения в минуту (≤5) и SS суммарно ≥90 с.</string>
+    <string name="ta_H10_title">Восьмёрка спринтов</string>
+    <string name="ta_H10_desc">За 12 минут ≥8 включений SS по ≥8 с; остановки &gt;2 с запрещены.</string>
+
+    <!-- EXTREME -->
+    <string name="difficulty_extreme">Экстрим</string>
+    <string name="ta_X1_title">SS‑марафон 120</string>
+    <string name="ta_X1_desc">Непрерывный superspeed ≥120 с. На всё — 5 минут.</string>
+    <string name="ta_X2_title">5 минут в SS</string>
+    <string name="ta_X2_desc">За 10 минут накопите ≥300 с в superspeed.</string>
+    <string name="ta_X3_title">Лесенка PRO</string>
+    <string name="ta_X3_desc">SS: 20 → 25 → 30 → 35 с. Отдых между этапами ≤2 с.</string>
+    <string name="ta_X4_title">20 точных переключений</string>
+    <string name="ta_X4_desc">За 10 минут выполните ровно 20 переключений SS↔N.</string>
+
+ </resources>

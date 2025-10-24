@@ -2,6 +2,7 @@
 *.vsidx
 *.iml
 Dialog.md
+ProgressIndicator.md
 .gradle
 /app/src/main/assets
 /local.properties
