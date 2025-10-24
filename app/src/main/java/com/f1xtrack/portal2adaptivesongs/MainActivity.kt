@@ -656,16 +656,20 @@ class MainActivity : AppCompatActivity() {
             val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
             val zis = ZipInputStream(inputStream)
             var entry = zis.nextEntry
+            // Поддерживаем файлы normal[число].wav и superspeed[число].wav (без обязательных base-файлов)
+            val allowed = Regex("^(normal(\\d*)|superspeed(\\d*))\\.wav$", RegexOption.IGNORE_CASE)
             var foundNormal = false
             var foundSuper = false
             while (entry != null) {
                 if (!entry.isDirectory) {
-                    val outFile = when (entry.name) {
-                        "normal.wav" -> File(dir, "normal.wav").also { foundNormal = true }
-                        "superspeed.wav" -> File(dir, "superspeed.wav").also { foundSuper = true }
-                        else -> null
-                    }
-                    if (outFile != null) {
+                    // Берём только файлы с именами normal[число].wav или superspeed[число].wav (в любом подкаталоге архива)
+                    val base = entry.name.substringAfterLast('/')
+                    if (allowed.matches(base)) {
+                        val lower = base.lowercase()
+                        if (lower.startsWith("normal")) foundNormal = true
+                        if (lower.startsWith("superspeed")) foundSuper = true
+                        val outFile = File(dir, lower)
+                        outFile.parentFile?.mkdirs()
                         FileOutputStream(outFile).use { out ->
                             zis.copyTo(out)
                         }

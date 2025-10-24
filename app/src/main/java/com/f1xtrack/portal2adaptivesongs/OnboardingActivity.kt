@@ -199,6 +199,8 @@ class OnboardingActivity : AppCompatActivity() {
                 if (!destRoot.exists()) destRoot.mkdirs()
                 ZipInputStream(tmp.inputStream()).use { zis ->
                     var entry: ZipEntry? = zis.nextEntry
+                    // Разрешаем только normal[число].wav и superspeed[число].wav для прямых файлов верхнего архива
+                    val allowed = Regex("^(normal(\\d*)|superspeed(\\d*))\\.wav$", RegexOption.IGNORE_CASE)
                     while (entry != null) {
                         val safeName = entry.name.replace("\\", "/")
                         if (safeName.contains("..")) {
@@ -258,15 +260,20 @@ class OnboardingActivity : AppCompatActivity() {
                             }
                             innerZip.delete()
                         } else {
-                            // Прямые файлы из верхнего архива (редкий случай)
-                            val outFile = File(destRoot, rel)
-                            outFile.parentFile?.mkdirs()
-                            FileOutputStream(outFile).use { out ->
-                                val buf = ByteArray(8 * 1024)
-                                while (true) {
-                                    val n = zis.read(buf)
-                                    if (n == -1) break
-                                    out.write(buf, 0, n)
+                            // Прямые файлы из верхнего архива (редкий случай): фильтруем по allowed
+                            val base = rel.substringAfterLast('/')
+                            if (allowed.matches(base)) {
+                                val parent = rel.substringBeforeLast('/', "")
+                                val targetRel = if (parent.isEmpty()) base.lowercase() else "$parent/${base.lowercase()}"
+                                val outFile = File(destRoot, targetRel)
+                                outFile.parentFile?.mkdirs()
+                                FileOutputStream(outFile).use { out ->
+                                    val buf = ByteArray(8 * 1024)
+                                    while (true) {
+                                        val n = zis.read(buf)
+                                        if (n == -1) break
+                                        out.write(buf, 0, n)
+                                    }
                                 }
                             }
                         }
