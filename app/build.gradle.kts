@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId = "com.f1xtrack.portal2adaptivesongs"
         minSdk = 30
-        targetSdk = 33
-        versionCode = 3
+        targetSdk = 34
+        versionCode = 4
         versionName = "1.3.2"
     }
     buildFeatures {

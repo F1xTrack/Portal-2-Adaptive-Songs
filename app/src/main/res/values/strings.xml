@@ -2,6 +2,15 @@
     <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">Выберите саундтрек</string>
     <string name="import_zip">Загрузить саундтрек из ZIP</string>
+    <string name="import_single_track_title">Введите название саундтрека</string>
+    <string name="import_name_required">Название не может быть пустым</string>
+    <string name="import_progress_single">Импортируем саундтрек…</string>
+    <string name="import_progress_pack">Импортируем пак саундтреков…</string>
+    <string name="import_success_single">Саундтрек импортирован!</string>
+    <string name="import_error_zip_requirements">В ZIP должны быть normal.wav и superspeed.wav или их numbered-варианты</string>
+    <string name="import_error_generic">Ошибка импорта: %1$s</string>
+    <string name="import_pack_result">Импортировано: %1$d, ошибок: %2$d</string>
+    <string name="import_pack_error">Ошибка импорта пака: %1$s</string>
     
     <string name="faith_plate_threshold">Порог Панели Веры: %1$d км/ч</string>
     <string name="faith_plate_threshold_label">Порог Панели Веры (км/ч)</string>

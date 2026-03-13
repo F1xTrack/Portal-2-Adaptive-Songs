@@ -6,15 +6,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import com.f1xtrack.portal2adaptivesongs.databinding.ActivityMainBinding
-import android.app.ProgressDialog
 import android.view.Menu
 import android.view.MenuItem
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.util.zip.ZipInputStream
-import java.io.FileOutputStream
 import java.io.File
 import android.provider.DocumentsContract
 import android.media.MediaMetadataRetriever
@@ -27,9 +26,9 @@ import android.os.Handler
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import android.content.Context
-import kotlin.random.Random
 import androidx.core.widget.doOnTextChanged
 import android.widget.TextView
 import android.text.method.LinkMovementMethod
@@ -41,8 +40,6 @@ class MainActivity : AppCompatActivity() {
     internal lateinit var player: ExoSoundPlayer
     private var isSuperSpeed = false
     private var lastTrack: String? = null
-    private val IMPORT_ZIP_REQUEST_CODE = 101
-    private val IMPORT_PACK_REQUEST_CODE = 102
     internal var userTracks: List<String> = emptyList()
     private var hysteresis = 3f // Гистерезис для предотвращения мигания
     internal var selectedTrack: String? = null // Для landscape режима
@@ -59,6 +56,21 @@ class MainActivity : AppCompatActivity() {
     private var timeAttackManager: TimeAttackManager? = null
     private var routeRecorder: RouteRecorder? = null
     private var searchQuery: String = ""
+    private var shouldResumeTracking = false
+
+    private val importZipLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                showNameInputDialog(uri)
+            }
+        }
+
+    private val importFolderLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            if (uri != null) {
+                importPackFromFolder(uri)
+            }
+        }
 
     private fun getHiddenAssets(): Set<String> {
         val prefs = getSharedPreferences("storage_prefs", Context.MODE_PRIVATE)
@@ -244,14 +256,10 @@ class MainActivity : AppCompatActivity() {
                     // Уже на главном экране
                 }
                 R.id.nav_import_zip -> {
-                    val intent = Intent(Intent.ACTION_GET_CONTENT)
-                    intent.type = "application/zip"
-                    intent.addCategory(Intent.CATEGORY_OPENABLE)
-                    startActivityForResult(intent, IMPORT_ZIP_REQUEST_CODE)
+                    importZipLauncher.launch("application/zip")
                 }
                 R.id.nav_import_folder -> {
-                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                    startActivityForResult(intent, IMPORT_PACK_REQUEST_CODE)
+                    importFolderLauncher.launch(null)
                 }
                 R.id.nav_track_prefs -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.nav_storage -> startActivity(Intent(this, StorageActivity::class.java))
@@ -453,79 +461,49 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMPORT_ZIP_REQUEST_CODE && resultCode == RESULT_OK) {
-            val uri = data?.data ?: return
-            showNameInputDialog(uri)
-        } else if (requestCode == IMPORT_PACK_REQUEST_CODE && resultCode == RESULT_OK) {
-            val treeUri = data?.data ?: return
-            importPackFromFolder(treeUri)
-        }
-    }
-
     private fun showNameInputDialog(zipUri: Uri) {
         val input = android.widget.EditText(this)
         MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
-            .setTitle("Введите название саундтрека")
+            .setTitle(R.string.import_single_track_title)
             .setView(input)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(android.R.string.ok) { _, _ ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
                     importZipToSoundtracks(zipUri, name)
                 } else {
-                    Toast.makeText(this, "Название не может быть пустым", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.import_name_required), Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("Отмена", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
     private fun importZipToSoundtracks(zipUri: Uri, name: String) {
-        val dialog = ProgressDialog(this)
-        dialog.setMessage("Импортируем саундтрек...")
-        dialog.setCancelable(false)
-        dialog.show()
+        val dialog = createBlockingProgressDialog(getString(R.string.import_progress_single))
         Thread {
             try {
                 val dir = File(filesDir, "soundtracks/$name")
-                dir.mkdirs()
-                val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
-                val zis = ZipInputStream(inputStream)
-                var entry = zis.nextEntry
-                var foundNormal = false
-                var foundSuper = false
-                while (entry != null) {
-                    if (!entry.isDirectory) {
-                        val outFile = when (entry.name) {
-                            "normal.wav" -> File(dir, "normal.wav").also { foundNormal = true }
-                            "superspeed.wav" -> File(dir, "superspeed.wav").also { foundSuper = true }
-                            else -> null
-                        }
-                        if (outFile != null) {
-                            FileOutputStream(outFile).use { out ->
-                                zis.copyTo(out)
-                            }
-                        }
-                    }
-                    entry = zis.nextEntry
-                }
-                zis.close()
-                inputStream.close()
+                val result = contentResolver.openInputStream(zipUri)?.use { input ->
+                    TrackZipImporter.importFromStream(input, dir)
+                } ?: throw IllegalStateException("Не удалось открыть ZIP")
                 runOnUiThread {
                     dialog.dismiss()
-                    if (foundNormal && foundSuper) {
-                        Toast.makeText(this, "Саундтрек импортирован!", Toast.LENGTH_SHORT).show()
+                    if (result.isValid) {
+                        Toast.makeText(this, getString(R.string.import_success_single), Toast.LENGTH_SHORT).show()
                         updateTracksList(name)
                     } else {
                         dir.deleteRecursively()
-                        Toast.makeText(this, "В ZIP должны быть normal.wav и superspeed.wav", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, getString(R.string.import_error_zip_requirements), Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
                 runOnUiThread {
                     dialog.dismiss()
-                    Toast.makeText(this, "Ошибка импорта: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.import_error_generic, e.message ?: "unknown error"),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }.start()
@@ -593,7 +571,7 @@ class MainActivity : AppCompatActivity() {
         tracksAdapter.updateData(filtered, selectedTrack)
     }
 
-    private fun startTracking() {
+    private fun startTracking(showToast: Boolean = true) {
         // Настройки GPS: использование сетей и интервал записи
         val gp = getSharedPreferences("gps_prefs", Context.MODE_PRIVATE)
         val useNet = gp.getBoolean("use_network_location", true)
@@ -602,14 +580,41 @@ class MainActivity : AppCompatActivity() {
         tracker.setUpdateIntervalSeconds(intervalSec)
         routeRecorder?.startSession()
         tracker.start()
-        Toast.makeText(this, "Трекинг запущен", Toast.LENGTH_SHORT).show()
+        shouldResumeTracking = true
+        if (showToast) {
+            Toast.makeText(this, "Трекинг запущен", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun stopTracking() {
+        if (!this::tracker.isInitialized) return
+        tracker.stop()
+        routeRecorder?.stopSession()
+    }
+
+    private fun hasLocationPermission(): Boolean {
+        val fineGranted = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarseGranted = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        return fineGranted || coarseGranted
+    }
+
+    private fun createBlockingProgressDialog(message: String): AlertDialog {
+        val view = layoutInflater.inflate(R.layout.dialog_blocking_progress, null)
+        view.findViewById<TextView>(R.id.textProgressMessage).text = message
+        return MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
+            .setView(view)
+            .setCancelable(false)
+            .show()
     }
 
     private fun importPackFromFolder(treeUri: Uri) {
-        val dialog = ProgressDialog(this)
-        dialog.setMessage("Импортируем пак саундтреков...")
-        dialog.setCancelable(false)
-        dialog.show()
+        val dialog = createBlockingProgressDialog(getString(R.string.import_progress_pack))
         Thread {
             var imported = 0
             var failed = 0
@@ -636,13 +641,17 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 runOnUiThread {
                     dialog.dismiss()
-                    Toast.makeText(this, "Ошибка импорта пака: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.import_pack_error, e.message ?: "unknown error"),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 return@Thread
             }
             runOnUiThread {
                 dialog.dismiss()
-                Toast.makeText(this, "Импортировано: $imported, ошибок: $failed", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.import_pack_result, imported, failed), Toast.LENGTH_LONG).show()
                 updateTracksList()
             }
         }.start()
@@ -652,34 +661,10 @@ class MainActivity : AppCompatActivity() {
     private fun importZipToSoundtracksSync(zipUri: Uri, name: String): Boolean {
         return try {
             val dir = File(filesDir, "soundtracks/$name")
-            dir.mkdirs()
-            val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
-            val zis = ZipInputStream(inputStream)
-            var entry = zis.nextEntry
-            // Поддерживаем файлы normal[число].wav и superspeed[число].wav (без обязательных base-файлов)
-            val allowed = Regex("^(normal(\\d*)|superspeed(\\d*))\\.wav$", RegexOption.IGNORE_CASE)
-            var foundNormal = false
-            var foundSuper = false
-            while (entry != null) {
-                if (!entry.isDirectory) {
-                    // Берём только файлы с именами normal[число].wav или superspeed[число].wav (в любом подкаталоге архива)
-                    val base = entry.name.substringAfterLast('/')
-                    if (allowed.matches(base)) {
-                        val lower = base.lowercase()
-                        if (lower.startsWith("normal")) foundNormal = true
-                        if (lower.startsWith("superspeed")) foundSuper = true
-                        val outFile = File(dir, lower)
-                        outFile.parentFile?.mkdirs()
-                        FileOutputStream(outFile).use { out ->
-                            zis.copyTo(out)
-                        }
-                    }
-                }
-                entry = zis.nextEntry
-            }
-            zis.close()
-            inputStream.close()
-            if (!(foundNormal && foundSuper)) {
+            val result = contentResolver.openInputStream(zipUri)?.use { input ->
+                TrackZipImporter.importFromStream(input, dir)
+            } ?: throw IllegalStateException("Не удалось открыть ZIP")
+            if (!result.isValid) {
                 dir.deleteRecursively()
                 false
             } else true
@@ -717,17 +702,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        stopTracking()
+        stopSuperSpeedTimer()
         if (this::player.isInitialized) {
             player.releaseAll()
         }
         timeAttackManager?.dispose()
+        super.onDestroy()
+    }
+
+    override fun onStop() {
+        stopTracking()
+        stopSuperSpeedTimer()
+        super.onStop()
     }
 
     override fun onResume() {
         super.onResume()
         // Обновить список на случай изменений в Хранилище
         updateTracksList(selectedTrack)
+        if (shouldResumeTracking && hasLocationPermission()) {
+            startTracking(showToast = false)
+        }
         val taPrefs = getSharedPreferences("time_attack_prefs", Context.MODE_PRIVATE)
         if (taPrefs.getBoolean("start_now", false)) {
             taPrefs.edit().putBoolean("start_now", false).apply()
@@ -738,11 +734,10 @@ class MainActivity : AppCompatActivity() {
     private fun startSuperSpeedTimer() {
         if (superSpeedTimer != null) return
         superSpeedTimer = Handler(mainLooper)
-        val repo = AchievementRepository(this)
         val runnable = object : Runnable {
             override fun run() {
                 if (isSuperSpeed) {
-                    repo.addSuperSpeedMinutes(1)
+                    reportSuperMinutesDelta(1)
                 }
                 superSpeedTimer?.postDelayed(this, 60_000L)
             }

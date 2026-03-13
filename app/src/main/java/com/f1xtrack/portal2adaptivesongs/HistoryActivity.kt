@@ -212,39 +212,6 @@ class HistoryActivity : AppCompatActivity() {
             return
         }
 
-        // Build segments: new segment when track or mode or session changes
-        var last: Pt? = null
-        val current = mutableListOf<GeoPoint>()
-        var currentTrack: String? = null
-        var currentMode: String? = null
-        var currentSid: String? = null
-        val segments = mutableListOf<Triple<List<GeoPoint>, String, String>>() // pts, track, mode
-        for (p in points) {
-            if (last == null) {
-                current.clear()
-                current += GeoPoint(p.lat, p.lon)
-                currentTrack = p.track
-                currentMode = p.mode
-                currentSid = p.sid
-            } else {
-                val changed = (p.track != currentTrack) || (p.mode != currentMode) || (p.sid != currentSid)
-                if (changed) {
-                    if (current.size >= 2 && currentTrack != null && currentMode != null) {
-                        segments += Triple(current.toList(), currentTrack!!, currentMode!!)
-                    }
-                    current.clear()
-                    currentTrack = p.track
-                    currentMode = p.mode
-                    currentSid = p.sid
-                }
-                current += GeoPoint(p.lat, p.lon)
-            }
-            last = p
-        }
-        if (current.size >= 2 && currentTrack != null && currentMode != null) {
-            segments += Triple(current.toList(), currentTrack!!, currentMode!!)
-        }
-
         // Render based on scheme
         when (colorScheme) {
             "track" -> renderByTrack(points)
@@ -337,8 +304,8 @@ class HistoryActivity : AppCompatActivity() {
         }
         if (values.isEmpty()) return
 
-        val minVal = values.minOrNull()!!
-        val maxVal = values.maxOrNull()!!
+        val minVal = values.minOrNull() ?: return
+        val maxVal = values.maxOrNull() ?: return
 
         for (i in 0 until points.size - 1) {
             val p1 = points[i]
@@ -424,8 +391,10 @@ class HistoryActivity : AppCompatActivity() {
             } else {
                 val changed = (p.track != currentTrack) || (p.mode != currentMode) || (p.sid != currentSid)
                 if (changed) {
-                    if (current.size >= 2 && currentTrack != null && currentMode != null) {
-                        segments += Triple(current.toList(), currentTrack!!, currentMode!!)
+                    val track = currentTrack
+                    val mode = currentMode
+                    if (current.size >= 2 && track != null && mode != null) {
+                        segments += Triple(current.toList(), track, mode)
                     }
                     current.clear()
                     currentTrack = p.track
@@ -436,8 +405,10 @@ class HistoryActivity : AppCompatActivity() {
             }
             last = p
         }
-        if (current.size >= 2 && currentTrack != null && currentMode != null) {
-            segments += Triple(current.toList(), currentTrack!!, currentMode!!)
+        val track = currentTrack
+        val mode = currentMode
+        if (current.size >= 2 && track != null && mode != null) {
+            segments += Triple(current.toList(), track, mode)
         }
         return segments
     }

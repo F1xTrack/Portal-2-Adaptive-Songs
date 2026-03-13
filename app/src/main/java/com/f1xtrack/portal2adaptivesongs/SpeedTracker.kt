@@ -1,13 +1,15 @@
 package com.f1xtrack.portal2adaptivesongs
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.util.Log
+import androidx.core.content.ContextCompat
 
 class SpeedTracker(
-    context: Context,
+    private val context: Context,
     private val onSpeedBurst: (Float) -> Unit,
     private val onSpeedChange: ((Float) -> Unit)? = null,
     private val onDistanceMeters: ((Float) -> Unit)? = null,
@@ -57,8 +59,11 @@ class SpeedTracker(
         listener = newListener
         // Подписки на провайдеры:
         // Всегда пробуем GPS; при включённой опции — добавляем провайдер сети (Wi‑Fi/мобильные сети)
+        if (!hasAnyLocationPermission()) {
+            return
+        }
         try { lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateIntervalMs, 0f, newListener) } catch (_: Exception) {}
-        if (useNetworkProvider) {
+        if (useNetworkProvider && hasCoarseLocationPermission()) {
             try { lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updateIntervalMs, 0f, newListener) } catch (_: Exception) {}
         }
     }
@@ -81,5 +86,20 @@ class SpeedTracker(
     fun setUpdateIntervalSeconds(sec: Int) {
         val clamped = if (sec < 1) 1 else if (sec > 60) 60 else sec
         updateIntervalMs = clamped * 1000L
+    }
+
+    private fun hasAnyLocationPermission(): Boolean {
+        val fineGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        return fineGranted || hasCoarseLocationPermission()
+    }
+
+    private fun hasCoarseLocationPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 }
