@@ -70,6 +70,45 @@ class TrackZipImporterTest {
         outputDir.deleteRecursively()
     }
 
+    @Test
+    fun `normalizes imported filenames to lowercase`() {
+        val outputDir = Files.createTempDirectory("track-import-uppercase").toFile()
+
+        val result = TrackZipImporter.importFromStream(
+            inputStream = buildZip(
+                "NORMAL.WAV" to "normal-upper",
+                "folder/SUPERSPEED9.WAV" to "super-upper"
+            ),
+            outputDir = outputDir
+        )
+
+        assertTrue(result.isValid)
+        assertTrue(File(outputDir, "normal.wav").exists())
+        assertTrue(File(outputDir, "superspeed9.wav").exists())
+
+        outputDir.deleteRecursively()
+    }
+
+    @Test
+    fun `drops unsafe path parts and keeps only the file name`() {
+        val outputDir = Files.createTempDirectory("track-import-safe-name").toFile()
+
+        val result = TrackZipImporter.importFromStream(
+            inputStream = buildZip(
+                "../../normal.wav" to "normal-traversal",
+                "..\\..\\superspeed.wav" to "super-traversal"
+            ),
+            outputDir = outputDir
+        )
+
+        assertTrue(result.isValid)
+        assertTrue(File(outputDir, "normal.wav").exists())
+        assertTrue(File(outputDir, "superspeed.wav").exists())
+        assertFalse(File(outputDir.parentFile, "normal.wav").exists())
+
+        outputDir.deleteRecursively()
+    }
+
     private fun buildZip(vararg entries: Pair<String, String>): ByteArrayInputStream {
         val bytes = java.io.ByteArrayOutputStream()
         ZipOutputStream(bytes).use { zip ->
