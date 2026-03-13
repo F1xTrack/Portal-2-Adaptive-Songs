@@ -24,6 +24,7 @@ import com.f1xtrack.portal2adaptivesongs.HistoryActivity
 import com.f1xtrack.portal2adaptivesongs.MainActivity
 import com.f1xtrack.portal2adaptivesongs.SettingsActivity
 import com.f1xtrack.portal2adaptivesongs.StorageActivity
+import com.f1xtrack.portal2adaptivesongs.ui.screens.NowPlaybackController
 import com.f1xtrack.portal2adaptivesongs.ui.screens.LibraryPlaceholderScreen
 import com.f1xtrack.portal2adaptivesongs.ui.screens.NowScreen
 import com.f1xtrack.portal2adaptivesongs.ui.screens.ProfilePlaceholderScreen
@@ -33,6 +34,7 @@ import com.f1xtrack.portal2adaptivesongs.ui.theme.PortalThemeTokens
 @Composable
 fun PortalNavHost(
     navController: NavHostController,
+    playbackController: NowPlaybackController,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -85,6 +87,7 @@ fun PortalNavHost(
             ) {
                 composable(PortalDestination.Now.route) {
                     NowScreen(
+                        controller = playbackController,
                         onOpenLegacyPlayer = {
                             context.startActivity(Intent(context, MainActivity::class.java))
                         },

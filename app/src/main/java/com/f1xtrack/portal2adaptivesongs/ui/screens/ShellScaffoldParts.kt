@@ -27,8 +27,10 @@ import com.f1xtrack.portal2adaptivesongs.ui.theme.PortalThemeTokens
 internal fun ShellHeader(
     title: String,
     subtitle: String,
+    badgeText: String? = null,
     modifier: Modifier = Modifier,
 ) {
+    val resolvedBadge = badgeText ?: stringResource(R.string.shell_placeholder_badge)
     Column(modifier = modifier) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -40,7 +42,7 @@ internal fun ShellHeader(
                 contentColor = PortalThemeTokens.colors.accentOrange,
             ) {
                 Text(
-                    text = stringResource(R.string.shell_placeholder_badge),
+                    text = resolvedBadge,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
