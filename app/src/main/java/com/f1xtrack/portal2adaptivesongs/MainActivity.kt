@@ -242,6 +242,27 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        syncWindowPreferences()
+        binding.textCurrentTrackValue.text = getString(R.string.main_now_playing_none)
+        binding.textCurrentThemeValue.text = resolveThemeLabel()
+        binding.textTrackingModeValue.text = resolveTrackingProfileLabel()
+
+        binding.toolbar.setNavigationOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        }
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
+
+        binding.btnQuickImport.setOnClickListener { importZipLauncher.launch("application/zip") }
+        binding.btnQuickHistory.setOnClickListener { startActivity(Intent(this, HistoryActivity::class.java)) }
+        binding.btnQuickTimeAttack.setOnClickListener { startActivity(Intent(this, TimeAttackSettingsActivity::class.java)) }
 
         // Мигрируем скрытые треки после переименования папок [PSM]/[Rev]
         migrateHiddenAssetsIfNeeded()
@@ -377,6 +398,7 @@ class MainActivity : AppCompatActivity() {
                 lastTrack = null
 
                 selectedTrack = trackInfo.name
+                binding.textCurrentTrackValue.text = trackInfo.name
                 tracksAdapter.updateData(getTrackInfoList(), selectedTrack)
                 val isUser = userTracks.contains(trackInfo.name)
                 player.playBoth(trackInfo.name, isUser)
@@ -720,6 +742,10 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         // Обновить список на случай изменений в Хранилище
+        syncWindowPreferences()
+        binding.textCurrentThemeValue.text = resolveThemeLabel()
+        binding.textTrackingModeValue.text = resolveTrackingProfileLabel()
+        binding.textCurrentTrackValue.text = selectedTrack ?: getString(R.string.main_now_playing_none)
         updateTracksList(selectedTrack)
         if (shouldResumeTracking && hasLocationPermission()) {
             startTracking(showToast = false)
@@ -847,10 +873,12 @@ class MainActivity : AppCompatActivity() {
 
 private fun MainActivity.applyThemeFromPrefs() {
     val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
-    when (prefs.getString("app_theme", "portal2")) {
-        "asi" -> setTheme(R.style.Theme_Portal_ASI)
-        "portal2_overgrowth" -> setTheme(R.style.Theme_Portal2_Overgrowth)
-        "portal1" -> setTheme(R.style.Theme_Portal1)
+    val amoled = prefs.getBoolean("amoled_mode", false)
+    when {
+        amoled -> setTheme(R.style.Theme_Portal2AdaptiveSongs_Amoled)
+        prefs.getString("app_theme", "portal2") == "asi" -> setTheme(R.style.Theme_Portal_ASI)
+        prefs.getString("app_theme", "portal2") == "portal2_overgrowth" -> setTheme(R.style.Theme_Portal2_Overgrowth)
+        prefs.getString("app_theme", "portal2") == "portal1" -> setTheme(R.style.Theme_Portal1)
         else -> setTheme(R.style.Theme_Portal2AdaptiveSongs)
     }
     // Применяем сохранённый язык
@@ -957,4 +985,35 @@ private fun MainActivity.startRandomTrackForTimeAttack() {
     player.playBoth(name, isUser)
     selectedTrack = name
     tracksAdapter.updateData(getTrackInfoList(), selectedTrack)
+}
+
+private fun MainActivity.syncWindowPreferences() {
+    val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
+    if (prefs.getBoolean("keep_screen_on", false)) {
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    } else {
+        window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+}
+
+private fun MainActivity.resolveThemeLabel(): String {
+    val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
+    return when {
+        prefs.getBoolean("amoled_mode", false) -> getString(R.string.settings_amoled_theme)
+        prefs.getString("app_theme", "portal2") == "asi" -> getString(R.string.theme_asi)
+        prefs.getString("app_theme", "portal2") == "portal2_overgrowth" -> getString(R.string.theme_portal2_overgrowth)
+        prefs.getString("app_theme", "portal2") == "portal1" -> getString(R.string.theme_portal1)
+        else -> getString(R.string.theme_portal2_default)
+    }
+}
+
+private fun MainActivity.resolveTrackingProfileLabel(): String {
+    val prefs = getSharedPreferences("gps_prefs", Context.MODE_PRIVATE)
+    val useNetwork = prefs.getBoolean("use_network_location", true)
+    val intervalSec = prefs.getInt("interval_sec", 2)
+    return when {
+        !useNetwork -> getString(R.string.main_tracking_precise)
+        intervalSec <= 2 -> getString(R.string.main_tracking_network)
+        else -> getString(R.string.main_tracking_balanced)
+    }
 }

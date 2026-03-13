@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="purple_200">#7FD2FF</color>
+    <color name="purple_500">#2FA8FF</color>
+    <color name="purple_700">#1566A8</color>
+    <color name="teal_200">#FFB25B</color>
+    <color name="teal_700">#E77A16</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="portal_blue">#2196F3</color>
-    <color name="portal_orange">#FF9800</color>
-    <color name="portal_white">#FAFAFA</color>
-    <color name="portal_bg_dark">#23272A</color>
-    <color name="portal_card_bg">#2C2F33</color>
-    <color name="portal_bg_light">#FFC0C0C0</color>
+    <color name="portal_blue">#7FD2FF</color>
+    <color name="portal_orange">#FF9A3D</color>
+    <color name="portal_white">#F4F7FB</color>
+    <color name="portal_bg_dark">#0B0F14</color>
+    <color name="portal_card_bg">#121923</color>
+    <color name="portal_bg_light">#DCE8F4</color>
+    <color name="portal_surface_secondary">#182433</color>
+    <color name="portal_surface_tertiary">#1F2F43</color>
+    <color name="portal_stroke">#2C425C</color>
+    <color name="portal_amoled_bg">#020304</color>
+    <color name="portal_amoled_card">#0A0D11</color>
     <!-- Theming helper colors -->
-    <color name="text_secondary_on_bg">#B3FFFFFF</color>
-    <color name="overlay_scrim">#80000000</color>
+    <color name="text_secondary_on_bg">#A6B2C5</color>
+    <color name="overlay_scrim">#99040A12</color>
 </resources>

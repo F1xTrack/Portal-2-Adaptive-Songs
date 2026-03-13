@@ -132,6 +132,7 @@
     <!-- Plurais -->
     <plurals name="plays_count">
         <item quantity="one">%d reprodução</item>
+        <item quantity="many">%d reproduções</item>
         <item quantity="other">%d reproduções</item>
     </plurals>
 

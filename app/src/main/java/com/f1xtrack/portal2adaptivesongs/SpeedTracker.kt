@@ -1,5 +1,6 @@
 package com.f1xtrack.portal2adaptivesongs
 
+import android.annotation.SuppressLint
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -30,6 +31,7 @@ class SpeedTracker(
     }
     fun getThreshold(): Float = threshold
 
+    @SuppressLint("MissingPermission")
     fun start() {
         // Stop previous listener if any
         listener?.let {

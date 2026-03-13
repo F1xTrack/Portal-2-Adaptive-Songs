@@ -131,6 +131,7 @@
 
     <!-- Çoğul -->
     <plurals name="plays_count">
+        <item quantity="one">%d kez çalındı</item>
         <item quantity="other">%d kez çalındı</item>
     </plurals>
 

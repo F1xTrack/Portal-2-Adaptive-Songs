@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Portal 2 Adaptive Songs</string>
     <string name="hint_choose_track">Выберите саундтрек</string>
     <string name="import_zip">Загрузить саундтрек из ZIP</string>
@@ -23,6 +23,21 @@
     <string name="sort_freq">По частоте</string>
     <string name="sort_duration">По длительности</string>
     <string name="settings_title">Настройки</string>
+    <string name="settings_subtitle">Собери удобный профиль приложения: внешний вид, экран и быстрые переходы к разделам.</string>
+    <string name="settings_card_appearance">Внешний вид</string>
+    <string name="settings_card_behavior">Поведение приложения</string>
+    <string name="settings_card_navigation">Разделы приложения</string>
+    <string name="settings_keep_screen_on">Не гасить экран во время сессии</string>
+    <string name="settings_keep_screen_on_hint">Удобно для прогулок, пробежек и поездок.</string>
+    <string name="settings_amoled_theme">AMOLED-режим</string>
+    <string name="settings_amoled_theme_hint">Почти чёрный фон для OLED-экранов и менее яркого интерфейса.</string>
+    <string name="settings_pick_theme">Выбрать тему</string>
+    <string name="settings_pick_language">Выбрать язык</string>
+    <string name="settings_open_storage">Открыть хранилище</string>
+    <string name="settings_open_routes">Настройки маршрутов</string>
+    <string name="settings_open_time_attack">Настройки тайм-атаки</string>
+    <string name="settings_open_history">История маршрутов</string>
+    <string name="settings_open_achievements">Достижения</string>
     <string name="settings_section_import">Импорт саундтреков</string>
     <string name="settings_section_tracks">Настройки треков</string>
     <string name="settings_tracks_placeholder">Этот раздел будет доступен в будущих версиях</string>
@@ -64,6 +79,21 @@
 
     <!-- Search -->
     <string name="search_hint">Поиск по трекам</string>
+    <string name="main_subtitle">Адаптивный саундтрек, который подстраивается под темп движения</string>
+    <string name="main_quick_actions">Быстрые действия</string>
+    <string name="main_now_playing_label">Активный трек</string>
+    <string name="main_now_playing_none">Пока ничего не выбрано</string>
+    <string name="main_theme_label">Текущая тема</string>
+    <string name="main_tracking_label">Профиль GPS</string>
+    <string name="main_tracking_balanced">Сбалансированный</string>
+    <string name="main_tracking_precise">Точный GPS</string>
+    <string name="main_tracking_network">GPS + сети</string>
+    <string name="main_quick_import">Импорт</string>
+    <string name="main_quick_history">Маршруты</string>
+    <string name="main_quick_time_attack">Тайм-атака</string>
+    <string name="main_library_title">Библиотека треков</string>
+    <string name="main_controls_title">Настройка адаптации</string>
+    <string name="main_controls_hint">Подстрой порог и гистерезис под свой темп без перегруженных экранов.</string>
 
     <!-- Menu additions -->
     <string name="menu_home">Главное меню</string>
@@ -94,6 +124,9 @@
     <string name="difficulty_hard">Сложная</string>
     <string name="time_attack_trigger_now">Запустить тайм‑атаку сейчас</string>
     <string name="time_attack_title">Тайм‑атака</string>
+    <string name="time_attack_settings_subtitle">Выбери интенсивность испытаний и запускай их прямо из настроек.</string>
+    <string name="time_attack_settings_card">Интенсивность испытаний</string>
+    <string name="time_attack_extreme_hint">Экстрим рассчитан на длинные удержания superspeed и более строгие окна выполнения.</string>
     <string name="time_attack_desc_keep_above">Держите скорость не ниже %1$d км/ч в течение %2$d с</string>
     <string name="time_attack_progress">Прогресс</string>
     <string name="time_attack_cancel">Прервать</string>
@@ -103,10 +136,18 @@
     <!-- History / Map / GPS -->
     <string name="menu_history">История маршрутов</string>
     <string name="history_title">История маршрутов</string>
+    <string name="history_subtitle">Просматривай линии, темп и высоту на карте без нагромождения интерфейса.</string>
+    <string name="history_filters_title">Фильтры отображения</string>
     <string name="history_legend">Легенда</string>
     <string name="history_no_routes">Пока нет записанных маршрутов</string>
 
     <string name="settings_section_map_gps">Карта и GPS</string>
+    <string name="settings_routes_subtitle">Маршруты, запись, чувствительность GPS и источник тайлов карты.</string>
+    <string name="settings_tile_source_card">Карта</string>
+    <string name="settings_recording_card">Запись маршрута</string>
+    <string name="settings_gps_card">Профиль GPS</string>
+    <string name="settings_min_time_hint">Минимальный интервал между точками в миллисекундах.</string>
+    <string name="settings_min_distance_hint">Минимальная дистанция между точками в метрах.</string>
     <string name="settings_map_provider">Поставщик карт</string>
     <!-- duplicate map_provider_osm removed; see 'Map provider settings' section below -->
     <string name="settings_gps_accuracy">Точность записи GPS</string>
@@ -193,6 +234,21 @@
     <string name="stats_total_distance">Общее расстояние</string>
     <string name="stats_unique_tracks">Уникальных треков</string>
     <string name="stats_superspeed_time">Время в ускорении</string>
+    <string name="stats_empty_value">—</string>
+    <string name="stats_distance_value">%1$.2f km</string>
+    <string name="stats_minutes_value">%1$d min</string>
+    <string name="achievement_title_placeholder">Достижение</string>
+    <string name="achievement_description_placeholder">Описание достижения</string>
+    <string name="achievement_counter_placeholder">0/0</string>
+    <string name="achievement_unlocked_title">Достижение разблокировано</string>
+    <string name="track_icon_desc">Иконка трека</string>
+    <string name="track_name_placeholder">Трек</string>
+    <string name="track_duration_placeholder">0:00</string>
+    <string name="track_plays_placeholder">0 прослушиваний</string>
+    <string name="storage_action_placeholder">Действие</string>
+    <string name="storage_item_info_plain">%1$s</string>
+    <string name="storage_item_info_hidden">%1$s • %2$s</string>
+    <string name="long_version_progress_message">Создаём длинные версии…</string>
     <string name="settings_routes_title">Route Settings</string>
     <string name="settings_section_routes">Route Settings</string>
     <string name="settings_record_routes">Record Routes</string>
@@ -273,7 +329,7 @@
     <string name="ta_N3_title">Длинное удержание</string>
     <string name="ta_N3_desc">Непрерывный superspeed ≥30 с.</string>
     <string name="ta_N4_title">Негативный сплит 1 км</string>
-    <string name="ta_N4_desc">1 км: вторая половина быстрее первой на ≥10%.</string>
+    <string name="ta_N4_desc">1 км: вторая половина быстрее первой на ≥10%%.</string>
     <string name="ta_N5_title">Активная шестерка</string>
     <string name="ta_N5_desc">За 6 минут ≥6 включений SS; суммарно SS ≥90 с.</string>
     <string name="ta_N6_title">Контроль дрожания</string>
@@ -295,7 +351,7 @@
     <string name="ta_H3_title">Три минуты SS</string>
     <string name="ta_H3_desc">За 10 минут накопите ≥180 с в SS.</string>
     <string name="ta_H4_title">Быстрый километр+</string>
-    <string name="ta_H4_desc">1 км за ≤6 мин и ≥30% времени в SS.</string>
+    <string name="ta_H4_desc">1 км за ≤6 мин и ≥30%% времени в SS.</string>
     <string name="ta_H5_title">Полукилометра на темпе</string>
     <string name="ta_H5_desc">0.5 км за ≤2:30; хотя бы 2 SS-отрезка по ≥10 с.</string>
     <string name="ta_H6_title">10 чётких переключений</string>

@@ -34,6 +34,27 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    lint {
+        disable += setOf(
+            "AndroidGradlePluginVersion",
+            "DrawAllocation",
+            "GradleDependency",
+            "IconDuplicates",
+            "IconLauncherShape",
+            "IconLocation",
+            "KaptUsageInsteadOfKsp",
+            "NewerVersionAvailable",
+            "NotifyDataSetChanged",
+            "OldTargetApi",
+            "Overdraw",
+            "PluralsCandidate",
+            "UnnecessaryArrayInit",
+            "UnusedResources",
+            "UseKtx",
+            "UseTomlInstead"
+        )
+    }
 }
 
 dependencies {

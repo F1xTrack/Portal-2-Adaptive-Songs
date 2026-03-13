@@ -15,12 +15,14 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import org.json.JSONObject
 import android.location.Location
+import java.util.Locale
 
 class AchievementsActivity : AppCompatActivity() {
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: AchievementsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyThemeFromPrefs()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_achievements)
         supportActionBar?.title = getString(R.string.achievements_title)
@@ -48,9 +50,9 @@ class AchievementsActivity : AppCompatActivity() {
 
         val raw = RouteRecorder.readAll(this)
         if (raw.isEmpty()) {
-            textStatDistance.text = "0.00 km"
+            textStatDistance.text = getString(R.string.stats_distance_value, 0.0)
             textStatTracks.text = "0"
-            textStatSuperspeedTime.text = "0 min"
+            textStatSuperspeedTime.text = getString(R.string.stats_minutes_value, 0)
             return
         }
 
@@ -65,7 +67,7 @@ class AchievementsActivity : AppCompatActivity() {
             Location.distanceBetween(p1.lat, p1.lon, p2.lat, p2.lon, results)
             totalDistance += results[0]
         }
-        textStatDistance.text = String.format("%.2f km", totalDistance / 1000.0)
+        textStatDistance.text = getString(R.string.stats_distance_value, totalDistance / 1000.0)
 
         // Calculate unique tracks
         val uniqueTracks = points.map { it.track }.filter { it.isNotEmpty() }.toSet()
@@ -81,7 +83,7 @@ class AchievementsActivity : AppCompatActivity() {
             }
         }
         val superspeedMinutes = superspeedMillis / 1000 / 60
-        textStatSuperspeedTime.text = "$superspeedMinutes min"
+        textStatSuperspeedTime.text = getString(R.string.stats_minutes_value, superspeedMinutes)
     }
 
     private fun toPt(obj: JSONObject): Pt? {
@@ -150,7 +152,7 @@ class AchievementsAdapter(private val context: Context, private var items: List<
         holder.desc.text = context.getString(a.descriptionRes)
         val pct = (100 * a.current) / (if (a.target == 0) 1 else a.target)
         holder.progress.progress = pct.coerceIn(0, 100)
-        holder.counter.text = "${a.current}/${a.target}"
+        holder.counter.text = String.format(Locale.getDefault(), "%d/%d", a.current, a.target)
     }
 }
 
@@ -247,5 +249,17 @@ class AchievementRepository(private val ctx: Context) {
         val prefs = ctx.getSharedPreferences("achievements", AppCompatActivity.MODE_PRIVATE)
         val v = prefs.getInt("superspeed_minutes", 0) + delta
         prefs.edit().putInt("superspeed_minutes", v).apply()
+    }
+}
+
+private fun AchievementsActivity.applyThemeFromPrefs() {
+    val prefs = getSharedPreferences("ui_prefs", AppCompatActivity.MODE_PRIVATE)
+    val amoled = prefs.getBoolean("amoled_mode", false)
+    when {
+        amoled -> setTheme(R.style.Theme_Portal2AdaptiveSongs_Amoled)
+        prefs.getString("app_theme", "portal2") == "asi" -> setTheme(R.style.Theme_Portal_ASI)
+        prefs.getString("app_theme", "portal2") == "portal2_overgrowth" -> setTheme(R.style.Theme_Portal2_Overgrowth)
+        prefs.getString("app_theme", "portal2") == "portal1" -> setTheme(R.style.Theme_Portal1)
+        else -> setTheme(R.style.Theme_Portal2AdaptiveSongs)
     }
 }

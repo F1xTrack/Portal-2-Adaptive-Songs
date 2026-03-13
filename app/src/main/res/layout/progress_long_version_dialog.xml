@@ -27,7 +27,7 @@
             android:id="@+id/textProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Создаём длинные версии..."
+            android:text="@string/long_version_progress_message"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:layout_marginTop="24dp"
             android:textColor="?attr/textPrimaryOnBackground"/>

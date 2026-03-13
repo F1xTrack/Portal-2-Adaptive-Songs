@@ -28,16 +28,21 @@ class StorageAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
         holder.name.text = item.name
-        holder.info.text = holder.itemView.context.getString(
+        val context = holder.itemView.context
+        val sourceLabel = context.getString(
             if (item.isUser) R.string.storage_imported_label else R.string.storage_builtin_label
-        ) + if (!item.isUser) {
-            " • " + (if (item.isHidden) holder.itemView.context.getString(R.string.storage_hide) else holder.itemView.context.getString(R.string.storage_unhide))
-        } else ""
+        )
+        holder.info.text = if (item.isUser) {
+            context.getString(R.string.storage_item_info_plain, sourceLabel)
+        } else {
+            val visibilityLabel = context.getString(if (item.isHidden) R.string.storage_hide else R.string.storage_unhide)
+            context.getString(R.string.storage_item_info_hidden, sourceLabel, visibilityLabel)
+        }
 
         if (item.isUser) {
-            holder.action.text = holder.itemView.context.getString(R.string.storage_delete)
+            holder.action.text = context.getString(R.string.storage_delete)
         } else {
-            holder.action.text = holder.itemView.context.getString(if (item.isHidden) R.string.storage_unhide else R.string.storage_hide)
+            holder.action.text = context.getString(if (item.isHidden) R.string.storage_unhide else R.string.storage_hide)
         }
 
         holder.action.setOnClickListener { onAction(item) }

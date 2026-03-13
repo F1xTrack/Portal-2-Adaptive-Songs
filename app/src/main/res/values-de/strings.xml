@@ -81,7 +81,7 @@
     <string name="time_attack_success">Erfolg!</string>
     <string name="time_attack_failed">Fehlgeschlagen</string>
     <string name="time_attack_finished">Beendet</string>
-    <string name="time_attack_next_mission_in">Nächste Mission in: %1$s</string>
+    <string name="time_attack_next_mission_in">Nächste Mission in: %1$d</string>
     <string name="time_attack_next_mission_now">Nächste Mission ist jetzt verfügbar</string>
 
     <!-- Common -->

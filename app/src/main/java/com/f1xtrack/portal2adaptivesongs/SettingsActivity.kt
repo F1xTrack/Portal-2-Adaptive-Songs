@@ -1,93 +1,125 @@
 package com.f1xtrack.portal2adaptivesongs
 
-import androidx.appcompat.app.AppCompatActivity
-import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import com.f1xtrack.portal2adaptivesongs.databinding.ActivitySettingsBinding
-import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
 
-    private lateinit var trackSettingsTitle: android.widget.TextView
-    private lateinit var importTitle: android.widget.TextView
-    private lateinit var routeRecordingTitle: android.widget.TextView
-    private lateinit var timeAttackTitle: android.widget.TextView
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyThemeFromPrefs()
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.title = getString(R.string.settings_title)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        binding.toolbarSettings.setNavigationOnClickListener { finish() }
 
+        val uiPrefs = getSharedPreferences("ui_prefs", MODE_PRIVATE)
 
-        // --- Секция настроек треков (пока пустая) ---
-        trackSettingsTitle = android.widget.TextView(this).apply {
-            text = getString(R.string.settings_section_tracks)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setPadding(0, 16, 0, 8)
-        }
-        val trackSettingsPlaceholder = android.widget.TextView(this).apply {
-            text = getString(R.string.settings_tracks_placeholder)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
-            setPadding(16, 8, 16, 8)
-            alpha = 0.6f
-        }
-        importTitle = android.widget.TextView(this).apply {
-            text = getString(R.string.importTitle)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setPadding(0, 16, 0, 8)
-        }
-        routeRecordingTitle = android.widget.TextView(this).apply {
-            text = getString(R.string.routeRecordingTitle)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setPadding(0, 16, 0, 8)
-        }
-        timeAttackTitle = android.widget.TextView(this).apply {
-            text = getString(R.string.timeAttackTitle)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setPadding(0, 16, 0, 8)
+        binding.switchAmoled.isChecked = uiPrefs.getBoolean("amoled_mode", false)
+        binding.switchKeepScreenOn.isChecked = uiPrefs.getBoolean("keep_screen_on", false)
+
+        binding.switchAmoled.setOnCheckedChangeListener { _, isChecked ->
+            uiPrefs.edit().putBoolean("amoled_mode", isChecked).apply()
+            recreate()
         }
 
-
-
-        // Получаем LinearLayout для размещения секций настроек
-        val layout = binding.layoutSettingsContent
-        // Удаляем заголовок, чтобы не было дублирования
-        layout.removeView(binding.textSettingsTitle)
-        
-
-        
-        // --- Секция настроек треков (пустая) ---
-        layout.addView(trackSettingsTitle)
-        layout.addView(trackSettingsPlaceholder)
-        layout.addView(importTitle)
-        layout.addView(routeRecordingTitle)
-        layout.addView(timeAttackTitle)
-
-        // Секция рассинхрона и переключатели десинхронизации убраны согласно требованиям
-
-        // Прокрутка к секции по extra open_section
-        binding.settingsScroll.post {
-            when (intent.getStringExtra("open_section")) {
-                "import" -> binding.settingsScroll.smoothScrollTo(0, importTitle.top)
-                "tracks" -> binding.settingsScroll.smoothScrollTo(0, trackSettingsTitle.top)
-                "route_recording" -> binding.settingsScroll.smoothScrollTo(0, routeRecordingTitle.top)
-                "time_attack" -> binding.settingsScroll.smoothScrollTo(0, timeAttackTitle.top)
-            }
+        binding.switchKeepScreenOn.setOnCheckedChangeListener { _, isChecked ->
+            uiPrefs.edit().putBoolean("keep_screen_on", isChecked).apply()
         }
+
+        binding.buttonTheme.setOnClickListener { showThemeDialog() }
+        binding.buttonLanguage.setOnClickListener { showLanguageDialog() }
+        binding.buttonStorage.setOnClickListener { startActivity(Intent(this, StorageActivity::class.java)) }
+        binding.buttonRoutes.setOnClickListener { startActivity(Intent(this, RouteSettingsActivity::class.java)) }
+        binding.buttonTimeAttack.setOnClickListener { startActivity(Intent(this, TimeAttackSettingsActivity::class.java)) }
+        binding.buttonHistory.setOnClickListener { startActivity(Intent(this, HistoryActivity::class.java)) }
+        binding.buttonAchievements.setOnClickListener { startActivity(Intent(this, AchievementsActivity::class.java)) }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
+    private fun showThemeDialog() {
+        val prefs = getSharedPreferences("ui_prefs", MODE_PRIVATE)
+        val options = arrayOf(
+            getString(R.string.theme_portal2_default),
+            getString(R.string.theme_asi),
+            getString(R.string.theme_portal2_overgrowth),
+            getString(R.string.theme_portal1)
+        )
+        val current = when (prefs.getString("app_theme", "portal2")) {
+            "asi" -> 1
+            "portal2_overgrowth" -> 2
+            "portal1" -> 3
+            else -> 0
+        }
+        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
+            .setTitle(R.string.menu_theme)
+            .setSingleChoiceItems(options, current) { dialog, which ->
+                val key = when (which) {
+                    1 -> "asi"
+                    2 -> "portal2_overgrowth"
+                    3 -> "portal1"
+                    else -> "portal2"
+                }
+                prefs.edit().putString("app_theme", key).apply()
+                dialog.dismiss()
+                recreate()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun showLanguageDialog() {
+        val prefs = getSharedPreferences("ui_prefs", MODE_PRIVATE)
+        val languages = listOf(
+            "system" to getString(R.string.language_system),
+            "ar" to "العربية",
+            "de" to "Deutsch",
+            "en" to "English",
+            "es" to "Español",
+            "hi" to "हिन्दी",
+            "ja" to "日本語",
+            "ko" to "한국어",
+            "pl" to "Polski",
+            "pt" to "Português",
+            "ru" to "Русский",
+            "tr" to "Türkçe",
+            "zh" to "中文"
+        )
+        val options = languages.map { it.second }.toTypedArray()
+        val currentLangCode = prefs.getString("app_lang", "system")
+        val current = languages.indexOfFirst { it.first == currentLangCode }.coerceAtLeast(0)
+
+        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
+            .setTitle(R.string.dialog_language_title)
+            .setSingleChoiceItems(options, current) { dialog, which ->
+                val code = languages[which].first
+                prefs.edit().putString("app_lang", code).apply()
+                val locales = if (code == "system") {
+                    LocaleListCompat.getEmptyLocaleList()
+                } else {
+                    LocaleListCompat.forLanguageTags(code)
+                }
+                AppCompatDelegate.setApplicationLocales(locales)
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+}
+
+private fun SettingsActivity.applyThemeFromPrefs() {
+    val prefs = getSharedPreferences("ui_prefs", AppCompatActivity.MODE_PRIVATE)
+    val amoled = prefs.getBoolean("amoled_mode", false)
+    when {
+        amoled -> setTheme(R.style.Theme_Portal2AdaptiveSongs_Amoled)
+        prefs.getString("app_theme", "portal2") == "asi" -> setTheme(R.style.Theme_Portal_ASI)
+        prefs.getString("app_theme", "portal2") == "portal2_overgrowth" -> setTheme(R.style.Theme_Portal2_Overgrowth)
+        prefs.getString("app_theme", "portal2") == "portal1" -> setTheme(R.style.Theme_Portal1)
+        else -> setTheme(R.style.Theme_Portal2AdaptiveSongs)
     }
 }

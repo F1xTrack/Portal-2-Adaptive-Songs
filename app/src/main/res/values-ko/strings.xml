@@ -91,7 +91,7 @@
     <string name="time_attack_success">성공!</string>
     <string name="time_attack_failed">실패</string>
     <string name="time_attack_finished">완료</string>
-    <string name="time_attack_next_mission_in">다음 미션까지: %1$s</string>
+    <string name="time_attack_next_mission_in">다음 미션까지: %1$d</string>
     <string name="time_attack_next_mission_now">다음 미션을 지금 이용할 수 있습니다</string>
 
     <!-- 일반 -->
