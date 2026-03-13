@@ -39,6 +39,9 @@ jobs:
       - name: Ensure Gradle wrapper is executable
         run: chmod +x ./gradlew
 
+      - name: Normalize Gradle wrapper line endings
+        run: sed -i 's/\r$//' ./gradlew
+
       - name: Run unit tests
         run: ./gradlew test
 
