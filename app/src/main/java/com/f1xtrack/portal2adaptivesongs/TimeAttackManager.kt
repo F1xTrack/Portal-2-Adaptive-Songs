@@ -183,6 +183,7 @@ class TimeAttackManager(
 
     fun dispose() {
         cancelSchedule()
+        active = false
         stopTicks()
         dialog?.dismiss()
         dialog = null
@@ -331,6 +332,7 @@ class TimeAttackManager(
     private fun updateStateForTick(state: RuntimeState, regime: Regime, dtSec: Int, speedKmh: Float) {
         state.elapsedSec += dtSec
         val was = state.currentRegime
+        state.lastRegime = was
         state.currentRegime = regime
         if (regime != was) {
             state.switches += 1

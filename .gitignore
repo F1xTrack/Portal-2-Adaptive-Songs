@@ -1,57 +1,25 @@
-<<<<<<< HEAD
-*.vsidx
-*.iml
-Dialog.md
-ProgressIndicator.md
-.gradle
-/app/src/main/assets
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-/AUTOPILOT/
-local.properties
-AUTOPILOT/
-=======
-# Gradle files
 .gradle/
 build/
 
-# Local configuration file (sdk path, etc)
 local.properties
 
-# Log/OS Files
-*.log
+.idea/
+.vs/
+*.iml
+*.vsidx
 
-# Android Studio generated files and folders
 captures/
 .externalNativeBuild/
 .cxx/
+
 *.apk
+*.ap_
 output-metadata.json
+*.log
+*.hprof
 
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
-
-# Keystore files
 *.jks
 *.keystore
-
-# Google Services (e.g. APIs or Firebase)
 google-services.json
 
-# Android Profiling
-*.hprof
->>>>>>> cbaea494c43f113a2cf050b6b5ea95271f535d99
+.DS_Store
