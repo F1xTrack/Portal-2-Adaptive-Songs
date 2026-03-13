@@ -75,29 +75,15 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun showLanguageDialog() {
         val prefs = getSharedPreferences("ui_prefs", MODE_PRIVATE)
-        val languages = listOf(
-            "system" to getString(R.string.language_system),
-            "ar" to "العربية",
-            "de" to "Deutsch",
-            "en" to "English",
-            "es" to "Español",
-            "hi" to "हिन्दी",
-            "ja" to "日本語",
-            "ko" to "한국어",
-            "pl" to "Polski",
-            "pt" to "Português",
-            "ru" to "Русский",
-            "tr" to "Türkçe",
-            "zh" to "中文"
-        )
-        val options = languages.map { it.second }.toTypedArray()
+        val languages = buildLanguageOptions(this)
+        val options = languages.map { it.label }.toTypedArray()
         val currentLangCode = prefs.getString("app_lang", "system")
-        val current = languages.indexOfFirst { it.first == currentLangCode }.coerceAtLeast(0)
+        val current = languages.indexOfFirst { it.code == currentLangCode }.coerceAtLeast(0)
 
         MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(R.string.dialog_language_title)
             .setSingleChoiceItems(options, current) { dialog, which ->
-                val code = languages[which].first
+                val code = languages[which].code
                 prefs.edit().putString("app_lang", code).apply()
                 val locales = if (code == "system") {
                     LocaleListCompat.getEmptyLocaleList()

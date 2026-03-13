@@ -221,12 +221,12 @@ class MainActivity : AppCompatActivity() {
             val granted = perms[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
                     perms[Manifest.permission.ACCESS_COARSE_LOCATION] == true
             if (granted) startTracking()
-            else Toast.makeText(this, "Разрешите местоположение", Toast.LENGTH_LONG).show()
+            else Toast.makeText(this, getString(R.string.permission_location_required), Toast.LENGTH_LONG).show()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Применяем тему до создания вью
-        applyThemeFromPrefs()
+        applyAppThemeFromPrefs()
         super.onCreate(savedInstanceState)
 
         // Онбординг: показываем один раз при первом запуске
@@ -604,7 +604,7 @@ class MainActivity : AppCompatActivity() {
         tracker.start()
         shouldResumeTracking = true
         if (showToast) {
-            Toast.makeText(this, "Трекинг запущен", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.tracking_started), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -685,7 +685,7 @@ class MainActivity : AppCompatActivity() {
             val dir = File(filesDir, "soundtracks/$name")
             val result = contentResolver.openInputStream(zipUri)?.use { input ->
                 TrackZipImporter.importFromStream(input, dir)
-            } ?: throw IllegalStateException("Не удалось открыть ZIP")
+            } ?: throw IllegalStateException(getString(R.string.import_open_zip_failed))
             if (!result.isValid) {
                 dir.deleteRecursively()
                 false
@@ -809,17 +809,47 @@ class MainActivity : AppCompatActivity() {
 
     private fun onKmAchieved(totalKm: Int) {
         when (totalKm) {
-            1 -> showAchievementBanner("1 км", "Пройдено 1 км", 0, 0)
-            10 -> showAchievementBanner("10 км", "Пройдено 10 км", 0, 1)
-            100 -> showAchievementBanner("100 км", "Пройдено 100 км", 0, 2)
+            1 -> showAchievementBanner(
+                getString(R.string.ach_km_1_title),
+                getString(R.string.ach_km_1_desc),
+                0,
+                0
+            )
+            10 -> showAchievementBanner(
+                getString(R.string.ach_km_10_title),
+                getString(R.string.ach_km_10_desc),
+                0,
+                1
+            )
+            100 -> showAchievementBanner(
+                getString(R.string.ach_km_100_title),
+                getString(R.string.ach_km_100_desc),
+                0,
+                2
+            )
         }
     }
 
     private fun onImportAchieved(total: Int) {
         when (total) {
-            1 -> showAchievementBanner("1 трек", "Импортирован 1 трек", 1, 0)
-            10 -> showAchievementBanner("10 треков", "Импортировано 10 треков", 1, 1)
-            100 -> showAchievementBanner("100 треков", "Импортировано 100 треков", 1, 2)
+            1 -> showAchievementBanner(
+                getString(R.string.ach_lib_1_title),
+                getString(R.string.ach_lib_1_desc),
+                1,
+                0
+            )
+            10 -> showAchievementBanner(
+                getString(R.string.ach_lib_10_title),
+                getString(R.string.ach_lib_10_desc),
+                1,
+                1
+            )
+            100 -> showAchievementBanner(
+                getString(R.string.ach_lib_100_title),
+                getString(R.string.ach_lib_100_desc),
+                1,
+                2
+            )
         }
     }
 
@@ -871,26 +901,6 @@ class MainActivity : AppCompatActivity() {
 // Дополнительные функции MainActivity
 // -------------------------
 
-private fun MainActivity.applyThemeFromPrefs() {
-    val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
-    val amoled = prefs.getBoolean("amoled_mode", false)
-    when {
-        amoled -> setTheme(R.style.Theme_Portal2AdaptiveSongs_Amoled)
-        prefs.getString("app_theme", "portal2") == "asi" -> setTheme(R.style.Theme_Portal_ASI)
-        prefs.getString("app_theme", "portal2") == "portal2_overgrowth" -> setTheme(R.style.Theme_Portal2_Overgrowth)
-        prefs.getString("app_theme", "portal2") == "portal1" -> setTheme(R.style.Theme_Portal1)
-        else -> setTheme(R.style.Theme_Portal2AdaptiveSongs)
-    }
-    // Применяем сохранённый язык
-    val lang = prefs.getString("app_lang", "system")
-    val locales = if (lang == null || lang == "system" || lang.isBlank()) {
-        LocaleListCompat.getEmptyLocaleList()
-    } else {
-        LocaleListCompat.forLanguageTags(lang)
-    }
-    AppCompatDelegate.setApplicationLocales(locales)
-}
-
 private fun MainActivity.maybeShowDrawerHint() {
     val prefs = getSharedPreferences("onboarding_prefs", Context.MODE_PRIVATE)
     val shown = prefs.getInt("drawer_hint_shown_count", 0)
@@ -906,33 +916,15 @@ private fun MainActivity.maybeShowDrawerHint() {
 
 private fun MainActivity.showLanguageDialog() {
     val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
-
-    val languages = listOf(
-        "system" to getString(R.string.language_system),
-        "ar" to "العربية",
-        "de" to "Deutsch",
-        "en" to "English",
-        "es" to "Español",
-        "fr" to "Français",
-        "hi" to "हिन्दी",
-        "it" to "Italiano",
-        "ja" to "日本語",
-        "ko" to "한국어",
-        "pl" to "Polski",
-        "pt" to "Português",
-        "ru" to "Русский",
-        "tr" to "Türkçe",
-        "zh" to "中文"
-    )
-
-    val options = languages.map { it.second }.toTypedArray()
+    val languages = buildLanguageOptions(this)
+    val options = languages.map { it.label }.toTypedArray()
     val currentLangCode = prefs.getString("app_lang", "system")
-    val current = languages.indexOfFirst { it.first == currentLangCode }.coerceAtLeast(0)
+    val current = languages.indexOfFirst { it.code == currentLangCode }.coerceAtLeast(0)
 
     MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
         .setTitle(R.string.dialog_language_title)
         .setSingleChoiceItems(options, current) { dialog, which ->
-            val code = languages[which].first
+            val code = languages[which].code
             prefs.edit().putString("app_lang", code).apply()
             val locales = if (code == "system") {
                 LocaleListCompat.getEmptyLocaleList()

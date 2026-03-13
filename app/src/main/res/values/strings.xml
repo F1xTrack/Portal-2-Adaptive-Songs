@@ -94,6 +94,26 @@
     <string name="main_library_title">Библиотека треков</string>
     <string name="main_controls_title">Настройка адаптации</string>
     <string name="main_controls_hint">Подстрой порог и гистерезис под свой темп без перегруженных экранов.</string>
+    <string name="shell_now">Now</string>
+    <string name="shell_routes">Routes</string>
+    <string name="shell_library">Library</string>
+    <string name="shell_profile">Profile</string>
+    <string name="shell_title">Portal UI 2.0</string>
+    <string name="shell_subtitle">Этап 1: новый Compose-каркас поверх существующего ядра.</string>
+    <string name="shell_open_legacy_player">Открыть legacy playback</string>
+    <string name="shell_open_import">Импорт треков</string>
+    <string name="shell_open_history">Открыть историю</string>
+    <string name="shell_open_settings">Открыть настройки</string>
+    <string name="shell_placeholder_badge">Stage 1</string>
+    <string name="shell_motion_label">Интенсивность motion</string>
+    <string name="shell_motion_moderate">Сейчас используется умеренный режим по умолчанию.</string>
+    <string name="shell_legacy_status">Audio / GPS / Route / TimeAttack логика пока остаётся в legacy-слое и не переписывается на этом этапе.</string>
+    <string name="shell_placeholder_routes_title">Routes foundation</string>
+    <string name="shell_placeholder_routes_body">Новый раздел подготовлен как навигационная точка. Полный перенос истории и карт будет на следующем этапе.</string>
+    <string name="shell_placeholder_library_title">Library foundation</string>
+    <string name="shell_placeholder_library_body">Библиотека пока не мигрирована, но дизайн-система и контейнер уже готовы для нового экрана.</string>
+    <string name="shell_placeholder_profile_title">Profile foundation</string>
+    <string name="shell_placeholder_profile_body">Профиль и настройки анимаций пока не реализованы полностью. Здесь только базовый задел под дальнейшую миграцию.</string>
 
     <!-- Menu additions -->
     <string name="menu_home">Главное меню</string>
@@ -106,8 +126,18 @@
     <string name="language_system_default">Системный (по умолчанию)</string>
     <string name="language_russian">Русский</string>
     <string name="language_english">English</string>
-    <string name="language_system">System</string>
+    <string name="language_system">Системный</string>
     <string name="language_kazakh">Қазақ тілі</string>
+    <string name="language_arabic_native">العربية</string>
+    <string name="language_chinese_native">中文</string>
+    <string name="language_german_native">Deutsch</string>
+    <string name="language_hindi_native">हिन्दी</string>
+    <string name="language_japanese_native">日本語</string>
+    <string name="language_korean_native">한국어</string>
+    <string name="language_polish_native">Polski</string>
+    <string name="language_portuguese_native">Português</string>
+    <string name="language_spanish_native">Español</string>
+    <string name="language_turkish_native">Türkçe</string>
 
     <!-- Theme dialog -->
     <string name="dialog_theme_title">Выберите тему</string>
@@ -132,6 +162,8 @@
     <string name="time_attack_cancel">Прервать</string>
     <string name="time_attack_success">Испытание выполнено!</string>
     <string name="time_attack_fail">Испытание провалено</string>
+    <string name="time_attack_status_text">%1$s
+Время: %2$d с  •  Дист: %3$d м  •  SS: %4$d с  •  Перекл: %5$d  •  Порог: %6$d км/ч</string>
 
     <!-- History / Map / GPS -->
     <string name="menu_history">История маршрутов</string>
@@ -235,8 +267,8 @@
     <string name="stats_unique_tracks">Уникальных треков</string>
     <string name="stats_superspeed_time">Время в ускорении</string>
     <string name="stats_empty_value">—</string>
-    <string name="stats_distance_value">%1$.2f km</string>
-    <string name="stats_minutes_value">%1$d min</string>
+    <string name="stats_distance_value">%1$.2f км</string>
+    <string name="stats_minutes_value">%1$d мин</string>
     <string name="achievement_title_placeholder">Достижение</string>
     <string name="achievement_description_placeholder">Описание достижения</string>
     <string name="achievement_counter_placeholder">0/0</string>
@@ -249,29 +281,32 @@
     <string name="storage_item_info_plain">%1$s</string>
     <string name="storage_item_info_hidden">%1$s • %2$s</string>
     <string name="long_version_progress_message">Создаём длинные версии…</string>
-    <string name="settings_routes_title">Route Settings</string>
-    <string name="settings_section_routes">Route Settings</string>
-    <string name="settings_record_routes">Record Routes</string>
-    <string name="settings_min_time_s">Min Time (s)</string>
-    <string name="settings_min_distance_m">Min Distance (m)</string>
-    <string name="importTitle">Import Tracks</string>
-    <string name="routeRecordingTitle">Route Recording</string>
-    <string name="timeAttackTitle">Time Attack</string>
+    <string name="settings_routes_title">Настройки маршрутов</string>
+    <string name="settings_section_routes">Маршруты</string>
+    <string name="settings_record_routes">Записывать маршруты</string>
+    <string name="settings_min_time_s">Мин. время (с)</string>
+    <string name="settings_min_distance_m">Мин. дистанция (м)</string>
+    <string name="importTitle">Импорт треков</string>
+    <string name="routeRecordingTitle">Запись маршрута</string>
+    <string name="timeAttackTitle">Тайм‑атака</string>
 
-    <string name="difficulty">Difficulty</string>
-    <string name="gps_accuracy">GPS Accuracy</string>
-    <string name="gps_settings_title">GPS Settings</string>
-    <string name="language_arabic">Arabic</string>
-    <string name="menu_route_history">Route History</string>
-    <string name="theme_dark">Dark</string>
-    <string name="theme_light">Light</string>
+    <string name="difficulty">Сложность</string>
+    <string name="gps_accuracy">Точность GPS</string>
+    <string name="gps_settings_title">Настройки GPS</string>
+    <string name="language_arabic">Арабский</string>
+    <string name="menu_route_history">История маршрутов</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="theme_light">Светлая</string>
     <string name="theme_p1">Portal 1</string>
-    <string name="theme_p2o">Portal 2 Overgrown</string>
-    <string name="theme_system">System</string>
-    <string name="time_attack_failed">Failed</string>
-    <string name="time_attack_finished">Finished</string>
-    <string name="time_attack_next_mission_in">Next mission in %d seconds</string>
-    <string name="time_attack_next_mission_now">Next mission now</string>
+    <string name="theme_p2o">Portal 2 (Заросли)</string>
+    <string name="theme_system">Системная</string>
+    <string name="time_attack_failed">Провалено</string>
+    <string name="time_attack_finished">Завершено</string>
+    <string name="time_attack_next_mission_in">Следующая миссия через %d секунд</string>
+    <string name="time_attack_next_mission_now">Следующая миссия сейчас</string>
+    <string name="permission_location_required">Разрешите доступ к местоположению</string>
+    <string name="tracking_started">Трекинг запущен</string>
+    <string name="import_open_zip_failed">Не удалось открыть ZIP</string>
 
     <!-- Onboarding -->
     <string name="onboarding_title">Первоначальная настройка</string>
