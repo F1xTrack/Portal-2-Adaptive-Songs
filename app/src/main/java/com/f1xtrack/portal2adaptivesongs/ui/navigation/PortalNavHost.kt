@@ -24,8 +24,8 @@ import com.f1xtrack.portal2adaptivesongs.HistoryActivity
 import com.f1xtrack.portal2adaptivesongs.MainActivity
 import com.f1xtrack.portal2adaptivesongs.SettingsActivity
 import com.f1xtrack.portal2adaptivesongs.StorageActivity
+import com.f1xtrack.portal2adaptivesongs.ui.screens.LibraryScreenEntry
 import com.f1xtrack.portal2adaptivesongs.ui.screens.NowPlaybackController
-import com.f1xtrack.portal2adaptivesongs.ui.screens.LibraryPlaceholderScreen
 import com.f1xtrack.portal2adaptivesongs.ui.screens.NowScreen
 import com.f1xtrack.portal2adaptivesongs.ui.screens.ProfilePlaceholderScreen
 import com.f1xtrack.portal2adaptivesongs.ui.screens.RoutesScreenEntry
@@ -106,7 +106,7 @@ fun PortalNavHost(
                     RoutesScreenEntry()
                 }
                 composable(PortalDestination.Library.route) {
-                    LibraryPlaceholderScreen()
+                    LibraryScreenEntry()
                 }
                 composable(PortalDestination.Profile.route) {
                     ProfilePlaceholderScreen()
