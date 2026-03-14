@@ -28,7 +28,7 @@ import com.f1xtrack.portal2adaptivesongs.ui.screens.NowPlaybackController
 import com.f1xtrack.portal2adaptivesongs.ui.screens.LibraryPlaceholderScreen
 import com.f1xtrack.portal2adaptivesongs.ui.screens.NowScreen
 import com.f1xtrack.portal2adaptivesongs.ui.screens.ProfilePlaceholderScreen
-import com.f1xtrack.portal2adaptivesongs.ui.screens.RoutesPlaceholderScreen
+import com.f1xtrack.portal2adaptivesongs.ui.screens.RoutesScreenEntry
 import com.f1xtrack.portal2adaptivesongs.ui.theme.PortalThemeTokens
 
 @Composable
@@ -103,7 +103,7 @@ fun PortalNavHost(
                     )
                 }
                 composable(PortalDestination.Routes.route) {
-                    RoutesPlaceholderScreen()
+                    RoutesScreenEntry()
                 }
                 composable(PortalDestination.Library.route) {
                     LibraryPlaceholderScreen()
