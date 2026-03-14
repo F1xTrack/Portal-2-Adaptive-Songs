@@ -162,8 +162,8 @@
     <string name="routes_latest_session_title">Последняя сессия: %1$s</string>
     <string name="routes_latest_session_body">Старт: %1$s
 Сэмплов: %2$d  •  Superspeed-моментов: %3$d</string>
-    <string name="routes_actions_title">Legacy bridge</string>
-    <string name="routes_actions_body">Карта и детальная цветовая легенда остаются в legacy [`HistoryActivity`]. На этом этапе Routes уже не placeholder и даёт быстрый Compose-обзор маршрутов.</string>
+    <string name="routes_actions_title">История и карта</string>
+    <string name="routes_actions_body">Карта и детальная цветовая легенда пока остаются на экране истории. Здесь доступен быстрый Compose-обзор последних маршрутов и GPS-статуса.</string>
     <string name="routes_open_history_map">Открыть карту history</string>
     <string name="routes_distance_km">%1$.1f км</string>
     <string name="routes_minutes_value">%1$d мин</string>

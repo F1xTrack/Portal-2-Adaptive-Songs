@@ -40,6 +40,30 @@ class RoutesStateTest {
     }
 
     @Test
+    fun buildGpsStatus_prioritizesMissingPermissionOverOtherFlags() {
+        val status = buildGpsStatus(
+            hasPermission = false,
+            isRecordingEnabled = true,
+            usesNetworkLocation = false,
+            updateIntervalSeconds = 120,
+        )
+
+        assertEquals(GpsQuality.PermissionRequired, status.quality)
+        assertEquals(60, status.updateIntervalSeconds)
+        assertTrue(status.statusLine.contains("Разрешение"))
+    }
+
+    @Test
+    fun calculateRouteMetrics_returnsEmptySnapshotForNoPoints() {
+        val metrics = calculateRouteMetrics(emptyList())
+
+        assertTrue(metrics.sessions.isEmpty())
+        assertEquals(0f, metrics.totalDistanceKm)
+        assertEquals(0, metrics.longestSessionMinutes)
+        assertEquals(0, metrics.averageSpeedKmh)
+    }
+
+    @Test
     fun loadRoutesUiState_buildsRecentSessionsAndChart() {
         val raw = listOf(
             point("s1", 1_000L, 55.0, 37.0, 8.0, 100.0, "A", "normal"),
@@ -62,6 +86,40 @@ class RoutesStateTest {
         assertEquals(2, state.recentSessions.size)
         assertEquals(2, state.chartEntries.size)
         assertTrue(state.hasAnyRoutes)
+    }
+
+    @Test
+    fun routesUiState_latestSession_returnsMostRecentEntry() {
+        val sessions = listOf(
+            RouteSessionSummary(
+                sessionId = "newest",
+                title = "Newest",
+                startedAtLabel = "01.01 10:00",
+                durationMinutes = 3,
+                distanceKm = 1.2f,
+                averageSpeedKmh = 11,
+                peakSpeedKmh = 14,
+                altitudeRangeMeters = 9,
+                superspeedMoments = 2,
+                sampleCount = 12,
+            ),
+            RouteSessionSummary(
+                sessionId = "older",
+                title = "Older",
+                startedAtLabel = "01.01 09:00",
+                durationMinutes = 2,
+                distanceKm = 0.8f,
+                averageSpeedKmh = 8,
+                peakSpeedKmh = 10,
+                altitudeRangeMeters = 3,
+                superspeedMoments = 0,
+                sampleCount = 8,
+            ),
+        )
+
+        val state = RoutesUiState(recentSessions = sessions.toImmutableList())
+
+        assertEquals("newest", state.latestSession?.sessionId)
     }
 
     private fun point(

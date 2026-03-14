@@ -39,6 +39,13 @@ class ProfileStateTest {
     }
 
     @Test
+    fun resolveLanguageLabel_fallsBackToSystemForUnknownLocale() {
+        val label = resolveLanguageLabel(context, "xx")
+
+        assertEquals(context.getString(R.string.language_system), label)
+    }
+
+    @Test
     fun buildProfileUiState_mapsSnapshotIntoUserFacingSummary() {
         val uiState = buildProfileUiState(
             context = context,
@@ -66,5 +73,30 @@ class ProfileStateTest {
         assertEquals(5, uiState.importedTracks)
         assertEquals(AnimationIntensity.Expressive, uiState.animationIntensity)
         assertEquals(3, uiState.quickActions.size)
+    }
+
+    @Test
+    fun buildProfileUiState_reportsZeroProgressWhenThereAreNoAchievements() {
+        val uiState = buildProfileUiState(
+            context = context,
+            snapshot = ProfileSnapshot(
+                themeKey = "portal2",
+                languageCode = "system",
+                isAmoledEnabled = false,
+                isKeepScreenOnEnabled = false,
+                animationIntensity = AnimationIntensity.Moderate,
+                onboardingCompleted = false,
+                timeAttackDifficulty = "normal",
+                achievementsUnlocked = 0,
+                achievementsTotal = 0,
+                totalDistanceKm = 0,
+                superSpeedMinutes = 0,
+                importedTracks = 0,
+            ),
+        )
+
+        assertEquals(0f, uiState.achievementsProgress)
+        assertEquals(context.getString(R.string.theme_portal2_default), uiState.themeLabel)
+        assertEquals(context.getString(R.string.language_system), uiState.languageLabel)
     }
 }
