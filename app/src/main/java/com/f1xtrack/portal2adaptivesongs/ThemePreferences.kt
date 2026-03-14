@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import com.f1xtrack.portal2adaptivesongs.ui.theme.AnimationIntensity
 
 internal fun ComponentActivity.applyAppThemeFromPrefs() {
     val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
@@ -23,4 +24,15 @@ internal fun ComponentActivity.applyAppThemeFromPrefs() {
         LocaleListCompat.forLanguageTags(lang)
     }
     AppCompatDelegate.setApplicationLocales(locales)
+}
+
+internal fun readAnimationIntensityPreference(context: Context): AnimationIntensity {
+    return when (
+        context.getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
+            .getString("animation_intensity", "moderate")
+    ) {
+        "relaxed" -> AnimationIntensity.Relaxed
+        "expressive" -> AnimationIntensity.Expressive
+        else -> AnimationIntensity.Moderate
+    }
 }

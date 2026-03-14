@@ -27,14 +27,16 @@ import com.f1xtrack.portal2adaptivesongs.StorageActivity
 import com.f1xtrack.portal2adaptivesongs.ui.screens.LibraryScreenEntry
 import com.f1xtrack.portal2adaptivesongs.ui.screens.NowPlaybackController
 import com.f1xtrack.portal2adaptivesongs.ui.screens.NowScreen
-import com.f1xtrack.portal2adaptivesongs.ui.screens.ProfilePlaceholderScreen
+import com.f1xtrack.portal2adaptivesongs.ui.screens.ProfileScreenEntry
 import com.f1xtrack.portal2adaptivesongs.ui.screens.RoutesScreenEntry
+import com.f1xtrack.portal2adaptivesongs.ui.theme.AnimationIntensity
 import com.f1xtrack.portal2adaptivesongs.ui.theme.PortalThemeTokens
 
 @Composable
 fun PortalNavHost(
     navController: NavHostController,
     playbackController: NowPlaybackController,
+    onAnimationIntensityChanged: (AnimationIntensity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -109,7 +111,9 @@ fun PortalNavHost(
                     LibraryScreenEntry()
                 }
                 composable(PortalDestination.Profile.route) {
-                    ProfilePlaceholderScreen()
+                    ProfileScreenEntry(
+                        onAnimationIntensityChanged = onAnimationIntensityChanged,
+                    )
                 }
             }
         }
