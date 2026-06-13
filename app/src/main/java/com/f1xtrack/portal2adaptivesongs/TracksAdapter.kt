@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import java.util.Locale
 
 class TracksAdapter(
     private var tracks: List<TrackInfo>,
@@ -61,7 +62,7 @@ class TracksAdapter(
             val totalSec = ms / 1000
             val min = totalSec / 60
             val sec = totalSec % 60
-            return String.format("%d:%02d", min, sec)
+            return String.format(Locale.getDefault(), "%d:%02d", min, sec)
         }
     }
 } 

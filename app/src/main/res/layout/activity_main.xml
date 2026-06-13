@@ -10,47 +10,245 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_app_gradient">
 
-        <!-- Баннер достижений -->
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="8dp">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:minHeight="?attr/actionBarSize"
+                android:navigationIcon="@drawable/ic_arrow_back"
+                android:title="@string/app_name"
+                android:titleTextColor="?attr/colorOnSurface"
+                app:menu="@menu/main_menu" />
+        </com.google.android.material.appbar.AppBarLayout>
+
         <include
             android:id="@+id/achBanner"
             layout="@layout/view_achievement_banner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:paddingStart="16dp"
+            android:paddingTop="96dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="24dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:background="?attr/backgroundColor">
+                android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardMain"
+                    android:id="@+id/cardHero"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="8dp"
-                    app:cardBackgroundColor="?attr/cardBackgroundColor">
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="?attr/cardBackgroundColor"
+                    app:cardCornerRadius="28dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="24dp">
+                        android:padding="20dp">
 
-                        <!-- Поиск по трекам -->
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/main_subtitle"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="0dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="14dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/main_now_playing_label"
+                                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                    <TextView
+                                        android:id="@+id/textCurrentTrackValue"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="6dp"
+                                        android:text="@string/main_now_playing_none"
+                                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                                        android:textColor="?attr/colorOnSurface" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                                app:cardCornerRadius="20dp"
+                                app:cardElevation="0dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="14dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/main_tracking_label"
+                                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                    <TextView
+                                        android:id="@+id/textTrackingModeValue"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="6dp"
+                                        android:text="@string/main_tracking_balanced"
+                                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                                        android:textColor="?attr/colorOnSurface" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/main_quick_actions"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/main_theme_label"
+                                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+
+                            <TextView
+                                android:id="@+id/textCurrentThemeValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                                android:textColor="?attr/colorSecondary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQuickImport"
+                                style="@style/Widget.Material3.Button"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/main_quick_import" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQuickHistory"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/main_quick_history" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQuickTimeAttack"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/main_quick_time_attack" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="?attr/cardBackgroundColor"
+                    app:cardCornerRadius="28dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/main_library_title"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/searchLayout"
                             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
                             app:endIconMode="clear_text">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -66,69 +264,91 @@
                             android:id="@+id/sortSegmented"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:orientation="horizontal"
+                            android:layout_marginTop="14dp"
                             app:selectionRequired="true"
                             app:singleSelection="true">
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnSortAlpha"
                                 android:layout_width="0dp"
-                                android:layout_height="36dp"
-                                android:layout_weight="1.5"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:checked="true"
-                                android:text="@string/sort_alpha"
-                                android:textSize="12sp" />
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:minHeight="44dp"
+                                android:text="@string/sort_alpha" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnSortFreq"
                                 android:layout_width="0dp"
-                                android:layout_height="36dp"
-                                android:layout_weight="1.5"
-                                android:text="@string/sort_freq"
-                                android:textSize="12sp" />
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:minHeight="44dp"
+                                android:text="@string/sort_freq" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnSortDuration"
                                 android:layout_width="0dp"
-                                android:layout_height="36dp"
-                                android:layout_weight="1.5"
-                                android:text="@string/sort_duration"
-                                android:textSize="12sp" />
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:minHeight="44dp"
+                                android:text="@string/sort_duration" />
                         </com.google.android.material.button.MaterialButtonToggleGroup>
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerTracks"
                             android:layout_width="match_parent"
-                            android:layout_height="183dp"
-                            android:layout_marginTop="16dp"
+                            android:layout_height="320dp"
+                            android:layout_marginTop="14dp"
                             android:clipToPadding="false"
-                            android:paddingBottom="16dp"
+                            android:paddingBottom="8dp"
                             android:scrollbars="vertical" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/textSpeed"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="24dp"
-                            android:text="@string/faith_plate_threshold"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="?attr/textPrimaryOnBackground" />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="?attr/cardBackgroundColor"
+                    app:cardCornerRadius="28dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="1dp">
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/textHysteresis"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/hysteresis_value_initial"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="?attr/textPrimaryOnBackground" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/faith_plate_threshold_label"
-                            android:textColor="?attr/textPrimaryOnBackground" />
+                            android:text="@string/main_controls_title"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/main_controls_hint"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:id="@+id/textSpeed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp"
+                            android:text="@string/faith_plate_threshold"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textColor="?attr/colorOnSurface" />
 
                         <com.google.android.material.slider.Slider
                             android:id="@+id/seekBurst"
@@ -142,11 +362,13 @@
                             app:trackColorInactive="?attr/sliderTrackInactiveColor" />
 
                         <TextView
+                            android:id="@+id/textHysteresis"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/hysteresis_label"
-                            android:textColor="?attr/textPrimaryOnBackground" />
+                            android:layout_marginTop="14dp"
+                            android:text="@string/hysteresis_value_initial"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textColor="?attr/colorOnSurface" />
 
                         <com.google.android.material.slider.Slider
                             android:id="@+id/seekCooldown"
@@ -161,20 +383,19 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
-        </ScrollView>
-
+        </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        android:layout_width="wrap_content"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
         android:background="@drawable/drawer_bg"
-        app:menu="@menu/drawer_menu"
-        app:itemTextColor="@color/nav_item_text_color"
+        android:fitsSystemWindows="true"
+        app:itemBackground="@drawable/nav_item_bg"
         app:itemIconTint="@color/nav_item_text_color"
-        app:itemBackground="@drawable/nav_item_bg" />
+        app:itemTextColor="@color/nav_item_text_color"
+        app:menu="@menu/drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

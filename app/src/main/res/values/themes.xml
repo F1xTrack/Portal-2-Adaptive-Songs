@@ -1,52 +1,71 @@
 <resources>
-    <!-- Base application theme, наследуем от MaterialComponents (AppCompat-потомок) -->
     <style name="Theme.Portal2AdaptiveSongs" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/portal_blue</item>
         <item name="colorOnPrimary">@color/black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorPrimaryContainer">@color/portal_surface_secondary</item>
+        <item name="colorOnPrimaryContainer">@color/portal_white</item>
+        <item name="colorSecondary">@color/portal_orange</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Дополнительно: указываем, что мы используем MaterialComponents виджеты -->
+        <item name="colorSecondaryContainer">@color/portal_surface_tertiary</item>
+        <item name="colorOnSecondaryContainer">@color/portal_white</item>
+        <item name="colorTertiary">@color/portal_blue</item>
+        <item name="colorOnTertiary">@color/black</item>
+        <item name="colorSurface">@color/portal_card_bg</item>
+        <item name="colorSurfaceVariant">@color/portal_surface_secondary</item>
+        <item name="android:colorBackground">@color/portal_bg_dark</item>
+        <item name="colorOnSurface">@color/portal_white</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary_on_bg</item>
+        <item name="colorOutline">@color/portal_stroke</item>
+        <item name="android:navigationBarColor">@color/portal_bg_dark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
-        
-        <!-- Custom theme attributes used across layouts -->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+
         <item name="backgroundColor">@color/portal_bg_dark</item>
         <item name="cardBackgroundColor">@color/portal_card_bg</item>
         <item name="textPrimaryOnBackground">@color/portal_white</item>
         <item name="textSecondaryOnBackground">@color/text_secondary_on_bg</item>
         <item name="toolbarBackgroundColor">@color/portal_card_bg</item>
-        <item name="toolbarTitleTextColor">?attr/colorSecondary</item>
-        <item name="sliderThumbColor">?attr/colorSecondary</item>
-        <item name="sliderTrackActiveColor">?attr/colorSecondary</item>
-        <item name="sliderTrackInactiveColor">@color/portal_white</item>
+        <item name="toolbarTitleTextColor">@color/portal_white</item>
+        <item name="sliderThumbColor">@color/portal_orange</item>
+        <item name="sliderTrackActiveColor">@color/portal_orange</item>
+        <item name="sliderTrackInactiveColor">@color/portal_stroke</item>
         <item name="overlayScrimColor">@color/overlay_scrim</item>
         <item name="colorInfo">@color/portal_blue</item>
-        <!-- Material 3 dialogs theme overlay (centered, custom shape/buttons, theme-driven colors) -->
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
     </style>
 
-    <!-- Theme: ASI (Aperture Science Innovators) -->
+    <style name="Theme.Portal2AdaptiveSongs.Amoled" parent="Theme.Portal2AdaptiveSongs">
+        <item name="colorSurface">@color/portal_amoled_card</item>
+        <item name="colorSurfaceVariant">@color/portal_amoled_card</item>
+        <item name="android:colorBackground">@color/portal_amoled_bg</item>
+        <item name="android:navigationBarColor">@color/portal_amoled_bg</item>
+        <item name="backgroundColor">@color/portal_amoled_bg</item>
+        <item name="cardBackgroundColor">@color/portal_amoled_card</item>
+        <item name="toolbarBackgroundColor">@color/portal_amoled_card</item>
+    </style>
+
     <style name="Theme.Portal.ASI" parent="Theme.Portal2AdaptiveSongs">
         <item name="colorPrimary">@color/asi_primary</item>
-        <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/asi_secondary</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="sliderThumbColor">@color/asi_primary</item>
+        <item name="sliderTrackActiveColor">@color/asi_primary</item>
+        <item name="colorInfo">@color/asi_secondary</item>
     </style>
 
-    <!-- Theme: Portal 2 (Overgrowth) -->
     <style name="Theme.Portal2.Overgrowth" parent="Theme.Portal2AdaptiveSongs">
         <item name="colorPrimary">@color/overgrowth_primary</item>
-        <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/overgrowth_secondary</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="sliderThumbColor">@color/overgrowth_secondary</item>
+        <item name="sliderTrackActiveColor">@color/overgrowth_secondary</item>
+        <item name="colorInfo">@color/overgrowth_secondary</item>
     </style>
 
-    <!-- Theme: Portal 1 -->
     <style name="Theme.Portal1" parent="Theme.Portal2AdaptiveSongs">
         <item name="colorPrimary">@color/portal1_primary</item>
-        <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/portal1_secondary</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="sliderThumbColor">@color/portal1_secondary</item>
+        <item name="sliderTrackActiveColor">@color/portal1_secondary</item>
+        <item name="colorInfo">@color/portal1_primary</item>
     </style>
 </resources>

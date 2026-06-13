@@ -6,15 +6,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import com.f1xtrack.portal2adaptivesongs.databinding.ActivityMainBinding
-import android.app.ProgressDialog
 import android.view.Menu
 import android.view.MenuItem
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.util.zip.ZipInputStream
-import java.io.FileOutputStream
 import java.io.File
 import android.provider.DocumentsContract
 import android.media.MediaMetadataRetriever
@@ -27,9 +26,9 @@ import android.os.Handler
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import android.content.Context
-import kotlin.random.Random
 import androidx.core.widget.doOnTextChanged
 import android.widget.TextView
 import android.text.method.LinkMovementMethod
@@ -41,8 +40,6 @@ class MainActivity : AppCompatActivity() {
     internal lateinit var player: ExoSoundPlayer
     private var isSuperSpeed = false
     private var lastTrack: String? = null
-    private val IMPORT_ZIP_REQUEST_CODE = 101
-    private val IMPORT_PACK_REQUEST_CODE = 102
     internal var userTracks: List<String> = emptyList()
     private var hysteresis = 3f // Гистерезис для предотвращения мигания
     internal var selectedTrack: String? = null // Для landscape режима
@@ -59,6 +56,21 @@ class MainActivity : AppCompatActivity() {
     private var timeAttackManager: TimeAttackManager? = null
     private var routeRecorder: RouteRecorder? = null
     private var searchQuery: String = ""
+    private var shouldResumeTracking = false
+
+    private val importZipLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                showNameInputDialog(uri)
+            }
+        }
+
+    private val importFolderLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            if (uri != null) {
+                importPackFromFolder(uri)
+            }
+        }
 
     private fun getHiddenAssets(): Set<String> {
         val prefs = getSharedPreferences("storage_prefs", Context.MODE_PRIVATE)
@@ -209,12 +221,12 @@ class MainActivity : AppCompatActivity() {
             val granted = perms[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
                     perms[Manifest.permission.ACCESS_COARSE_LOCATION] == true
             if (granted) startTracking()
-            else Toast.makeText(this, "Разрешите местоположение", Toast.LENGTH_LONG).show()
+            else Toast.makeText(this, getString(R.string.permission_location_required), Toast.LENGTH_LONG).show()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Применяем тему до создания вью
-        applyThemeFromPrefs()
+        applyAppThemeFromPrefs()
         super.onCreate(savedInstanceState)
 
         // Онбординг: показываем один раз при первом запуске
@@ -230,6 +242,27 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        syncWindowPreferences()
+        binding.textCurrentTrackValue.text = getString(R.string.main_now_playing_none)
+        binding.textCurrentThemeValue.text = resolveThemeLabel()
+        binding.textTrackingModeValue.text = resolveTrackingProfileLabel()
+
+        binding.toolbar.setNavigationOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        }
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
+
+        binding.btnQuickImport.setOnClickListener { importZipLauncher.launch("application/zip") }
+        binding.btnQuickHistory.setOnClickListener { startActivity(Intent(this, HistoryActivity::class.java)) }
+        binding.btnQuickTimeAttack.setOnClickListener { startActivity(Intent(this, TimeAttackSettingsActivity::class.java)) }
 
         // Мигрируем скрытые треки после переименования папок [PSM]/[Rev]
         migrateHiddenAssetsIfNeeded()
@@ -244,14 +277,10 @@ class MainActivity : AppCompatActivity() {
                     // Уже на главном экране
                 }
                 R.id.nav_import_zip -> {
-                    val intent = Intent(Intent.ACTION_GET_CONTENT)
-                    intent.type = "application/zip"
-                    intent.addCategory(Intent.CATEGORY_OPENABLE)
-                    startActivityForResult(intent, IMPORT_ZIP_REQUEST_CODE)
+                    importZipLauncher.launch("application/zip")
                 }
                 R.id.nav_import_folder -> {
-                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                    startActivityForResult(intent, IMPORT_PACK_REQUEST_CODE)
+                    importFolderLauncher.launch(null)
                 }
                 R.id.nav_track_prefs -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.nav_storage -> startActivity(Intent(this, StorageActivity::class.java))
@@ -369,6 +398,7 @@ class MainActivity : AppCompatActivity() {
                 lastTrack = null
 
                 selectedTrack = trackInfo.name
+                binding.textCurrentTrackValue.text = trackInfo.name
                 tracksAdapter.updateData(getTrackInfoList(), selectedTrack)
                 val isUser = userTracks.contains(trackInfo.name)
                 player.playBoth(trackInfo.name, isUser)
@@ -453,79 +483,49 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMPORT_ZIP_REQUEST_CODE && resultCode == RESULT_OK) {
-            val uri = data?.data ?: return
-            showNameInputDialog(uri)
-        } else if (requestCode == IMPORT_PACK_REQUEST_CODE && resultCode == RESULT_OK) {
-            val treeUri = data?.data ?: return
-            importPackFromFolder(treeUri)
-        }
-    }
-
     private fun showNameInputDialog(zipUri: Uri) {
         val input = android.widget.EditText(this)
         MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
-            .setTitle("Введите название саундтрека")
+            .setTitle(R.string.import_single_track_title)
             .setView(input)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(android.R.string.ok) { _, _ ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
                     importZipToSoundtracks(zipUri, name)
                 } else {
-                    Toast.makeText(this, "Название не может быть пустым", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.import_name_required), Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("Отмена", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
     private fun importZipToSoundtracks(zipUri: Uri, name: String) {
-        val dialog = ProgressDialog(this)
-        dialog.setMessage("Импортируем саундтрек...")
-        dialog.setCancelable(false)
-        dialog.show()
+        val dialog = createBlockingProgressDialog(getString(R.string.import_progress_single))
         Thread {
             try {
                 val dir = File(filesDir, "soundtracks/$name")
-                dir.mkdirs()
-                val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
-                val zis = ZipInputStream(inputStream)
-                var entry = zis.nextEntry
-                var foundNormal = false
-                var foundSuper = false
-                while (entry != null) {
-                    if (!entry.isDirectory) {
-                        val outFile = when (entry.name) {
-                            "normal.wav" -> File(dir, "normal.wav").also { foundNormal = true }
-                            "superspeed.wav" -> File(dir, "superspeed.wav").also { foundSuper = true }
-                            else -> null
-                        }
-                        if (outFile != null) {
-                            FileOutputStream(outFile).use { out ->
-                                zis.copyTo(out)
-                            }
-                        }
-                    }
-                    entry = zis.nextEntry
-                }
-                zis.close()
-                inputStream.close()
+                val result = contentResolver.openInputStream(zipUri)?.use { input ->
+                    TrackZipImporter.importFromStream(input, dir)
+                } ?: throw IllegalStateException("Не удалось открыть ZIP")
                 runOnUiThread {
                     dialog.dismiss()
-                    if (foundNormal && foundSuper) {
-                        Toast.makeText(this, "Саундтрек импортирован!", Toast.LENGTH_SHORT).show()
+                    if (result.isValid) {
+                        Toast.makeText(this, getString(R.string.import_success_single), Toast.LENGTH_SHORT).show()
                         updateTracksList(name)
                     } else {
                         dir.deleteRecursively()
-                        Toast.makeText(this, "В ZIP должны быть normal.wav и superspeed.wav", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, getString(R.string.import_error_zip_requirements), Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
                 runOnUiThread {
                     dialog.dismiss()
-                    Toast.makeText(this, "Ошибка импорта: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.import_error_generic, e.message ?: "unknown error"),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }.start()
@@ -593,7 +593,7 @@ class MainActivity : AppCompatActivity() {
         tracksAdapter.updateData(filtered, selectedTrack)
     }
 
-    private fun startTracking() {
+    private fun startTracking(showToast: Boolean = true) {
         // Настройки GPS: использование сетей и интервал записи
         val gp = getSharedPreferences("gps_prefs", Context.MODE_PRIVATE)
         val useNet = gp.getBoolean("use_network_location", true)
@@ -602,14 +602,41 @@ class MainActivity : AppCompatActivity() {
         tracker.setUpdateIntervalSeconds(intervalSec)
         routeRecorder?.startSession()
         tracker.start()
-        Toast.makeText(this, "Трекинг запущен", Toast.LENGTH_SHORT).show()
+        shouldResumeTracking = true
+        if (showToast) {
+            Toast.makeText(this, getString(R.string.tracking_started), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun stopTracking() {
+        if (!this::tracker.isInitialized) return
+        tracker.stop()
+        routeRecorder?.stopSession()
+    }
+
+    private fun hasLocationPermission(): Boolean {
+        val fineGranted = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarseGranted = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        return fineGranted || coarseGranted
+    }
+
+    private fun createBlockingProgressDialog(message: String): AlertDialog {
+        val view = layoutInflater.inflate(R.layout.dialog_blocking_progress, null)
+        view.findViewById<TextView>(R.id.textProgressMessage).text = message
+        return MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
+            .setView(view)
+            .setCancelable(false)
+            .show()
     }
 
     private fun importPackFromFolder(treeUri: Uri) {
-        val dialog = ProgressDialog(this)
-        dialog.setMessage("Импортируем пак саундтреков...")
-        dialog.setCancelable(false)
-        dialog.show()
+        val dialog = createBlockingProgressDialog(getString(R.string.import_progress_pack))
         Thread {
             var imported = 0
             var failed = 0
@@ -636,13 +663,17 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 runOnUiThread {
                     dialog.dismiss()
-                    Toast.makeText(this, "Ошибка импорта пака: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.import_pack_error, e.message ?: "unknown error"),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 return@Thread
             }
             runOnUiThread {
                 dialog.dismiss()
-                Toast.makeText(this, "Импортировано: $imported, ошибок: $failed", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.import_pack_result, imported, failed), Toast.LENGTH_LONG).show()
                 updateTracksList()
             }
         }.start()
@@ -652,34 +683,10 @@ class MainActivity : AppCompatActivity() {
     private fun importZipToSoundtracksSync(zipUri: Uri, name: String): Boolean {
         return try {
             val dir = File(filesDir, "soundtracks/$name")
-            dir.mkdirs()
-            val inputStream = contentResolver.openInputStream(zipUri) ?: throw Exception("Не удалось открыть ZIP")
-            val zis = ZipInputStream(inputStream)
-            var entry = zis.nextEntry
-            // Поддерживаем файлы normal[число].wav и superspeed[число].wav (без обязательных base-файлов)
-            val allowed = Regex("^(normal(\\d*)|superspeed(\\d*))\\.wav$", RegexOption.IGNORE_CASE)
-            var foundNormal = false
-            var foundSuper = false
-            while (entry != null) {
-                if (!entry.isDirectory) {
-                    // Берём только файлы с именами normal[число].wav или superspeed[число].wav (в любом подкаталоге архива)
-                    val base = entry.name.substringAfterLast('/')
-                    if (allowed.matches(base)) {
-                        val lower = base.lowercase()
-                        if (lower.startsWith("normal")) foundNormal = true
-                        if (lower.startsWith("superspeed")) foundSuper = true
-                        val outFile = File(dir, lower)
-                        outFile.parentFile?.mkdirs()
-                        FileOutputStream(outFile).use { out ->
-                            zis.copyTo(out)
-                        }
-                    }
-                }
-                entry = zis.nextEntry
-            }
-            zis.close()
-            inputStream.close()
-            if (!(foundNormal && foundSuper)) {
+            val result = contentResolver.openInputStream(zipUri)?.use { input ->
+                TrackZipImporter.importFromStream(input, dir)
+            } ?: throw IllegalStateException(getString(R.string.import_open_zip_failed))
+            if (!result.isValid) {
                 dir.deleteRecursively()
                 false
             } else true
@@ -717,17 +724,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        stopTracking()
+        stopSuperSpeedTimer()
         if (this::player.isInitialized) {
             player.releaseAll()
         }
         timeAttackManager?.dispose()
+        super.onDestroy()
+    }
+
+    override fun onStop() {
+        stopTracking()
+        stopSuperSpeedTimer()
+        super.onStop()
     }
 
     override fun onResume() {
         super.onResume()
         // Обновить список на случай изменений в Хранилище
+        syncWindowPreferences()
+        binding.textCurrentThemeValue.text = resolveThemeLabel()
+        binding.textTrackingModeValue.text = resolveTrackingProfileLabel()
+        binding.textCurrentTrackValue.text = selectedTrack ?: getString(R.string.main_now_playing_none)
         updateTracksList(selectedTrack)
+        if (shouldResumeTracking && hasLocationPermission()) {
+            startTracking(showToast = false)
+        }
         val taPrefs = getSharedPreferences("time_attack_prefs", Context.MODE_PRIVATE)
         if (taPrefs.getBoolean("start_now", false)) {
             taPrefs.edit().putBoolean("start_now", false).apply()
@@ -738,11 +760,10 @@ class MainActivity : AppCompatActivity() {
     private fun startSuperSpeedTimer() {
         if (superSpeedTimer != null) return
         superSpeedTimer = Handler(mainLooper)
-        val repo = AchievementRepository(this)
         val runnable = object : Runnable {
             override fun run() {
                 if (isSuperSpeed) {
-                    repo.addSuperSpeedMinutes(1)
+                    reportSuperMinutesDelta(1)
                 }
                 superSpeedTimer?.postDelayed(this, 60_000L)
             }
@@ -788,17 +809,47 @@ class MainActivity : AppCompatActivity() {
 
     private fun onKmAchieved(totalKm: Int) {
         when (totalKm) {
-            1 -> showAchievementBanner("1 км", "Пройдено 1 км", 0, 0)
-            10 -> showAchievementBanner("10 км", "Пройдено 10 км", 0, 1)
-            100 -> showAchievementBanner("100 км", "Пройдено 100 км", 0, 2)
+            1 -> showAchievementBanner(
+                getString(R.string.ach_km_1_title),
+                getString(R.string.ach_km_1_desc),
+                0,
+                0
+            )
+            10 -> showAchievementBanner(
+                getString(R.string.ach_km_10_title),
+                getString(R.string.ach_km_10_desc),
+                0,
+                1
+            )
+            100 -> showAchievementBanner(
+                getString(R.string.ach_km_100_title),
+                getString(R.string.ach_km_100_desc),
+                0,
+                2
+            )
         }
     }
 
     private fun onImportAchieved(total: Int) {
         when (total) {
-            1 -> showAchievementBanner("1 трек", "Импортирован 1 трек", 1, 0)
-            10 -> showAchievementBanner("10 треков", "Импортировано 10 треков", 1, 1)
-            100 -> showAchievementBanner("100 треков", "Импортировано 100 треков", 1, 2)
+            1 -> showAchievementBanner(
+                getString(R.string.ach_lib_1_title),
+                getString(R.string.ach_lib_1_desc),
+                1,
+                0
+            )
+            10 -> showAchievementBanner(
+                getString(R.string.ach_lib_10_title),
+                getString(R.string.ach_lib_10_desc),
+                1,
+                1
+            )
+            100 -> showAchievementBanner(
+                getString(R.string.ach_lib_100_title),
+                getString(R.string.ach_lib_100_desc),
+                1,
+                2
+            )
         }
     }
 
@@ -850,24 +901,6 @@ class MainActivity : AppCompatActivity() {
 // Дополнительные функции MainActivity
 // -------------------------
 
-private fun MainActivity.applyThemeFromPrefs() {
-    val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
-    when (prefs.getString("app_theme", "portal2")) {
-        "asi" -> setTheme(R.style.Theme_Portal_ASI)
-        "portal2_overgrowth" -> setTheme(R.style.Theme_Portal2_Overgrowth)
-        "portal1" -> setTheme(R.style.Theme_Portal1)
-        else -> setTheme(R.style.Theme_Portal2AdaptiveSongs)
-    }
-    // Применяем сохранённый язык
-    val lang = prefs.getString("app_lang", "system")
-    val locales = if (lang == null || lang == "system" || lang.isBlank()) {
-        LocaleListCompat.getEmptyLocaleList()
-    } else {
-        LocaleListCompat.forLanguageTags(lang)
-    }
-    AppCompatDelegate.setApplicationLocales(locales)
-}
-
 private fun MainActivity.maybeShowDrawerHint() {
     val prefs = getSharedPreferences("onboarding_prefs", Context.MODE_PRIVATE)
     val shown = prefs.getInt("drawer_hint_shown_count", 0)
@@ -883,33 +916,15 @@ private fun MainActivity.maybeShowDrawerHint() {
 
 private fun MainActivity.showLanguageDialog() {
     val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
-
-    val languages = listOf(
-        "system" to getString(R.string.language_system),
-        "ar" to "العربية",
-        "de" to "Deutsch",
-        "en" to "English",
-        "es" to "Español",
-        "fr" to "Français",
-        "hi" to "हिन्दी",
-        "it" to "Italiano",
-        "ja" to "日本語",
-        "ko" to "한국어",
-        "pl" to "Polski",
-        "pt" to "Português",
-        "ru" to "Русский",
-        "tr" to "Türkçe",
-        "zh" to "中文"
-    )
-
-    val options = languages.map { it.second }.toTypedArray()
+    val languages = buildLanguageOptions(this)
+    val options = languages.map { it.label }.toTypedArray()
     val currentLangCode = prefs.getString("app_lang", "system")
-    val current = languages.indexOfFirst { it.first == currentLangCode }.coerceAtLeast(0)
+    val current = languages.indexOfFirst { it.code == currentLangCode }.coerceAtLeast(0)
 
     MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
         .setTitle(R.string.dialog_language_title)
         .setSingleChoiceItems(options, current) { dialog, which ->
-            val code = languages[which].first
+            val code = languages[which].code
             prefs.edit().putString("app_lang", code).apply()
             val locales = if (code == "system") {
                 LocaleListCompat.getEmptyLocaleList()
@@ -962,4 +977,35 @@ private fun MainActivity.startRandomTrackForTimeAttack() {
     player.playBoth(name, isUser)
     selectedTrack = name
     tracksAdapter.updateData(getTrackInfoList(), selectedTrack)
+}
+
+private fun MainActivity.syncWindowPreferences() {
+    val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
+    if (prefs.getBoolean("keep_screen_on", false)) {
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    } else {
+        window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+}
+
+private fun MainActivity.resolveThemeLabel(): String {
+    val prefs = getSharedPreferences("ui_prefs", Context.MODE_PRIVATE)
+    return when {
+        prefs.getBoolean("amoled_mode", false) -> getString(R.string.settings_amoled_theme)
+        prefs.getString("app_theme", "portal2") == "asi" -> getString(R.string.theme_asi)
+        prefs.getString("app_theme", "portal2") == "portal2_overgrowth" -> getString(R.string.theme_portal2_overgrowth)
+        prefs.getString("app_theme", "portal2") == "portal1" -> getString(R.string.theme_portal1)
+        else -> getString(R.string.theme_portal2_default)
+    }
+}
+
+private fun MainActivity.resolveTrackingProfileLabel(): String {
+    val prefs = getSharedPreferences("gps_prefs", Context.MODE_PRIVATE)
+    val useNetwork = prefs.getBoolean("use_network_location", true)
+    val intervalSec = prefs.getInt("interval_sec", 2)
+    return when {
+        !useNetwork -> getString(R.string.main_tracking_precise)
+        intervalSec <= 2 -> getString(R.string.main_tracking_network)
+        else -> getString(R.string.main_tracking_balanced)
+    }
 }

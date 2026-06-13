@@ -33,7 +33,7 @@
                 android:id="@+id/textAchievementTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Achievement Title"
+                android:text="@string/achievement_title_placeholder"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:textColor="?attr/textPrimaryOnBackground" />
 
@@ -41,7 +41,7 @@
                 android:id="@+id/textAchievementDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description"
+                android:text="@string/achievement_description_placeholder"
                 android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                 android:textColor="?attr/textPrimaryOnBackground"
                 android:alpha="0.8"
@@ -61,7 +61,7 @@
                 android:id="@+id/textAchievementCounter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0/100"
+                android:text="@string/achievement_counter_placeholder"
                 android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                 android:textColor="?attr/colorInfo"
                 android:layout_marginTop="2dp"/>

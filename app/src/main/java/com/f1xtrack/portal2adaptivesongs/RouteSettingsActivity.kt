@@ -1,133 +1,97 @@
 package com.f1xtrack.portal2adaptivesongs
 
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
-import android.widget.Spinner
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.slider.Slider
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.android.material.textfield.TextInputEditText
+import java.util.Locale
 import android.widget.ArrayAdapter
-import android.widget.AdapterView
-import android.view.View
 
 class RouteSettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyThemeFromPrefs()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_route_settings)
 
-        // Material 3: no top app bar on this screen; rely on system back navigation
+        findViewById<MaterialToolbar>(R.id.toolbarRouteSettings).setNavigationOnClickListener { finish() }
 
-        val settingsContainer = findViewById<ViewGroup>(R.id.settings_container)
-        setupRouteRecordingSettings(settingsContainer)
-    }
-
-    private fun setupRouteRecordingSettings(container: ViewGroup) {
         val prefs = getSharedPreferences("gps_prefs", MODE_PRIVATE)
-
-        // --- Секция записи маршрутов ---
-        val routeRecordingTitle = android.widget.TextView(this).apply {
-            text = getString(R.string.settings_section_routes)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setPadding(0, 16, 0, 8)
-        }
-
-        val switchRecord = com.google.android.material.switchmaterial.SwitchMaterial(this).apply {
-            text = getString(R.string.settings_record_routes)
-            isChecked = prefs.getBoolean("record_routes", true)
-            setOnCheckedChangeListener { _, isChecked ->
-                prefs.edit().putBoolean("record_routes", isChecked).apply()
-            }
-        }
-
-        val minTimeLayout = com.google.android.material.textfield.TextInputLayout(this).apply {
-            hint = getString(R.string.settings_min_time_s)
-            boxBackgroundMode = com.google.android.material.textfield.TextInputLayout.BOX_BACKGROUND_OUTLINE
-        }
-        val minTimeEdit = com.google.android.material.textfield.TextInputEditText(this).apply {
-            setText(prefs.getLong("min_time_ms", 1000L).toString())
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER
-            addTextChangedListener(object : android.text.TextWatcher {
-                override fun afterTextChanged(s: android.text.Editable?) {
-                    val value = s.toString().toLongOrNull() ?: 1000L
-                    prefs.edit().putLong("min_time_ms", value).apply()
-                }
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            })
-        }
-        minTimeLayout.addView(minTimeEdit)
-
-        val minDistanceLayout = com.google.android.material.textfield.TextInputLayout(this).apply {
-            hint = getString(R.string.settings_min_distance_m)
-            boxBackgroundMode = com.google.android.material.textfield.TextInputLayout.BOX_BACKGROUND_OUTLINE
-        }
-        val minDistanceEdit = com.google.android.material.textfield.TextInputEditText(this).apply {
-            setText(prefs.getFloat("min_distance_m", 2f).toString())
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
-            addTextChangedListener(object : android.text.TextWatcher {
-                override fun afterTextChanged(s: android.text.Editable?) {
-                    val value = s.toString().toFloatOrNull() ?: 2f
-                    prefs.edit().putFloat("min_distance_m", value).apply()
-                }
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            })
-        }
-        minDistanceLayout.addView(minDistanceEdit)
-
-        container.addView(routeRecordingTitle)
-        container.addView(switchRecord)
-        container.addView(minTimeLayout)
-        container.addView(minDistanceLayout)
-
-        // --- Секция карты и GPS ---
         val mapPrefs = getSharedPreferences("osmdroid", MODE_PRIVATE)
 
-        val mapSectionTitle = TextView(this).apply {
-            text = getString(R.string.settings_section_map_gps)
-            setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium)
-            setPadding(0, 24, 0, 8)
+        val switchRecordRoutes = findViewById<MaterialSwitch>(R.id.switchRecordRoutes)
+        val switchUseNetwork = findViewById<MaterialSwitch>(R.id.switchUseNetworkLocation)
+        val editMinTime = findViewById<TextInputEditText>(R.id.editMinTime)
+        val editMinDistance = findViewById<TextInputEditText>(R.id.editMinDistance)
+        val intervalSlider = findViewById<Slider>(R.id.sliderRecordingInterval)
+        val intervalText = findViewById<android.widget.TextView>(R.id.textRecordingInterval)
+        val tileSourceDropdown = findViewById<MaterialAutoCompleteTextView>(R.id.autoCompleteTileSource)
+
+        switchRecordRoutes.isChecked = prefs.getBoolean("record_routes", true)
+        switchUseNetwork.isChecked = prefs.getBoolean("use_network_location", true)
+        editMinTime.setText(prefs.getLong("min_time_ms", 1000L).toString())
+        editMinDistance.setText(String.format(Locale.getDefault(), "%.1f", prefs.getFloat("min_distance_m", 2f)))
+
+        val intervalSec = prefs.getInt("interval_sec", 2).coerceIn(1, 15)
+        intervalSlider.value = intervalSec.toFloat()
+        intervalText.text = getString(R.string.recording_interval_value, intervalSec)
+
+        switchRecordRoutes.setOnCheckedChangeListener { _, checked ->
+            prefs.edit().putBoolean("record_routes", checked).apply()
+        }
+        switchUseNetwork.setOnCheckedChangeListener { _, checked ->
+            prefs.edit().putBoolean("use_network_location", checked).apply()
+        }
+        editMinTime.doAfterTextChangedCompat { value ->
+            prefs.edit().putLong("min_time_ms", value.toLongOrNull() ?: 1000L).apply()
+        }
+        editMinDistance.doAfterTextChangedCompat { value ->
+            prefs.edit().putFloat("min_distance_m", value.replace(',', '.').toFloatOrNull() ?: 2f).apply()
         }
 
-        // Используется только OSM; выбор провайдера удалён
-
-        // Источник тайлов для OSM
-        val osmSourceLabel = TextView(this).apply {
-            text = getString(R.string.osm_tile_source_label)
-            setPadding(0, 16, 0, 4)
+        intervalSlider.addOnChangeListener { _, value, _ ->
+            val seconds = value.toInt().coerceIn(1, 15)
+            intervalText.text = getString(R.string.recording_interval_value, seconds)
+            prefs.edit().putInt("interval_sec", seconds).apply()
         }
-        val osmSourceSpinner = Spinner(this)
-        val osmSources = listOf(
-            org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK,
-            org.osmdroid.tileprovider.tilesource.TileSourceFactory.USGS_TOPO,
-            org.osmdroid.tileprovider.tilesource.TileSourceFactory.USGS_SAT
-        )
-        val osmSourceNames = arrayOf(
+
+        val tileSourceLabels = arrayOf(
             getString(R.string.osm_source_mapnik),
             getString(R.string.osm_source_usgs_topo),
             getString(R.string.osm_source_usgs_sat)
         )
-        val osmAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, osmSourceNames).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val tileSourceValues = arrayOf("MAPNIK", "USGS_TOPO", "USGS_SAT")
+        tileSourceDropdown.setAdapter(ArrayAdapter(this, android.R.layout.simple_list_item_1, tileSourceLabels))
+        val currentTileSource = mapPrefs.getString("tile_source", tileSourceValues.first()) ?: tileSourceValues.first()
+        val currentIndex = tileSourceValues.indexOf(currentTileSource).coerceAtLeast(0)
+        tileSourceDropdown.setText(tileSourceLabels[currentIndex], false)
+        tileSourceDropdown.setOnItemClickListener { _, _, position, _ ->
+            mapPrefs.edit().putString("tile_source", tileSourceValues[position]).apply()
         }
-        osmSourceSpinner.adapter = osmAdapter
+    }
+}
 
-        val currentTileSource = mapPrefs.getString("tile_source", org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK.name())
-        val currentTileIndex = osmSources.indexOfFirst { it.name() == currentTileSource }.coerceAtLeast(0)
-        osmSourceSpinner.setSelection(currentTileIndex)
-
-        // Настройки OSM всегда отображаются
-
-        osmSourceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selected = osmSources[position]
-                mapPrefs.edit().putString("tile_source", selected.name()).apply()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>) {}
+private fun TextInputEditText.doAfterTextChangedCompat(action: (String) -> Unit) {
+    addTextChangedListener(object : android.text.TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+        override fun afterTextChanged(s: android.text.Editable?) {
+            action(s?.toString().orEmpty())
         }
+    })
+}
 
-        container.addView(mapSectionTitle)
-        container.addView(osmSourceLabel)
-        container.addView(osmSourceSpinner)
+private fun RouteSettingsActivity.applyThemeFromPrefs() {
+    val prefs = getSharedPreferences("ui_prefs", AppCompatActivity.MODE_PRIVATE)
+    val amoled = prefs.getBoolean("amoled_mode", false)
+    when {
+        amoled -> setTheme(R.style.Theme_Portal2AdaptiveSongs_Amoled)
+        prefs.getString("app_theme", "portal2") == "asi" -> setTheme(R.style.Theme_Portal_ASI)
+        prefs.getString("app_theme", "portal2") == "portal2_overgrowth" -> setTheme(R.style.Theme_Portal2_Overgrowth)
+        prefs.getString("app_theme", "portal2") == "portal1" -> setTheme(R.style.Theme_Portal1)
+        else -> setTheme(R.style.Theme_Portal2AdaptiveSongs)
     }
 }

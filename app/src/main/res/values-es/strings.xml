@@ -81,7 +81,7 @@
     <string name="time_attack_success">¡Éxito!</string>
     <string name="time_attack_failed">Fallido</string>
     <string name="time_attack_finished">Finalizado</string>
-    <string name="time_attack_next_mission_in">Próxima misión en: %1$s</string>
+    <string name="time_attack_next_mission_in">Próxima misión en: %1$d</string>
     <string name="time_attack_next_mission_now">La próxima misión ya está disponible</string>
 
     <!-- Común -->
@@ -148,6 +148,7 @@
     <!-- Plurales -->
     <plurals name="plays_count">
         <item quantity="one">%d reproducción</item>
+        <item quantity="many">%d reproducciones</item>
         <item quantity="other">%d reproducciones</item>
     </plurals>
 

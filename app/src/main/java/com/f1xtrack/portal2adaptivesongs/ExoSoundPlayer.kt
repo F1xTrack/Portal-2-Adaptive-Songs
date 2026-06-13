@@ -27,8 +27,11 @@ class ExoSoundPlayer(private val context: Context) {
     private var lastNormalVariant: String? = null
     private var lastSuperVariant: String? = null
     private var userPaused: Boolean = false
+    private var masterVolume: Float = 1f
 
     private fun log(tag: String, msg: String) = Log.d("ExoSoundPlayer-$tag", msg)
+
+    private fun scaledVolume(baseVolume: Float): Float = baseVolume.coerceIn(0f, 1f) * masterVolume
 
     /**
      * Try to build and prepare an ExoPlayer for the given media item safely.
@@ -40,7 +43,7 @@ class ExoSoundPlayer(private val context: Context) {
             player.setMediaItem(item)
             player.repeatMode = Player.REPEAT_MODE_ONE
             player.prepare()
-            player.volume = initialVolume
+            player.volume = scaledVolume(initialVolume)
             player.playWhenReady = playWhenReady
             player
         } catch (e: Exception) {
@@ -207,8 +210,8 @@ class ExoSoundPlayer(private val context: Context) {
         superPlayer.playWhenReady = !userPaused
         // Стартовые уровни громкости: нормальный слышен, супер — на нуле
         try {
-            normalPlayer.volume = 1f
-            superPlayer.volume = 0f
+            normalPlayer.volume = scaledVolume(1f)
+            superPlayer.volume = scaledVolume(0f)
         } catch (_: Exception) {}
         normalActive = normalPlayer
         superActive = superPlayer
@@ -243,11 +246,11 @@ class ExoSoundPlayer(private val context: Context) {
             }
             // Стартовые уровни
             try {
-                target.volume = 0f
-                normalActive?.volume = 1f
+                target.volume = scaledVolume(0f)
+                normalActive?.volume = scaledVolume(1f)
                 // Глушим все прочие
-                normalStandby?.volume = 0f
-                superActive?.volume = 0f
+                normalStandby?.volume = scaledVolume(0f)
+                superActive?.volume = scaledVolume(0f)
             } catch (_: Exception) {}
             if (!userPaused) target.playWhenReady = true
             val fromRef = normalActive
@@ -256,7 +259,7 @@ class ExoSoundPlayer(private val context: Context) {
                 if (target === superStandby) superStandby = null
                 prepareStandbyFor(modeSuper = false, trackName = trackName, isUserTrack = isUserTrack)
                 prepareStandbyFor(modeSuper = true, trackName = trackName, isUserTrack = isUserTrack)
-                try { fromRef?.volume = 0f } catch (_: Exception) {}
+                try { fromRef?.volume = scaledVolume(0f) } catch (_: Exception) {}
                 // Сохраняем состояние паузы
                 if (userPaused) {
                     try { superActive?.pause(); normalActive?.pause() } catch (_: Exception) {}
@@ -271,10 +274,10 @@ class ExoSoundPlayer(private val context: Context) {
                 return
             }
             try {
-                target.volume = 0f
-                superActive?.volume = 1f
-                superStandby?.volume = 0f
-                normalActive?.volume = 0f
+                target.volume = scaledVolume(0f)
+                superActive?.volume = scaledVolume(1f)
+                superStandby?.volume = scaledVolume(0f)
+                normalActive?.volume = scaledVolume(0f)
             } catch (_: Exception) {}
             if (!userPaused) target.playWhenReady = true
             val fromRef = superActive
@@ -283,7 +286,7 @@ class ExoSoundPlayer(private val context: Context) {
                 if (target === normalStandby) normalStandby = null
                 prepareStandbyFor(modeSuper = true, trackName = trackName, isUserTrack = isUserTrack)
                 prepareStandbyFor(modeSuper = false, trackName = trackName, isUserTrack = isUserTrack)
-                try { fromRef?.volume = 0f } catch (_: Exception) {}
+                try { fromRef?.volume = scaledVolume(0f) } catch (_: Exception) {}
                 // Сохраняем состояние паузы
                 if (userPaused) {
                     try { superActive?.pause(); normalActive?.pause() } catch (_: Exception) {}
@@ -300,16 +303,32 @@ class ExoSoundPlayer(private val context: Context) {
             crossfadeJob?.postDelayed({
                 val vol = i / steps.toFloat()
                 try {
-                    to?.volume = vol
-                    from?.volume = 1 - vol
+                    to?.volume = scaledVolume(vol)
+                    from?.volume = scaledVolume(1 - vol)
                 } catch (_: Exception) {}
                 if (i == steps) {
-                    try { to?.volume = 1f; from?.volume = 0f } catch (_: Exception) {}
+                    try { to?.volume = scaledVolume(1f); from?.volume = scaledVolume(0f) } catch (_: Exception) {}
                     onComplete()
                 }
             }, i * delay)
         }
     }
+
+    fun setMasterVolume(volume: Float) {
+        masterVolume = volume.coerceIn(0f, 1f)
+        val normalActiveVolume = if (normalActive?.volume ?: 0f > 0f) 1f else 0f
+        val superActiveVolume = if (superActive?.volume ?: 0f > 0f) 1f else 0f
+        val normalStandbyVolume = if (normalStandby?.volume ?: 0f > 0f) 1f else 0f
+        val superStandbyVolume = if (superStandby?.volume ?: 0f > 0f) 1f else 0f
+        try {
+            normalActive?.volume = scaledVolume(normalActiveVolume)
+            superActive?.volume = scaledVolume(superActiveVolume)
+            normalStandby?.volume = scaledVolume(normalStandbyVolume)
+            superStandby?.volume = scaledVolume(superStandbyVolume)
+        } catch (_: Exception) {}
+    }
+
+    fun isPlaying(): Boolean = normalActive?.isPlaying == true || superActive?.isPlaying == true
 
     fun pause() {
         userPaused = true
@@ -324,7 +343,7 @@ class ExoSoundPlayer(private val context: Context) {
     }
 
     fun togglePause() {
-        val currentlyPlaying = normalActive?.isPlaying ?: false || superActive?.isPlaying ?: false
+        val currentlyPlaying = isPlaying()
         if (currentlyPlaying) {
             pause()
         } else {

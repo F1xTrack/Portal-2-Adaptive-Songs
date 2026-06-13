@@ -51,7 +51,7 @@
                     android:id="@+id/textStatDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-"
+                    android:text="@string/stats_empty_value"
                     android:textColor="?attr/textPrimaryOnBackground"/>
             </LinearLayout>
 
@@ -70,7 +70,7 @@
                     android:id="@+id/textStatTracks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-"
+                    android:text="@string/stats_empty_value"
                     android:textColor="?attr/textPrimaryOnBackground"/>
             </LinearLayout>
 
@@ -89,7 +89,7 @@
                     android:id="@+id/textStatSuperspeedTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-"
+                    android:text="@string/stats_empty_value"
                     android:textColor="?attr/textPrimaryOnBackground"/>
             </LinearLayout>
 

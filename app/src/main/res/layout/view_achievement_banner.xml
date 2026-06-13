@@ -22,7 +22,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/aperture_logo"
-            android:contentDescription="achievement icon" />
+            android:contentDescription="@string/achievement_icon_desc" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -35,7 +35,7 @@
                 android:id="@+id/bannerTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Achievement Unlocked"
+                android:text="@string/achievement_unlocked_title"
                 android:textColor="?attr/colorSecondary"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
@@ -43,7 +43,7 @@
                 android:id="@+id/bannerDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Описание"
+                android:text="@string/achievement_description_placeholder"
                 android:textColor="?attr/textPrimaryOnBackground"
                 android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                 android:alpha="0.85" />

@@ -183,6 +183,7 @@ class TimeAttackManager(
 
     fun dispose() {
         cancelSchedule()
+        active = false
         stopTicks()
         dialog?.dismiss()
         dialog = null
@@ -331,6 +332,7 @@ class TimeAttackManager(
     private fun updateStateForTick(state: RuntimeState, regime: Regime, dtSec: Int, speedKmh: Float) {
         state.elapsedSec += dtSec
         val was = state.currentRegime
+        state.lastRegime = was
         state.currentRegime = regime
         if (regime != was) {
             state.switches += 1
@@ -516,14 +518,15 @@ class TimeAttackManager(
     }
 
     private fun textBase(spec: ChallengeSpec, s: RuntimeState, threshold: Int): String {
-        val d = getChallengeDesc(spec)
-        return buildString {
-            appendLine(d)
-            append("Время: ").append(s.elapsedSec).append(" с  •  ")
-            append("Дист: ").append(s.distanceM.toInt()).append(" м  •  ")
-            append("SS: ").append(s.ssTimeSec).append(" с  •  ")
-            append("Перекл: ").append(s.switches).append("  •  Порог: ").append(threshold)
-        }
+        return host.getString(
+            R.string.time_attack_status_text,
+            getChallengeDesc(spec),
+            s.elapsedSec,
+            s.distanceM.toInt(),
+            s.ssTimeSec,
+            s.switches,
+            threshold
+        )
     }
 
     // UI-only сглаживание прогресса (плавное движение ползунка между изменениями состояния)

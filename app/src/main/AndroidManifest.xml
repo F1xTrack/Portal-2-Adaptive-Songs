@@ -20,7 +20,7 @@
 
         <!-- Главная активность с Launcher intent-filter -->
         <activity
-            android:name=".MainActivity"
+            android:name=".RootActivity"
             android:exported="true"
             android:theme="@style/Theme.Portal2AdaptiveSongs">
             <intent-filter>
@@ -28,6 +28,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Portal2AdaptiveSongs" />
 
         <activity
             android:name=".OnboardingActivity"

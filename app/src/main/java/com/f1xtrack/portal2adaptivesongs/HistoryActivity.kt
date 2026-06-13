@@ -22,6 +22,7 @@ import org.osmdroid.views.overlay.TilesOverlay
 import android.content.res.Configuration as AppConfiguration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import kotlin.math.abs
+import java.util.Locale
 
 class HistoryActivity : AppCompatActivity() {
 
@@ -34,6 +35,7 @@ class HistoryActivity : AppCompatActivity() {
     private var timePeriod: String = "all"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyThemeFromPrefs()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
@@ -212,39 +214,6 @@ class HistoryActivity : AppCompatActivity() {
             return
         }
 
-        // Build segments: new segment when track or mode or session changes
-        var last: Pt? = null
-        val current = mutableListOf<GeoPoint>()
-        var currentTrack: String? = null
-        var currentMode: String? = null
-        var currentSid: String? = null
-        val segments = mutableListOf<Triple<List<GeoPoint>, String, String>>() // pts, track, mode
-        for (p in points) {
-            if (last == null) {
-                current.clear()
-                current += GeoPoint(p.lat, p.lon)
-                currentTrack = p.track
-                currentMode = p.mode
-                currentSid = p.sid
-            } else {
-                val changed = (p.track != currentTrack) || (p.mode != currentMode) || (p.sid != currentSid)
-                if (changed) {
-                    if (current.size >= 2 && currentTrack != null && currentMode != null) {
-                        segments += Triple(current.toList(), currentTrack!!, currentMode!!)
-                    }
-                    current.clear()
-                    currentTrack = p.track
-                    currentMode = p.mode
-                    currentSid = p.sid
-                }
-                current += GeoPoint(p.lat, p.lon)
-            }
-            last = p
-        }
-        if (current.size >= 2 && currentTrack != null && currentMode != null) {
-            segments += Triple(current.toList(), currentTrack!!, currentMode!!)
-        }
-
         // Render based on scheme
         when (colorScheme) {
             "track" -> renderByTrack(points)
@@ -317,8 +286,8 @@ class HistoryActivity : AppCompatActivity() {
         segments.forEach { (geoPts, track, mode) ->
             val polyline = Polyline()
             polyline.setPoints(geoPts)
-            polyline.color = colorForTrack(track, mode)
-            polyline.width = if (mode.equals("superspeed", ignoreCase = true)) 10f else 5f
+            polyline.outlinePaint.color = colorForTrack(track, mode)
+            polyline.outlinePaint.strokeWidth = if (mode.equals("superspeed", ignoreCase = true)) 10f else 5f
             map.overlays.add(polyline)
             tracksInLegend.add(track)
         }
@@ -337,8 +306,8 @@ class HistoryActivity : AppCompatActivity() {
         }
         if (values.isEmpty()) return
 
-        val minVal = values.minOrNull()!!
-        val maxVal = values.maxOrNull()!!
+        val minVal = values.minOrNull() ?: return
+        val maxVal = values.maxOrNull() ?: return
 
         for (i in 0 until points.size - 1) {
             val p1 = points[i]
@@ -349,8 +318,8 @@ class HistoryActivity : AppCompatActivity() {
                 val polyline = Polyline()
                 polyline.addPoint(GeoPoint(p1.lat, p1.lon))
                 polyline.addPoint(GeoPoint(p2.lat, p2.lon))
-                polyline.color = getColorForValue(value, minVal, maxVal)
-                polyline.width = if (p1.mode.equals("superspeed", ignoreCase = true)) 10f else 5f
+                polyline.outlinePaint.color = getColorForValue(value, minVal, maxVal)
+                polyline.outlinePaint.strokeWidth = if (p1.mode.equals("superspeed", ignoreCase = true)) 10f else 5f
                 map.overlays.add(polyline)
             }
         }
@@ -388,13 +357,13 @@ class HistoryActivity : AppCompatActivity() {
         }
         val colorOnSurfaceVariant = MaterialColors.getColor(gradientView, com.google.android.material.R.attr.colorOnSurfaceVariant)
         val minLabel = TextView(this).apply {
-            text = "%.1f %s".format(min, unit)
+            text = String.format(Locale.getDefault(), "%.1f %s", min, unit)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setTextColor(colorOnSurfaceVariant)
             textSize = 12f
         }
         val maxLabel = TextView(this).apply {
-            text = "%.1f %s".format(max, unit)
+            text = String.format(Locale.getDefault(), "%.1f %s", max, unit)
             gravity = android.view.Gravity.END
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setTextColor(colorOnSurfaceVariant)
@@ -424,8 +393,10 @@ class HistoryActivity : AppCompatActivity() {
             } else {
                 val changed = (p.track != currentTrack) || (p.mode != currentMode) || (p.sid != currentSid)
                 if (changed) {
-                    if (current.size >= 2 && currentTrack != null && currentMode != null) {
-                        segments += Triple(current.toList(), currentTrack!!, currentMode!!)
+                    val track = currentTrack
+                    val mode = currentMode
+                    if (current.size >= 2 && track != null && mode != null) {
+                        segments += Triple(current.toList(), track, mode)
                     }
                     current.clear()
                     currentTrack = p.track
@@ -436,8 +407,10 @@ class HistoryActivity : AppCompatActivity() {
             }
             last = p
         }
-        if (current.size >= 2 && currentTrack != null && currentMode != null) {
-            segments += Triple(current.toList(), currentTrack!!, currentMode!!)
+        val track = currentTrack
+        val mode = currentMode
+        if (current.size >= 2 && track != null && mode != null) {
+            segments += Triple(current.toList(), track, mode)
         }
         return segments
     }
@@ -455,5 +428,17 @@ class HistoryActivity : AppCompatActivity() {
         row.addView(swatch)
         row.addView(label)
         return row
+    }
+}
+
+private fun HistoryActivity.applyThemeFromPrefs() {
+    val prefs = getSharedPreferences("ui_prefs", AppCompatActivity.MODE_PRIVATE)
+    val amoled = prefs.getBoolean("amoled_mode", false)
+    when {
+        amoled -> setTheme(R.style.Theme_Portal2AdaptiveSongs_Amoled)
+        prefs.getString("app_theme", "portal2") == "asi" -> setTheme(R.style.Theme_Portal_ASI)
+        prefs.getString("app_theme", "portal2") == "portal2_overgrowth" -> setTheme(R.style.Theme_Portal2_Overgrowth)
+        prefs.getString("app_theme", "portal2") == "portal1" -> setTheme(R.style.Theme_Portal1)
+        else -> setTheme(R.style.Theme_Portal2AdaptiveSongs)
     }
 }
